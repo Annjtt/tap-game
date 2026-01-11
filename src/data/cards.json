@@ -1,0 +1,6 @@
+{
+    "A": { "bonus": 1.0, "chance": 0.001 },
+    "B": { "bonus": 0.8, "chance": 0.005 },
+    "C": { "bonus": 0.4, "chance": 0.024 }
+    
+  }

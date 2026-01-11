@@ -1,0 +1,16 @@
+{
+    "name": "tap-game-tg",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@twa-dev/sdk": "^7.10.1"
+    },
+    "devDependencies": {
+        "vite": "^7.3.1"
+    }
+}
