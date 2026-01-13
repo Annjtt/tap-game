@@ -1,16 +1,19 @@
-import { Confetti } from './Confetti.js'; // ✅ Импортируем конфети
+import { Confetti } from './Confetti.js';
+import { img } from '../utils/imageHelper.js'; // ✅ Импортируем хелпер
 
 export class ItemModal {
   static show(item, game) {
     const container = document.createElement('div');
     container.className = 'item-overlay';
 
-    const cardImage = item.card ? `./src/assets/images/cards/${item.card.toLowerCase()}.png` : '';
+    // ✅ Используем хелпер для путей
+    const cardImage = item.card ? img(`src/assets/images/cards/${item.card.toLowerCase()}.png`) : '';
+    const itemImage = img(item.image);
 
     container.innerHTML = `
       <div class="item-modal">
         <div class="item-image-container">
-          <img src="${item.image}" alt="${item.name}" class="item-image" />
+          <img src="${itemImage}" alt="${item.name}" class="item-image" />
           ${cardImage ? `<img src="${cardImage}" alt="${item.card}" class="card-badge" />` : ''}
         </div>
         <div class="item-name">${item.name}</div>
@@ -24,17 +27,15 @@ export class ItemModal {
 
     document.body.appendChild(container);
 
-    // Обработчик распыления
     document.getElementById('disenchant-item').addEventListener('click', () => {
       const compensation = ItemModal.getCompensation(item);
       game.addCurrency(compensation);
-      game.removeItem(item); // Удаляем предмет из инвентаря
+      game.removeItem(item);
       
-      // ✅ Показываем конфети при распылении
       Confetti.showDisenchant();
       
       document.body.removeChild(container);
-      Notification.show(`Предмет распылен. Получено: ${compensation} Теней.`);
+      alert(`Предмет распылен. Получено: ${compensation} Теней.`);
     });
 
     document.getElementById('close-item-modal').addEventListener('click', () => {

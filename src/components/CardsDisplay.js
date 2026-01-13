@@ -1,16 +1,17 @@
 import { Notification } from './Notification.js';
 import { Confetti } from './Confetti.js';
+import { img } from '../utils/imageHelper.js'; // ✅ Импортируем хелпер
 
 export class CardsDisplay {
   static showCard(card, item, game) {
-    // ✅ Показываем конфети
     Confetti.show(card);
 
     const container = document.createElement('div');
     container.className = 'card-overlay';
 
-    const cardImage = `./src/assets/images/cards/${card.toLowerCase()}.png`;
-    const itemImage = item.image;
+    // ✅ Используем хелпер для путей
+    const cardImage = img(`src/assets/images/cards/${card.toLowerCase()}.png`);
+    const itemImage = img(item.image);
 
     container.innerHTML = `
       <div class="card-modal">
@@ -28,13 +29,11 @@ export class CardsDisplay {
 
     document.body.appendChild(container);
 
-    // ✅ Функция закрытия модалки и добавления предмета - передаём game
     const closeAndAddItem = () => {
-      game.addItem(item); // Добавляем предмет в инвентарь
+      game.addItem(item);
       document.body.removeChild(container);
     };
 
-    // Обработчик распыления
     document.getElementById('disenchant-card').addEventListener('click', () => {
       const compensation = CardsDisplay.getCompensation(item);
       game.addCurrency(compensation);
@@ -42,12 +41,10 @@ export class CardsDisplay {
       Notification.show(`Предмет распылен. Получено: ${compensation} Теней.`);
     });
 
-    // Обработчик закрытия - добавляем предмет в инвентарь
     document.getElementById('close-card').addEventListener('click', () => {
       closeAndAddItem();
     });
 
-    // Автообмен через 5 секунд
     setTimeout(() => {
       if (document.body.contains(container)) {
         closeAndAddItem();

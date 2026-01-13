@@ -1,4 +1,5 @@
 import { ItemModal } from './ItemModal.js';
+import { img } from '../utils/imageHelper.js'; // ✅ Импортируем хелпер
 
 export class InventoryModal {
   constructor(gameCore) {
@@ -24,10 +25,8 @@ export class InventoryModal {
 
     document.body.appendChild(container);
 
-    // Добавляем обработчики для слотов
-    this.updateSlotListeners(container); // ✅ Выносим в отдельный метод
+    this.updateSlotListeners(container);
 
-    // ✅ Слушаем событие обновления инвентаря
     const updateHandler = () => {
       if (this.isOpen) {
         this.refreshSlots(container);
@@ -37,7 +36,7 @@ export class InventoryModal {
     document.addEventListener('inventoryUpdated', updateHandler);
 
     document.getElementById('close-inventory').addEventListener('click', () => {
-      document.removeEventListener('inventoryUpdated', updateHandler); // ✅ Удаляем обработчик
+      document.removeEventListener('inventoryUpdated', updateHandler);
       document.body.removeChild(container);
       this.isOpen = false;
     });
@@ -46,7 +45,7 @@ export class InventoryModal {
   updateSlotListeners(container) {
     const slots = container.querySelectorAll('.inventory-slot');
     slots.forEach((slot, index) => {
-      slot.replaceWith(slot.cloneNode(true)); // ✅ Удаляем старые обработчики
+      slot.replaceWith(slot.cloneNode(true));
       const newSlot = container.querySelectorAll('.inventory-slot')[index];
 
       if (newSlot && this.game.items[index]) {
@@ -63,7 +62,7 @@ export class InventoryModal {
   refreshSlots(container) {
     const grid = container.querySelector('.inventory-grid');
     grid.innerHTML = this.renderSlots();
-    this.updateSlotListeners(container); // ✅ Обновляем обработчики
+    this.updateSlotListeners(container);
   }
 
   renderSlots() {
@@ -72,9 +71,11 @@ export class InventoryModal {
     for (let i = 0; i < 20; i++) {
       const item = this.game.items[i];
       if (item) {
+        // ✅ Используем хелпер для путей
+        const itemImage = img(item.image);
         slots.push(`
           <div class="inventory-slot" title="${item.name}">
-            <img src="${item.image}" alt="${item.name}" class="item-icon" />
+            <img src="${itemImage}" alt="${item.name}" class="item-icon" />
           </div>
         `);
       } else {
