@@ -104,23 +104,27 @@ export class GameCore {
       console.warn('Предмет без карты:', item);
       return;
     }
-
+  
     // ✅ Проверяем, есть ли уже предмет с таким именем
     const existingItem = this.items.find(i => i.name === item.name);
-
+  
     if (existingItem) {
       // Сравниваем редкость: если новый редче — заменяем
       const newRank = this.getCardRank(item.card);
       const existingRank = this.getCardRank(existingItem.card);
       
       if (newRank < existingRank) {
-        // Новый предмет более редкий - заменяем
+        // Новый предмет более редкий - заменяем и даём компенсацию за старый
+        const compensation = this.getCompensationForItem(existingItem);
+        this.addCurrency(compensation);
         const index = this.items.indexOf(existingItem);
         this.items[index] = item;
-        Notification.show(`Предмет "${item.name}" заменен на более редкий (${existingItem.card} → ${item.card})`);
+        Notification.show(`Предмет "${item.name}" заменен (${existingItem.card} → ${item.card}). Компенсация: ${compensation} Теней`);
       } else if (newRank > existingRank) {
-        // Новый предмет менее редкий - не добавляем
-        Notification.show(`У вас уже есть "${existingItem.name}" (${existingItem.card}). Новый предмет менее редкий (${item.card}).`);
+        // Новый предмет менее редкий - не добавляем, но даём компенсацию
+        const compensation = this.getCompensationForItem(item);
+        this.addCurrency(compensation);
+        Notification.show(`У вас уже есть "${existingItem.name}" (${existingItem.card}). Новый предмет менее редкий (${item.card}). Компенсация: ${compensation} Теней`);
       } else {
         // Одинаковая редкость - заменяем (обновляем)
         const index = this.items.indexOf(existingItem);
@@ -130,9 +134,25 @@ export class GameCore {
       // Новый предмет - добавляем
       this.items.push(item);
     }
-
+  
     this.updateStatsFromItems();
     this.triggerEvent('inventoryUpdated');
+  }
+  
+  // ✅ Новая функция для компенсации
+  getCompensationForItem(item) {
+    const multipliers = {
+      A: 5000,
+      B: 3000,
+      C: 1500,
+      D: 800,
+      E: 500,
+      F: 300,
+      G: 150,
+      H: 50
+    };
+  
+    return Math.floor(multipliers[item.card] || 50);
   }
 
   removeItem(item) {

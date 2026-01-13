@@ -1,9 +1,9 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Cormorant Garamond', serif;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
   
   body {
     background: 
@@ -15,6 +15,15 @@
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     min-height: 100vh;
+  }
+
+  h1, h2, h3, p, .header h1, .inventory-title, .shop-title, .item-name {
+    font-family: 'Neucha', cursive; /* ✅ Заголовочный шрифт */
+  }
+  
+  /* Если хочешь сделать заголовки толще */
+  h1, h2, h3 {
+    font-weight: 600; /* Neucha не имеет множества весов */
   }
   
   #app {
@@ -41,9 +50,10 @@
   }
   
   #currency {
-    font-weight: 600;
-    color: #d6d6d6;
-    letter-spacing: 0.3px;
+    font-family: 'Neucha', cursive;
+    font-weight: 300;
+    color: #bdbdbd;
+    letter-spacing: 2px;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
   
@@ -212,13 +222,15 @@
   }
   
   .shop-item {
+    position: relative;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     background: #2d2d2d;
     padding: 15px;
     border-radius: 8px;
     border: 0px solid #404040;
     transition: all 0.2s ease;
+    min-height: 120px;
   }
   
   .shop-item.affordable {
@@ -231,38 +243,59 @@
   }
   
   .shop-item-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
     font-size: 2rem;
-    margin-right: 15px;
     color: #e0e0e0;
   }
   
   .shop-item-info {
+    margin-left: 0px;
+    margin-top: 10px;
+    text-align: center;
     flex: 1;
   }
   
   .shop-item-info h3 {
     color: #e0e0e0;
     margin-bottom: 5px;
+    font-family: 'Neucha', cursive;
+    letter-spacing: 1px;
   }
   
   .shop-item-info p {
     color: #cccccc;
+    font-weight: 600;
+    padding: 8px;
     font-size: 0.9rem;
-    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: 'Inter', sans-serif;
+    border-radius: 8px;
+    background-color: #3f3f3fa9;
+    border-color: #a5a5a5bf;
+    backdrop-filter: blur(20px);
   }
   
   .shop-item-price {
     font-weight: bold;
-    color: #699baf;
-    font-size: 0.9rem;
+    color: #62b185;
+    font-size: 1.1rem;
+    font-family: 'Neucha', cursive;
+    margin-top: 5px;
   }
   
   .shop-item-level {
     color: #a0a0a0;
     font-size: 0.8rem;
+    margin-top: 5px;
   }
   
   .buy-btn {
+    position: relative;
+    margin-top: 10px;
+    bottom: 0;
     padding: 8px 16px;
     background: #2d2d2d;
     border: 1px solid #404040;
@@ -300,7 +333,7 @@
     from { transform: scale(0.8); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
   }
-
+  
   #close-shop {
     display: block;
     justify-self: center;
@@ -313,12 +346,12 @@
     font-size: 0.9rem;
     transition: all 0.3s ease;
   }
-
+  
   #close-shop:hover {
     transform: rotate(1.2deg) scale(1.05);
     background: #383838;
   }
-
+  
   .card-overlay {
     position: fixed;
     top: 0;
@@ -359,6 +392,8 @@
   
   .card-modal p {
     margin: 5px 0;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
     font-size: 0.9rem;
     color: #cccccc;
   }
@@ -373,7 +408,7 @@
     font-size: 0.9rem;
     transition: all 0.3s ease;
   }
-
+  
   #close-card:hover {
     transform: rotate(1.2deg) scale(1.05);
   }
