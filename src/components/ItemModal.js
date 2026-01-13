@@ -7,7 +7,7 @@ export class ItemModal {
     container.className = 'item-overlay';
 
     // ✅ Используем хелпер для путей
-    const cardImage = item.card ? img(`src/assets/images/cards/${item.card.toLowerCase()}.png`) : '';
+    const cardImage = item.card ? img(`images/cards/${item.card.toLowerCase()}.png`) : '';
     const itemImage = img(item.image);
 
     container.innerHTML = `

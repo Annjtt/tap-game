@@ -10,7 +10,7 @@ export class CardsDisplay {
     container.className = 'card-overlay';
 
     // ✅ Используем хелпер для путей
-    const cardImage = img(`src/assets/images/cards/${card.toLowerCase()}.png`);
+    const cardImage = img(`images/cards/${card.toLowerCase()}.png`);
     const itemImage = img(item.image);
 
     container.innerHTML = `

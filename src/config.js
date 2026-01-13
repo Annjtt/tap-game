@@ -20,14 +20,14 @@ export const CONFIG = {
   
     // Пути к изображениям
     cardImages: {
-      A: './assets/images/cards/a.png',
-      B: './assets/images/cards/b.png',
-      C: './assets/images/cards/c.png',
-      D: './assets/images/cards/d.png',
-      E: './assets/images/cards/e.png',
-      F: './assets/images/cards/f.png',
-      G: './assets/images/cards/g.png',
-      H: './assets/images/cards/h.png',
+      A: 'images/cards/a.png',
+      B: 'images/cards/b.png',
+      C: 'images/cards/c.png',
+      D: 'images/cards/d.png',
+      E: 'images/cards/e.png',
+      F: 'images/cards/f.png',
+      G: 'images/cards/g.png',
+      H: 'images/cards/h.png',
     },
   
     // Сохранение
