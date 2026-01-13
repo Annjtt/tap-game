@@ -4,14 +4,14 @@
  * 
  * @param {string} path - Путь относительно public/ 
  *   Примеры:
- *   - 'src/assets/images/cards/a.png'
- *   - '/src/assets/images/cards/a.png' (ведущий слеш будет удален)
+ *   - 'images/cards/a.png'
+ *   - '/images/cards/a.png' (ведущий слеш будет удален)
  * @returns {string} Полный путь с учетом BASE_URL
  * 
  * @example
- * getImagePath('src/assets/images/cards/a.png')
- * // Локально: '/src/assets/images/cards/a.png'
- * // GitHub Pages: '/tap-game/src/assets/images/cards/a.png'
+ * getImagePath('images/cards/a.png')
+ * // Локально: '/images/cards/a.png'
+ * // GitHub Pages: '/tap-game/images/cards/a.png'
  */
 export function getImagePath(path) {
     // Убираем ведущий слеш, если есть

@@ -1,52 +1,52 @@
 [
-    {
-      "id": "lightning_dagger",
-      "name": "Кинжал молнии",
-      "type": "active",
-      "baseBonus": 0.05,
-      "price": 5000,
-      "effect": "Шанс 5% умножить награду за нажатие на 2",
-      "stat": "click",
-      "image": "./src/assets/images/items/lightning_dagger.jpg"
-    },
-    {
-      "id": "chaos_seal",
-      "name": "Печать Хаоса",
-      "type": "active",
-      "baseBonus": 0.03,
-      "price": 8000,
-      "effect": "Каждые 10 нажатий — x5 награды",
-      "stat": "click",
-      "image": "./src/assets/images/items/chaos_seal.jpg"
-    },
-    {
-      "id": "gloves_of_rage",
-      "name": "Перчатки Гнева",
-      "type": "passive",
-      "baseBonus": 1,
-      "price": 3000,
-      "effect": "+1 Тень за нажатие",
-      "stat": "click",
-      "image": "./src/assets/images/items/gloves_of_rage.jpg"
-    },
-    {
-      "id": "eternal_clock",
-      "name": "Часы Этерна",
-      "type": "active",
-      "baseBonus": 0.1,
-      "price": 12000,
-      "effect": "На 10 секунд все нажатия дают x3",
-      "stat": "click",
-      "image": "./src/assets/images/items/eternal_clock.jpg"
-    },
-    {
-      "id": "shadow_hood",
-      "name": "Капюшон Тени",
-      "type": "passive",
-      "baseBonus": 0.05,
-      "price": 2000,
-      "effect": "+5% к авто-добыванию",
-      "stat": "auto",
-      "image": "./src/assets/images/items/shadow_hood.jpg"
-    }
-  ]
+  {
+    "id": "lightning_dagger",
+    "name": "Кинжал молнии",
+    "type": "active",
+    "baseBonus": 0.05,
+    "price": 5000,
+    "effect": "Шанс 5% умножить награду за нажатие на 2",
+    "stat": "click",
+    "image": "images/items/lightning_dagger.jpg"
+  },
+  {
+    "id": "chaos_seal",
+    "name": "Печать Хаоса",
+    "type": "active",
+    "baseBonus": 0.03,
+    "price": 8000,
+    "effect": "Каждые 10 нажатий — x5 награды",
+    "stat": "click",
+    "image": "images/items/chaos_seal.jpg"
+  },
+  {
+    "id": "gloves_of_rage",
+    "name": "Перчатки Гнева",
+    "type": "passive",
+    "baseBonus": 1,
+    "price": 3000,
+    "effect": "+1 Тень за нажатие",
+    "stat": "click",
+    "image": "images/items/gloves_of_rage.jpg"
+  },
+  {
+    "id": "eternal_clock",
+    "name": "Часы Этерна",
+    "type": "active",
+    "baseBonus": 0.1,
+    "price": 12000,
+    "effect": "На 10 секунд все нажатия дают x3",
+    "stat": "click",
+    "image": "images/items/eternal_clock.jpg"
+  },
+  {
+    "id": "shadow_hood",
+    "name": "Капюшон Тени",
+    "type": "passive",
+    "baseBonus": 0.05,
+    "price": 2000,
+    "effect": "+5% к авто-добыванию",
+    "stat": "auto",
+    "image": "images/items/shadow_hood.jpg"
+  }
+]

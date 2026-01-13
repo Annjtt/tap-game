@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/tap-game/', // ✅ Указываем базовый путь для GitHub Pages
+  base: '/tap-game/', // ✅ Базовый путь для GitHub Pages
   build: {
-    outDir: 'docs',
+    outDir: 'docs', // ✅ Выходная папка
   },
 });
