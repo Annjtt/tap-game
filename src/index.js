@@ -3,6 +3,7 @@ import { GameCore } from './logic/gameCore.js';
 import { ChestSystem } from './logic/chestSystem.js';
 import { CardsDisplay } from './components/CardsDisplay.js';
 import { InventoryModal } from './components/InventoryModal.js';
+import { ShopModal } from './components/ShopModal.js';
 
 // Инициализация Telegram
 const Telegram = window.Telegram?.WebApp;
@@ -23,6 +24,7 @@ const currencyDisplay = document.getElementById('currency');
 const clicker = document.getElementById('clicker');
 const openChestBtn = document.getElementById('open-chest');
 const inventoryBtn = document.getElementById('inventory-btn');
+const shopBtn = document.getElementById('shop'); // ✅ Добавляем кнопку магазина
 
 // Обновление валюты
 function updateCurrencyDisplay() {
@@ -30,11 +32,10 @@ function updateCurrencyDisplay() {
 }
 
 function formatNumber(num) {
-    // Всегда показываем 2 знака после запятой (сотые)
-    if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(2) + 'K';
-    return num.toFixed(2);
-  }
+  if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(2) + 'K';
+  return num.toFixed(2);
+}
 
 // Обработчики событий
 clicker.addEventListener('click', () => {
@@ -57,6 +58,13 @@ const inventoryModal = new InventoryModal(game);
 
 inventoryBtn.addEventListener('click', () => {
   inventoryModal.show();
+});
+
+// ✅ Магазин
+const shopModal = new ShopModal(game);
+
+shopBtn.addEventListener('click', () => {
+  shopModal.show();
 });
 
 // Анимация клика

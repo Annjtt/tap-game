@@ -1,0 +1,47 @@
+[
+    {
+      "id": "click_power_1",
+      "name": "Сила Нажатия I",
+      "description": "Увеличивает силу нажатия на 1",
+      "type": "click",
+      "value": 1,
+      "price": 100,
+      "icon": "fa-hand-point-up"
+    },
+    {
+      "id": "click_power_2",
+      "name": "Сила Нажатия II",
+      "description": "Увеличивает силу нажатия на 5",
+      "type": "click",
+      "value": 5,
+      "price": 500,
+      "icon": "fa-fist-raised"
+    },
+    {
+      "id": "auto_income_1",
+      "name": "Тени в Минуту I",
+      "description": "Даёт 0.1 Тени в секунду",
+      "type": "auto",
+      "value": 0.1,
+      "price": 300,
+      "icon": "fa-clock"
+    },
+    {
+      "id": "auto_income_2",
+      "name": "Тени в Минуту II",
+      "description": "Даёт 0.5 Тени в секунду",
+      "type": "auto",
+      "value": 0.5,
+      "price": 1500,
+      "icon": "fa-hourglass-half"
+    },
+    {
+      "id": "click_multiplier",
+      "name": "Умножитель Нажатия",
+      "description": "Увеличивает силу нажатия на 50%",
+      "type": "multiplier",
+      "value": 1.5,
+      "price": 1000,
+      "icon": "fa-star"
+    }
+  ]
