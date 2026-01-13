@@ -5,7 +5,7 @@ import { Notification } from '../components/Notification.js';
 export class ChestSystem {
   constructor(gameCore) {
     this.game = gameCore;
-    this.cost = 10;
+    this.cost = 1000;
   }
 
   openChest() {
