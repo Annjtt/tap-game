@@ -340,6 +340,7 @@
     margin-top: 15px;
     padding: 9px 18px;
     background: #2d2d2d;
+    color: #cccccc;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -403,6 +404,7 @@
     padding: 9px 18px;
     background: #2d2d2d;
     border: none;
+    color: #cccccc;
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.9rem;
@@ -618,6 +620,7 @@
     padding: 9px 18px;
     background: #2d2d2d;
     border: none;
+    color: #cccccc;
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.9rem;
