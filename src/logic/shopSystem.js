@@ -4,11 +4,50 @@ import { Notification } from '../components/Notification.js';
 export class ShopSystem {
   constructor(gameCore) {
     this.game = gameCore;
-    this.upgrades = upgrades.map(upgrade => ({
+    // Загружаем состояние магазина
+    this.upgrades = this.loadState();
+  }
+
+  loadState() {
+    const saved = localStorage.getItem('shopProgress');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Восстанавливаем улучшения с сохранённым уровнем
+        return upgrades.map(upgrade => {
+          const savedUpgrade = parsed.find(s => s.id === upgrade.id);
+          return {
+            ...upgrade,
+            level: savedUpgrade ? savedUpgrade.level : 0,
+            totalSpent: savedUpgrade ? savedUpgrade.totalSpent : 0
+          };
+        });
+      } catch (e) {
+        console.error('Ошибка загрузки прогресса магазина:', e);
+      }
+    }
+    // Если нет сохранения — начальный прогресс
+    return upgrades.map(upgrade => ({
       ...upgrade,
-      purchased: false,
-      level: 0
+      level: 0,
+      totalSpent: 0
     }));
+  }
+
+  saveState() {
+    const state = this.upgrades.map(upgrade => ({
+      id: upgrade.id,
+      level: upgrade.level,
+      totalSpent: upgrade.totalSpent
+    }));
+    localStorage.setItem('shopProgress', JSON.stringify(state));
+  }
+
+  getCurrentPrice(upgrade) {
+    if (upgrade.level === 0) {
+      return upgrade.price;
+    }
+    return Math.floor(upgrade.price * Math.pow(upgrade.priceIncrease, upgrade.level));
   }
 
   buyUpgrade(upgradeId) {
@@ -19,28 +58,31 @@ export class ShopSystem {
       return false;
     }
 
-    if (upgrade.purchased && upgrade.type !== 'multiplier') {
-      Notification.show("Это улучшение уже куплено");
+    if (upgrade.level >= upgrade.maxLevel) {
+      Notification.show(`Максимальный уровень улучшения "${upgrade.name}" достигнут`);
       return false;
     }
 
-    if (this.game.getCurrency() < upgrade.price) {
+    const price = this.getCurrentPrice(upgrade);
+
+    if (this.game.getCurrency() < price) {
       Notification.show("Недостаточно Теней");
       return false;
     }
 
-    this.game.addCurrency(-upgrade.price);
+    this.game.addCurrency(-price);
 
-    if (upgrade.type === 'multiplier') {
-      // Для мультипликаторов увеличиваем уровень
-      upgrade.level++;
-      this.applyMultiplierUpgrade(upgrade);
-    } else {
-      upgrade.purchased = true;
-      this.applyUpgrade(upgrade);
-    }
+    // Увеличиваем уровень
+    upgrade.level++;
+    upgrade.totalSpent += price;
 
-    Notification.show(`Куплено: ${upgrade.name}`);
+    // Применяем эффект
+    this.applyUpgrade(upgrade);
+
+    // Сохраняем прогресс
+    this.saveState();
+
+    Notification.show(`${upgrade.name} улучшен до уровня ${upgrade.level}`);
     return true;
   }
 
@@ -49,15 +91,18 @@ export class ShopSystem {
       this.game.clickValue += upgrade.value;
     } else if (upgrade.type === 'auto') {
       this.game.autoIncome += upgrade.value;
+    } else if (upgrade.type === 'multiplier') {
+      // Для мультипликатора увеличиваем силу нажатия
+      this.game.clickValue = Math.round(this.game.clickValue * upgrade.value);
     }
   }
 
-  applyMultiplierUpgrade(upgrade) {
-    // Применяем мультипликатор ко всей силе нажатия
-    this.game.clickValue = Math.round(this.game.clickValue * upgrade.value);
-  }
-
   getUpgrades() {
-    return this.upgrades;
+    return this.upgrades.map(upgrade => ({
+      ...upgrade,
+      currentPrice: this.getCurrentPrice(upgrade),
+      canAfford: this.game.getCurrency() >= this.getCurrentPrice(upgrade),
+      progressPercent: (upgrade.level / upgrade.maxLevel) * 100
+    }));
   }
 }

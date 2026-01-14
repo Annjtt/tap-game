@@ -36,26 +36,32 @@ export class ShopModal {
 
   renderUpgrades() {
     const upgrades = this.shop.getUpgrades();
-    const currency = this.game.getCurrency();
     
     return upgrades.map(upgrade => {
-      const isAffordable = currency >= upgrade.price;
-      const isPurchased = upgrade.purchased && upgrade.type !== 'multiplier';
-      const isOwned = upgrade.level > 0 && upgrade.type === 'multiplier';
+      const progressPercent = (upgrade.level / upgrade.maxLevel) * 100;
+      const currentPrice = this.shop.getCurrentPrice(upgrade);
       
       return `
-        <div class="shop-item ${isAffordable ? 'affordable' : ''} ${isPurchased || isOwned ? 'purchased' : ''}">
+        <div class="shop-item ${upgrade.canAfford ? 'affordable' : ''} ${upgrade.level >= upgrade.maxLevel ? 'maxed' : ''}">
           <div class="shop-item-icon">
             <i class="fas ${upgrade.icon}"></i>
           </div>
           <div class="shop-item-info">
             <h3>${upgrade.name}</h3>
             <p>${upgrade.description}</p>
-            <div class="shop-item-price">Цена: ${upgrade.price} Теней</div>
-            ${upgrade.level > 0 ? `<div class="shop-item-level">Уровень: ${upgrade.level}</div>` : ''}
+            <div class="shop-item-price">Цена: ${currentPrice} Теней</div>
+            
+            <!-- Прогресс-бар -->
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progressPercent}%"></div>
+            </div>
+            <div class="progress-text">${upgrade.level}/${upgrade.maxLevel}</div>
+            
+            <!-- Общая потраченная валюта -->
+            ${upgrade.totalSpent > 0 ? `<div class="total-spent">Потрачено: ${upgrade.totalSpent} Теней</div>` : ''}
           </div>
-          <button class="buy-btn" data-id="${upgrade.id}" ${!isAffordable || isPurchased || isOwned ? 'disabled' : ''}>
-            ${isPurchased || isOwned ? 'Куплено' : 'Купить'}
+          <button class="buy-btn" data-id="${upgrade.id}" ${!upgrade.canAfford || upgrade.level >= upgrade.maxLevel ? 'disabled' : ''}>
+            ${upgrade.level >= upgrade.maxLevel ? 'Макс.' : 'Купить'}
           </button>
         </div>
       `;
