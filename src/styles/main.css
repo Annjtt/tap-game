@@ -425,7 +425,6 @@
     bottom: 0;
     margin: 0 -20px -20px -20px; /* ✅ Выравнивание по краям */
     z-index: 1001;
-    width: 130px;
   }
   
   #close-shop:hover {
@@ -740,6 +739,7 @@
     bottom: 0;
     margin: 0 -20px -20px -20px; /* ✅ Выравнивание по краям */
     z-index: 1001;
+    width: 130px;
   }
   
   #close-profile:hover {
