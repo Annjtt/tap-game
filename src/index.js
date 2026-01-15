@@ -4,6 +4,7 @@ import { ChestSystem } from './logic/chestSystem.js';
 import { CardsDisplay } from './components/CardsDisplay.js';
 import { InventoryModal } from './components/InventoryModal.js';
 import { ShopModal } from './components/ShopModal.js';
+import { ProfileModal } from './components/ProfileModal.js'; // ✅ Новый импорт
 
 // Инициализация Telegram
 const Telegram = window.Telegram?.WebApp;
@@ -24,7 +25,8 @@ const currencyDisplay = document.getElementById('currency');
 const clicker = document.getElementById('clicker');
 const openChestBtn = document.getElementById('open-chest');
 const inventoryBtn = document.getElementById('inventory-btn');
-const shopBtn = document.getElementById('shop'); // ✅ Добавляем кнопку магазина
+const shopBtn = document.getElementById('shop');
+const profileBtn = document.getElementById('profile'); // ✅ Новая кнопка
 
 // Обновление валюты
 function updateCurrencyDisplay() {
@@ -60,11 +62,18 @@ inventoryBtn.addEventListener('click', () => {
   inventoryModal.show();
 });
 
-// ✅ Магазин
+// Магазин
 const shopModal = new ShopModal(game);
 
 shopBtn.addEventListener('click', () => {
   shopModal.show();
+});
+
+// Профиль
+const profileModal = new ProfileModal(game, Telegram); // ✅ Передаём Telegram
+
+profileBtn.addEventListener('click', () => {
+  profileModal.show();
 });
 
 // Анимация клика

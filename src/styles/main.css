@@ -59,7 +59,8 @@
   
   #tap-button,
   #open-chest,
-  #shop {
+  #shop,
+  #profile {
     background: #1a1a1a;
     border: 1px solid #404040;
     color: #ffffff;
@@ -69,11 +70,14 @@
     font-size: 1rem;
     transition: all 0.2s ease;
     font-family: inherit;
+    width: 48px;
+    height: 48px;
   }
   
   #tap-button:hover,
   #open-chest:hover,
-  #shop:hover {
+  #shop:hover,
+  #profile:hover {
     background: #2d2d2d;
     transform: scale(1.1);
   }
@@ -88,7 +92,7 @@
 
   .notification {
     position: fixed;
-    bottom: 120px;
+    top: 120px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
@@ -172,11 +176,19 @@
   
   .ui-panel {
     display: flex;
-    gap: 20px;
+    gap: 16px;
     margin-top: 20px;
     flex-wrap: wrap;
-    border-radius: 50%;
+    max-width: 290px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 30px;
     justify-content: center;
+    border: 1px solid #2d2d2d;
+    backdrop-filter: blur(2px);
   }
 
   .shop-overlay {
@@ -548,8 +560,7 @@
     background: #1a1a1a;
   }
   
-  #inventory-btn,
-  #open-chest {
+  #inventory-btn, #open-chest, #shop, #profile {
     background: #1a1a1a9a;
     border: 1px solid #404040;
     border-radius: 100%;
@@ -562,6 +573,7 @@
   }
   
   #inventory-btn:hover,
+  #profile:hover,
   #open-chest:hover {
     background: #2d2d2da8;
     transform: scale(1.1);
@@ -597,6 +609,119 @@
   .inventory-slot.empty {
     background: #1a1a1a;
     border: 1px dashed #404040;
+  }
+
+  .profile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .profile-modal {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 90%;
+    width: 400px;
+    box-shadow: 0 0 30px rgba(255,255,255,0.1);
+    animation: popIn 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #2d2d2d;
+  }
+  
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #404040;
+  }
+  
+  .profile-info {
+    flex: 1;
+  }
+  
+  .profile-name {
+    font-family: 'Neucha', cursive;
+    color: #e0e0e0;
+    margin: 0 0 5px 0;
+    font-size: 1.4rem;
+  }
+  
+  .profile-username {
+    color: #cccccc;
+    margin: 0 0 2px 0;
+    font-size: 0.9rem;
+  }
+  
+  .profile-id {
+    color: #a0a0a0;
+    margin: 0;
+    font-size: 0.8rem;
+  }
+  
+  .profile-stats {
+    padding: 10px 0;
+  }
+  
+  .profile-stats h3 {
+    font-family: 'Neucha', cursive;
+    color: #e0e0e0;
+    margin: 0 0 10px 0;
+    text-align: center;
+    border-bottom: 1px solid #2d2d2d;
+    padding-bottom: 5px;
+  }
+  
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #2d2d2d;
+  }
+  
+  .stat-label {
+    color: #cccccc;
+    font-size: 0.9rem;
+  }
+  
+  .stat-value {
+    color: #699baf;
+    font-weight: bold;
+    font-family: 'Neucha', cursive;
+  }
+  
+  #close-profile {
+    margin-top: 15px;
+    padding: 9px 18px;
+    background: #2d2d2d;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+  
+  #close-profile:hover {
+    transform: rotate(1.2deg) scale(1.05);
+    background: #383838;
   }
   
   /* Стили для модалки предмета */
