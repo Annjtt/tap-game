@@ -134,10 +134,10 @@ export class GameCore {
       console.warn('Предмет без карты:', item);
       return;
     }
-
+  
     // ✅ Проверяем, есть ли уже предмет с таким именем
     const existingItem = this.items.find(i => i.name === item.name);
-
+  
     if (existingItem) {
       // Сравниваем редкость: если новый редче — заменяем
       const newRank = this.getCardRank(item.card);
@@ -156,15 +156,18 @@ export class GameCore {
         this.addCurrency(compensation);
         Notification.show(`У вас уже есть "${existingItem.name}" (${existingItem.card}). Новый предмет менее редкий (${item.card}). Компенсация: ${compensation} Теней`);
       } else {
-        // Одинаковая редкость - заменяем (обновляем)
+        // Одинаковая редкость - заменяем (обновляем), но даём компенсацию за старый
+        const compensation = this.getCompensationForItem(existingItem); // ✅ Даём компенсацию за старый
+        this.addCurrency(compensation);
         const index = this.items.indexOf(existingItem);
         this.items[index] = item;
+        Notification.show(`Предмет "${item.name}" обновлен (${existingItem.card} → ${item.card}). Компенсация: ${compensation} Теней`);
       }
     } else {
       // Новый предмет - добавляем
       this.items.push(item);
     }
-
+  
     this.triggerEvent('inventoryUpdated');
   }
 

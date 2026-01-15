@@ -26,9 +26,9 @@ export class ProfileModal {
         </div>
         
         <div class="profile-stats">
-          <h3>📊 Статистика</h3>
+          <h3>Статистика</h3>
           <div class="stat-item">
-            <span class="stat-label">Валюта:</span>
+            <span class="stat-label">Теней:</span>
             <span class="stat-value">${this.game.getCurrency().toFixed(2)}</span>
           </div>
           <div class="stat-item">
@@ -45,7 +45,7 @@ export class ProfileModal {
           </div>
         </div>
         
-        <button id="reset-shop" class="reset-btn">🔄 Сбросить улучшения</button>
+        <button id="reset-shop" class="reset-btn">Сбросить улучшения</button>
         <button id="close-profile"><i class="fas fa-times"></i> Закрыть</button>
       </div>
     `;
@@ -54,7 +54,7 @@ export class ProfileModal {
 
     // Обработчик сброса улучшений
     document.getElementById('reset-shop').addEventListener('click', () => {
-      if (confirm('Вы уверены, что хотите сбросить все улучшения магазина? Вы получите Тени за потраченные улучшения.')) {
+      if (confirm('Вы уверены, что хотите сбросить все улучшения магазина? Вы получите все Тени за потраченные улучшения.')) {
         // Проверяем наличие shopSystem
         if (this.game.shopSystem) {
           const refund = this.game.shopSystem.resetAllUpgrades();

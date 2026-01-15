@@ -233,8 +233,9 @@
   .shop-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 25px;
-    margin-bottom: 20px;
+    gap: 35px;
+    margin-top: 30px;
+    margin-bottom: 30px;
   }
   
   .shop-item {
@@ -446,7 +447,9 @@
   }
   
   .card-modal {
-    background: #1a1a1a;
+    background: #88888818;
+    backdrop-filter: blur(3px);
+    border: 1px solid #4444446c;
     padding: 20px;
     border-radius: 12px;
     text-align: center;
@@ -520,7 +523,9 @@
   }
   
   .inventory-modal {
-    background: #1a1a1a;
+    background: #88888818;
+    backdrop-filter: blur(2px);
+    border: 1px solid #4444446c;
     padding: 20px;
     border-radius: 12px;
     max-width: 90%;
@@ -543,6 +548,7 @@
     grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
     gap: 10px;
     margin-top: 10px;
+    margin-bottom: 35px;
   }
   
   .inventory-slot {
@@ -711,19 +717,21 @@
   }
   
   .stat-value {
-    color: #699baf;
+    color: #cccccc;
     font-weight: bold;
     font-family: 'Neucha', cursive;
+    letter-spacing: 1px;
   }
   
   #close-profile {
     display: block;
     justify-self: center;
     padding: 10px 24px;
-    background: #2d2d2d;
+    background: #2d2d2da2;
     color: #cccccc;
     border: 1px solid #cccccc34;
-    border-radius: 6px;
+    backdrop-filter: blur(3px);
+    border-radius: 20px;
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.3s ease;

@@ -19,10 +19,10 @@ export class CardsDisplay {
           <img src="${itemImage}" alt="${item.name}" class="item-image" />
           <img src="${cardImage}" alt="${card}" class="card-badge" />
         </div>
-        <h2>Выпала карта: ${card}</h2>
-        <p>${item.name}</p>
+        <h2>${item.name}</h2>
+        <p>Карта ранга: ${card}</p>
         <p>${item.enhancedEffect}</p>
-        <button id="disenchant-card" class="disenchant-btn"> Распылить</button>
+        <button id="disenchant-card" class="disenchant-btn">Распылить</button>
         <button id="close-card">Закрыть</button>
       </div>
     `;
