@@ -20,12 +20,10 @@ if (Telegram) {
 const game = new GameCore();
 game.loadProgress();
 
-// Создаём магазин
+// Создаём магазин и передаём его в gameCore
 const shopModal = new ShopModal(game);
 const shopSystem = shopModal.shop;
-
-// Передаём систему магазина в gameCore
-game.shopSystem = shopSystem;
+game.shopSystem = shopSystem; // ✅ Передаём раньше, чем создаём ProfileModal
 
 // DOM элементы
 const currencyDisplay = document.getElementById('currency');
@@ -74,7 +72,7 @@ shopBtn.addEventListener('click', () => {
   shopModal.show();
 });
 
-// Профиль
+// Профиль - создаём после передачи shopSystem
 const profileModal = new ProfileModal(game, Telegram);
 
 profileBtn.addEventListener('click', () => {
