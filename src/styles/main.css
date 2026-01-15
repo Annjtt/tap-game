@@ -38,8 +38,11 @@
   .header {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
+    gap: 10px;
     align-items: center;
     padding: 15px 0;
+    margin-top: 10px;
     margin-bottom: 20px;
   }
   
@@ -92,13 +95,14 @@
 
   .notification {
     position: fixed;
-    top: 120px;
+    top: 80px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
-    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    background: transparent;
+    backdrop-filter: blur(4px);
     color: #ffffff;
     padding: 16px 24px;
-    border-radius: 12px;
+    border-radius: 30px;
     font-size: 0.95rem;
     font-weight: 500;
     letter-spacing: 0.3px;
@@ -111,9 +115,8 @@
     text-align: center;
     word-wrap: break-word;
     word-break: break-word;
-    max-width: calc(100% - 40px);
-    min-width: 200px;
-    backdrop-filter: blur(10px);
+    max-width: calc(100% - 50px);
+    min-width: 260px;
   }
   
   .notification.show {
@@ -176,15 +179,16 @@
   
   .ui-panel {
     display: flex;
-    gap: 16px;
+    gap: 14px;
     margin-top: 20px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
     max-width: 290px;
     margin-left: auto;
     margin-right: auto;
     padding: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
     border-radius: 30px;
     justify-content: center;
     border: 1px solid #2d2d2d;
@@ -407,20 +411,24 @@
   #close-shop {
     display: block;
     justify-self: center;
-    margin-top: 15px;
     padding: 10px 24px;
-    background: #2d2d2d;
+    background: #2d2d2da2;
     color: #cccccc;
-    border: none;
-    border-radius: 6px;
+    border: 1px solid #cccccc34;
+    backdrop-filter: blur(3px);
+    border-radius: 20px;
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.3s ease;
+    position: sticky;
+    bottom: 0;
+    margin: 0 -20px -20px -20px; /* ✅ Выравнивание по краям */
+    z-index: 1001;
   }
   
   #close-shop:hover {
     transform: rotate(1.2deg) scale(1.05);
-    background: #383838;
+    background: #383838d2;
   }
   
   .card-overlay {
@@ -709,15 +717,20 @@
   }
   
   #close-profile {
-    margin-top: 15px;
-    padding: 9px 18px;
+    display: block;
+    justify-self: center;
+    padding: 10px 24px;
     background: #2d2d2d;
     color: #cccccc;
-    border: none;
+    border: 1px solid #cccccc34;
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.3s ease;
+    position: sticky;
+    bottom: 0;
+    margin: 0 -20px -20px -20px; /* ✅ Выравнивание по краям */
+    z-index: 1001;
   }
   
   #close-profile:hover {
@@ -822,22 +835,27 @@
   #close-inventory {
     display: block;
     justify-self: center;
-    margin-top: 15px;
-    padding: 9px 18px;
-    background: #2d2d2d;
-    border: none;
+    padding: 10px 24px;
+    background: #2d2d2d21;
     color: #cccccc;
-    border-radius: 6px;
+    border: 1px solid #cccccc34;
+    backdrop-filter: blur(2px);
+    border-radius: 20px;
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.3s ease;
+    position: sticky;
+    bottom: 0;
+    margin: 0 -20px -20px -20px; /* ✅ Выравнивание по краям */
+    z-index: 1001;
   }
   #close-inventory:hover {
     transform: rotate(1.2deg) scale(1.05);
+    background: #3838386e;
   }
   
   #close-item-modal {
-    margin-top: 25px;
+    margin-top: 15px;
     padding: 9px 18px;
     background: #2d2d2d;
     color: #cccccc;
@@ -857,7 +875,7 @@
     margin-top: 8px;
     position: relative;
     padding: 8px 18px;
-    background: #397f8b;
+    background: #1b6471;
     border: none;
     border-radius: 6px;
     cursor: pointer;
@@ -867,7 +885,7 @@
   }
   
   .disenchant-btn:hover {
-    background: #4393a1;
+    background: #357480;
     transform: rotate(-1.2deg) scale(1.02);
   }
   
@@ -891,18 +909,6 @@
   }
   
   @media (max-width: 480px) {
-    .header {
-      flex-direction: column;
-      gap: 10px;
-    }
-  
-    .ui-panel {
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
     .item-overlay {
         position: fixed;
         top: 0;
@@ -972,17 +978,6 @@
         font-size: 0.9rem;
         color: #cccccc;
         line-height: 1.4;
-      }
-      
-      #close-item-modal {
-        margin-top: 8px;
-        padding: 9px 18px;
-        background: #2d2d2d;
-        color: #cccccc;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.9rem;
       }
 
       .confetti {

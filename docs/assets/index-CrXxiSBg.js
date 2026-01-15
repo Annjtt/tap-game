@@ -7,7 +7,7 @@
         <h2>Выпала карта: ${e}</h2>
         <p>${t.name}</p>
         <p>${t.enhancedEffect}</p>
-        <button id="disenchant-card" class="disenchant-btn">⚡ Распылить</button>
+        <button id="disenchant-card" class="disenchant-btn"> Распылить</button>
         <button id="close-card">Закрыть</button>
       </div>
     `,document.body.appendChild(i);const a=()=>{s.addItem(t),document.body.removeChild(i)};document.getElementById("disenchant-card").addEventListener("click",()=>{const d=f.getCompensation(t);s.addCurrency(d),document.body.removeChild(i),l.show(`Предмет распылен. Получено: ${d} Теней.`)}),document.getElementById("close-card").addEventListener("click",()=>{a()}),setTimeout(()=>{document.body.contains(i)&&a()},5e3)}static getCompensation(e){return Math.floor({A:5e3,B:3e3,C:1500,D:800,E:500,F:300,G:150,H:50}[e.card]||50)}}class g{static show(e,t){const s=document.createElement("div");s.className="item-overlay";const i=e.card?m(`images/cards/${e.card.toLowerCase()}.png`):"",n=m(e.image);s.innerHTML=`
@@ -20,7 +20,7 @@
         <div class="item-info">
           <div class="item-effect">${e.enhancedEffect}</div>
         </div>
-        <button id="disenchant-item" class="disenchant-btn">⚡ Распылить</button>
+        <button id="disenchant-item" class="disenchant-btn"> Распылить</button>
         <button id="close-item-modal"><i class="fas fa-times"></i> Закрыть</button>
       </div>
     `,document.body.appendChild(s),document.getElementById("disenchant-item").addEventListener("click",()=>{const o=g.getCompensation(e);t.addCurrency(o),t.removeItem(e),C.showDisenchant(),document.body.removeChild(s),alert(`Предмет распылен. Получено: ${o} Теней.`)}),document.getElementById("close-item-modal").addEventListener("click",()=>{document.body.removeChild(s)})}static getCompensation(e){return Math.floor({A:5e3,B:3e3,C:1500,D:800,E:500,F:300,G:150,H:50}[e.card]||50)}}class L{constructor(e){this.game=e,this.isOpen=!1}show(){if(this.isOpen)return;this.isOpen=!0;const e=document.createElement("div");e.className="inventory-overlay",e.innerHTML=`

@@ -22,7 +22,7 @@ export class CardsDisplay {
         <h2>Выпала карта: ${card}</h2>
         <p>${item.name}</p>
         <p>${item.enhancedEffect}</p>
-        <button id="disenchant-card" class="disenchant-btn">⚡ Распылить</button>
+        <button id="disenchant-card" class="disenchant-btn"> Распылить</button>
         <button id="close-card">Закрыть</button>
       </div>
     `;

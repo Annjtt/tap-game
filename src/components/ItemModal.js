@@ -20,7 +20,7 @@ export class ItemModal {
         <div class="item-info">
           <div class="item-effect">${item.enhancedEffect}</div>
         </div>
-        <button id="disenchant-item" class="disenchant-btn">⚡ Распылить</button>
+        <button id="disenchant-item" class="disenchant-btn"> Распылить</button>
         <button id="close-item-modal"><i class="fas fa-times"></i> Закрыть</button>
       </div>
     `;
