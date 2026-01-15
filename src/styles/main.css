@@ -725,7 +725,10 @@
   
   #close-profile {
     display: block;
-    justify-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0;
+    margin-top: 20px;
     padding: 10px 24px;
     background: #2d2d2da2;
     color: #cccccc;
@@ -736,12 +739,12 @@
     font-size: 0.9rem;
     transition: all 0.3s ease;
     position: sticky;
+    left: 0;
+    right: 0;
     bottom: 0;
-    margin: 0 -20px -20px -20px; /* ✅ Выравнивание по краям */
     z-index: 1001;
     width: 130px;
   }
-  
   #close-profile:hover {
     transform: rotate(1.2deg) scale(1.05);
     background: #383838;
