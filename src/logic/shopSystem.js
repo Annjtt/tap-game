@@ -88,12 +88,12 @@ export class ShopSystem {
 
   applyUpgrade(upgrade) {
     if (upgrade.type === 'click') {
-      this.game.clickValue += upgrade.value;
+      this.game.addShopClickBonus(upgrade.value);
     } else if (upgrade.type === 'auto') {
-      this.game.autoIncome += upgrade.value;
+      this.game.addShopAutoBonus(upgrade.value);
     } else if (upgrade.type === 'multiplier') {
-      // Для мультипликатора увеличиваем силу нажатия
-      this.game.clickValue = Math.round(this.game.clickValue * upgrade.value);
+      // Для мультипликатора увеличиваем бонус к силе нажатия
+      this.game.addShopMultiplier(upgrade.value);
     }
   }
 
@@ -104,5 +104,38 @@ export class ShopSystem {
       canAfford: this.game.getCurrency() >= this.getCurrentPrice(upgrade),
       progressPercent: (upgrade.level / upgrade.maxLevel) * 100
     }));
+  }
+
+  resetAllUpgrades() {
+    let totalRefund = 0;
+    
+    // Считаем сумму возврата за все улучшения
+    for (const upgrade of this.upgrades) {
+      if (upgrade.level > 0) {
+        // Пересчитываем потраченные деньги за все уровни
+        for (let level = 0; level < upgrade.level; level++) {
+          const priceAtLevel = Math.floor(upgrade.price * Math.pow(upgrade.priceIncrease, level));
+          totalRefund += priceAtLevel;
+        }
+      }
+    }
+    
+    // Сбрасываем все улучшения
+    this.upgrades = this.upgrades.map(upgrade => ({
+      ...upgrade,
+      level: 0,
+      totalSpent: 0
+    }));
+    
+    // Возвращаем деньги игроку
+    this.game.addCurrency(totalRefund);
+    
+    // Сохраняем прогресс
+    this.saveState();
+    
+    // Сбрасываем бонусы в gameCore
+    this.game.resetShopBonuses();
+    
+    return totalRefund;
   }
 }

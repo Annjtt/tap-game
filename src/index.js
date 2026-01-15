@@ -4,7 +4,7 @@ import { ChestSystem } from './logic/chestSystem.js';
 import { CardsDisplay } from './components/CardsDisplay.js';
 import { InventoryModal } from './components/InventoryModal.js';
 import { ShopModal } from './components/ShopModal.js';
-import { ProfileModal } from './components/ProfileModal.js'; // ✅ Новый импорт
+import { ProfileModal } from './components/ProfileModal.js';
 
 // Инициализация Telegram
 const Telegram = window.Telegram?.WebApp;
@@ -20,13 +20,20 @@ if (Telegram) {
 const game = new GameCore();
 game.loadProgress();
 
+// Создаём магазин
+const shopModal = new ShopModal(game);
+const shopSystem = shopModal.shop;
+
+// Передаём систему магазина в gameCore
+game.shopSystem = shopSystem;
+
 // DOM элементы
 const currencyDisplay = document.getElementById('currency');
 const clicker = document.getElementById('clicker');
 const openChestBtn = document.getElementById('open-chest');
 const inventoryBtn = document.getElementById('inventory-btn');
 const shopBtn = document.getElementById('shop');
-const profileBtn = document.getElementById('profile'); // ✅ Новая кнопка
+const profileBtn = document.getElementById('profile');
 
 // Обновление валюты
 function updateCurrencyDisplay() {
@@ -63,14 +70,12 @@ inventoryBtn.addEventListener('click', () => {
 });
 
 // Магазин
-const shopModal = new ShopModal(game);
-
 shopBtn.addEventListener('click', () => {
   shopModal.show();
 });
 
 // Профиль
-const profileModal = new ProfileModal(game, Telegram); // ✅ Передаём Telegram
+const profileModal = new ProfileModal(game, Telegram);
 
 profileBtn.addEventListener('click', () => {
   profileModal.show();

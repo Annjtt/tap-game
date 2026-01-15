@@ -4,9 +4,15 @@ import { Notification } from '../components/Notification.js';
 export class GameCore {
   constructor() {
     this.currency = 0;
-    this.clickValue = CONFIG.baseClickValue;
+    this.baseClickValue = CONFIG.baseClickValue; // ✅ Отдельно базовая сила
     this.items = [];
-    this.autoIncome = 0;
+    this.baseAutoIncome = 0; // ✅ Отдельно базовый авто-доход
+    
+    // ✅ Бонусы из магазина
+    this.shopClickBonus = 0;
+    this.shopAutoBonus = 0;
+    this.shopMultiplier = 1; // ✅ Мультипликатор (умножает общую силу)
+    
     this.lastSave = Date.now();
     this.bonusMultipliers = {
       A: 1.0,
@@ -30,33 +36,57 @@ export class GameCore {
   }
 
   getClickValue() {
-    let base = this.clickValue;
-    let bonus = 0;
-  
+    // база + (улучшения × мультипликатор) + предметы
+    const base = this.baseClickValue;
+    const shopWithMultiplier = this.shopClickBonus * this.shopMultiplier;
+    
+    let itemBonus = 0;
     const activeItems = this.getActiveItemsByName();
-  
+
     for (const item of Object.values(activeItems)) {
-      if (item.stat === 'click') { // ✅ Проверяем stat
-        bonus += item.enhancedValue || item.baseBonus; // ✅ Берём усиленное или базовое значение
+      if (item.stat === 'click') {
+        itemBonus += item.enhancedValue || item.baseBonus;
       }
     }
-  
-    return base + bonus;
+
+    return base + shopWithMultiplier + itemBonus;
   }
 
   getAutoIncome() {
-    let base = this.autoIncome;
-    let bonus = 0;
-
+    // база + (улучшения × мультипликатор) + предметы
+    const base = this.baseAutoIncome;
+    const shopWithMultiplier = this.shopAutoBonus * this.shopMultiplier;
+    
+    let itemBonus = 0;
     const activeItems = this.getActiveItemsByName();
 
     for (const item of Object.values(activeItems)) {
       if (item.stat === 'auto') {
-        bonus += item.enhancedValue || item.baseBonus;
+        itemBonus += item.enhancedValue || item.baseBonus;
       }
     }
 
-    return base + bonus;
+    return base + shopWithMultiplier + itemBonus;
+  }
+
+  // ✅ Методы для магазина
+  addShopClickBonus(value) {
+    this.shopClickBonus += value;
+  }
+
+  addShopAutoBonus(value) {
+    this.shopAutoBonus += value;
+  }
+
+  addShopMultiplier(value) {
+    this.shopMultiplier *= value;
+  }
+
+  // ✅ Метод для сброса бонусов магазина
+  resetShopBonuses() {
+    this.shopClickBonus = 0;
+    this.shopAutoBonus = 0;
+    this.shopMultiplier = 1;
   }
 
   // ✅ Получаем активные предметы по имени (самая редкая карта)
@@ -104,10 +134,10 @@ export class GameCore {
       console.warn('Предмет без карты:', item);
       return;
     }
-  
+
     // ✅ Проверяем, есть ли уже предмет с таким именем
     const existingItem = this.items.find(i => i.name === item.name);
-  
+
     if (existingItem) {
       // Сравниваем редкость: если новый редче — заменяем
       const newRank = this.getCardRank(item.card);
@@ -134,11 +164,10 @@ export class GameCore {
       // Новый предмет - добавляем
       this.items.push(item);
     }
-  
-    this.updateStatsFromItems();
+
     this.triggerEvent('inventoryUpdated');
   }
-  
+
   // ✅ Новая функция для компенсации
   getCompensationForItem(item) {
     const multipliers = {
@@ -151,7 +180,7 @@ export class GameCore {
       G: 150,
       H: 50
     };
-  
+
     return Math.floor(multipliers[item.card] || 50);
   }
 
@@ -159,33 +188,18 @@ export class GameCore {
     const index = this.items.indexOf(item);
     if (index > -1) {
       this.items.splice(index, 1);
-      this.updateStatsFromItems();
       this.triggerEvent('inventoryUpdated');
-    }
-  }
-
-  updateStatsFromItems() {
-    // Пересчитываем статы
-    this.clickValue = CONFIG.baseClickValue; // сброс
-    this.autoIncome = 0;
-
-    const activeItems = this.getActiveItemsByName();
-
-    for (const item of Object.values(activeItems)) {
-      if (item.stat === 'click') {
-        this.clickValue += item.enhancedValue || item.baseBonus;
-      }
-      if (item.stat === 'auto') {
-        this.autoIncome += item.enhancedValue || item.baseBonus;
-      }
     }
   }
 
   saveProgress() {
     const data = {
       currency: this.currency,
-      clickValue: this.clickValue,
-      autoIncome: this.getAutoIncome(),
+      baseClickValue: this.baseClickValue,
+      shopClickBonus: this.shopClickBonus,
+      shopAutoBonus: this.shopAutoBonus,
+      shopMultiplier: this.shopMultiplier,
+      baseAutoIncome: this.baseAutoIncome,
       items: this.items,
       timestamp: Date.now(),
     };
@@ -197,8 +211,12 @@ export class GameCore {
     if (saved) {
       const data = JSON.parse(saved);
       this.currency = data.currency || 0;
+      this.baseClickValue = data.baseClickValue || CONFIG.baseClickValue;
+      this.shopClickBonus = data.shopClickBonus || 0;
+      this.shopAutoBonus = data.shopAutoBonus || 0;
+      this.shopMultiplier = data.shopMultiplier || 1;
+      this.baseAutoIncome = data.baseAutoIncome || 0;
       this.items = data.items || [];
-      this.updateStatsFromItems(); // пересчитываем статы из предметов
       this.triggerEvent('progressLoaded');
     }
   }

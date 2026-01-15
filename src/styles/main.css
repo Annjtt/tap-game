@@ -723,6 +723,28 @@
     transform: rotate(1.2deg) scale(1.05);
     background: #383838;
   }
+
+  .reset-btn {
+    width: 100%;
+    padding: 12px;
+    background: #500000;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: all 0.2s ease;
+  }
+  
+  .reset-btn:hover {
+    background: #700000;
+    transform: scale(1.02);
+  }
+  
+  .reset-btn:active {
+    transform: scale(0.98);
+  }
   
   /* Стили для модалки предмета */
   .item-overlay {
