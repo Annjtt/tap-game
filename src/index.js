@@ -1,7 +1,5 @@
 import { CONFIG } from './config.js';
 import { GameCore } from './logic/gameCore.js';
-import { ChestSystem } from './logic/chestSystem.js';
-import { CardsDisplay } from './components/CardsDisplay.js';
 import { InventoryModal } from './components/InventoryModal.js';
 import { ShopModal } from './components/ShopModal.js';
 import { ProfileModal } from './components/ProfileModal.js';
@@ -24,7 +22,7 @@ game.loadProgress();
 // Создаём магазин и передаём его в gameCore
 const shopModal = new ShopModal(game);
 const shopSystem = shopModal.shop;
-game.shopSystem = shopSystem; // ✅ Передаём раньше, чем создаём ProfileModal
+game.shopSystem = shopSystem; // ✅ Передаём раньше, чем создаём ProfileMoыdal
 
 // DOM элементы
 const currencyDisplay = document.getElementById('currency');
@@ -50,9 +48,6 @@ clicker.addEventListener('click', () => {
   game.addCurrency(game.getClickValue());
   animateClicker();
 });
-
-// Система сундуков
-const chestSystem = new ChestSystem(game);
 
 // ✅ Магазин сундуков
 const chestShopModal = new ChestShopModal(game);

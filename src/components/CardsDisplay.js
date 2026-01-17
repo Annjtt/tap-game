@@ -49,7 +49,7 @@ export class CardsDisplay {
       if (document.body.contains(container)) {
         closeAndAddItem();
       }
-    }, 5000);
+    }, 10000);
   }
 
   static getCompensation(item) {
