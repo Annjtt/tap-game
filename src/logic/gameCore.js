@@ -135,33 +135,26 @@ export class GameCore {
       return;
     }
   
-    // ✅ Проверяем, есть ли уже предмет с таким именем
+    // ✅ Проверяем, есть ли уже предмет с ТАКИМ ЖЕ ИМЕНЕМ
     const existingItem = this.items.find(i => i.name === item.name);
   
     if (existingItem) {
-      // Сравниваем редкость: если новый редче — заменяем
+      // Сравниваем редкость: если новый РЕЖЕ — заменяем
       const newRank = this.getCardRank(item.card);
       const existingRank = this.getCardRank(existingItem.card);
       
       if (newRank < existingRank) {
-        // Новый предмет более редкий - заменяем и даём компенсацию за старый
+        // Новый предмет БОЛЕЕ редкий - заменяем и даём компенсацию за старый
         const compensation = this.getCompensationForItem(existingItem);
         this.addCurrency(compensation);
         const index = this.items.indexOf(existingItem);
         this.items[index] = item;
         Notification.show(`Предмет "${item.name}" заменен (${existingItem.card} → ${item.card}). Компенсация: ${compensation} Теней`);
-      } else if (newRank > existingRank) {
-        // Новый предмет менее редкий - не добавляем, но даём компенсацию
+      } else {
+        // Новый предмет МЕНЕЕ редкий или ОДИНАКОВЫЙ - компенсация за НОВЫЙ предмет
         const compensation = this.getCompensationForItem(item);
         this.addCurrency(compensation);
-        Notification.show(`У вас уже есть "${existingItem.name}" (${existingItem.card}). Новый предмет менее редкий (${item.card}). Компенсация: ${compensation} Теней`);
-      } else {
-        // Одинаковая редкость - заменяем (обновляем), но даём компенсацию за старый
-        const compensation = this.getCompensationForItem(existingItem); // ✅ Даём компенсацию за старый
-        this.addCurrency(compensation);
-        const index = this.items.indexOf(existingItem);
-        this.items[index] = item;
-        Notification.show(`Предмет "${item.name}" обновлен (${existingItem.card} → ${item.card}). Компенсация: ${compensation} Теней`);
+        Notification.show(`У вас уже есть "${existingItem.name}" (${existingItem.card}). Новый предмет (${item.card}) менее редкий. Компенсация: ${compensation} Теней`);
       }
     } else {
       // Новый предмет - добавляем
