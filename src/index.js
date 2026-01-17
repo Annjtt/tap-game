@@ -5,6 +5,7 @@ import { CardsDisplay } from './components/CardsDisplay.js';
 import { InventoryModal } from './components/InventoryModal.js';
 import { ShopModal } from './components/ShopModal.js';
 import { ProfileModal } from './components/ProfileModal.js';
+import { ChestShopModal } from './components/ChestShopModal.js'; // ✅ Новый импорт
 
 // Инициализация Telegram
 const Telegram = window.Telegram?.WebApp;
@@ -53,11 +54,11 @@ clicker.addEventListener('click', () => {
 // Система сундуков
 const chestSystem = new ChestSystem(game);
 
+// ✅ Магазин сундуков
+const chestShopModal = new ChestShopModal(game);
+
 openChestBtn.addEventListener('click', () => {
-  const result = chestSystem.openChest();
-  if (result) {
-    CardsDisplay.showCard(result.card, result.item, game);
-  }
+  chestShopModal.show(); // Теперь открывает магазин сундуков
 });
 
 // Инвентарь

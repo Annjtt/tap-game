@@ -1,0 +1,52 @@
+[
+    {
+      "id": "basic_chest",
+      "name": "Обычный сундук",
+      "description": "Содержит карты D-H",
+      "price": 1000,
+      "image": "images/chests/basic.png",
+      "minCard": "D",
+      "maxCard": "H",
+      "color": "#8B8B8B"
+    },
+    {
+      "id": "rare_chest",
+      "name": "Редкий сундук",
+      "description": "Содержит карты C-G",
+      "price": 3000,
+      "image": "images/chests/rare.png",
+      "minCard": "C",
+      "maxCard": "G",
+      "color": "#4CAF50"
+    },
+    {
+      "id": "epic_chest",
+      "name": "Эпический сундук",
+      "description": "Содержит карты B-F",
+      "price": 8000,
+      "image": "images/chests/epic.png",
+      "minCard": "B",
+      "maxCard": "F",
+      "color": "#2196F3"
+    },
+    {
+      "id": "legendary_chest",
+      "name": "Легендарный сундук",
+      "description": "Содержит карты A-E",
+      "price": 20000,
+      "image": "images/chests/legendary.png",
+      "minCard": "A",
+      "maxCard": "E",
+      "color": "#FF9800"
+    },
+    {
+      "id": "mythic_chest",
+      "name": "Мифический сундук",
+      "description": "Содержит карты A-D",
+      "price": 50000,
+      "image": "images/chests/mythic.png",
+      "minCard": "A",
+      "maxCard": "D",
+      "color": "#9C27B0"
+    }
+  ]

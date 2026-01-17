@@ -314,7 +314,7 @@
   
   .shop-item-price {
     font-weight: bold;
-    color: #569aa0;
+    color: #39df92a9;
     font-size: 1.1rem;
     font-family: 'Neucha', cursive;
     margin-top: 5px;
@@ -338,7 +338,7 @@
 
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #45a3af, #3d7381);
+    background: linear-gradient(90deg, #39df91, #3b8b91);
     transition: width 0.3s ease;
   }
 
@@ -372,13 +372,19 @@
     margin-top: 10px;
     bottom: 0;
     padding: 8px 16px;
-    background: #2d2d2d;
-    border: 1px solid #404040;
-    color: #ffffff;
-    border-radius: 6px;
+    background: #2d2d2d21;
+    backdrop-filter: blur(2px);
+    border: 1px solid #38adb669;
+    color: #39df91;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.3s ease;
+    max-width: 130px;
+    min-width: 130px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .buy-btn:hover:not(:disabled) {
@@ -388,14 +394,17 @@
   .buy-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    color: #87a597;
+    border: 1px solid #8ea0a169;
+    text-shadow: none;
   }
   
   .buy-btn:not(:disabled) {
-    background: #3d7381;
+    background: #1dbdbd15;
   }
   
   .buy-btn:not(:disabled):hover {
-    background: #45a3af;
+    background: #19e4e42c;
     transform: rotate(1.2deg) scale(1.05);
   }
   
@@ -506,7 +515,160 @@
     to { transform: scale(1); opacity: 1; }
   }
 
-  /* ... предыдущие стили ... */
+  .chest-shop-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .chest-shop-modal {
+    background: #88888818;
+    backdrop-filter: blur(2px);
+    border: 1px solid #4444446c;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 90%;
+    width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    animation: popIn 0.4s ease;
+    scrollbar-width: none;
+  }
+  
+  .chest-shop-title {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    color: #e0e0e0;
+  }
+  
+  .chest-shop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 14px;
+    margin-bottom: 35px;
+  }
+  
+  .chest-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: #77777713;
+    backdrop-filter: blur(2px);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #404040;
+    transition: all 0.2s ease;
+    min-height: 120px;
+  }
+  
+  .chest-item.affordable {
+    border-color: #85858591;
+  }
+  
+  .chest-image-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .chest-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin: 0 auto;
+    display: block;
+  }
+  
+  .chest-info {
+    text-align: center;
+    flex: 1;
+  }
+  
+  .chest-info h3 {
+    color: #e0e0e0;
+    margin: 2px 0 3px 0;
+    font-size: 1rem;
+  }
+  
+  .chest-info p {
+    color: #adadad;
+    font-size: 0.6rem;
+    margin: 0 0 5px 0;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  .chest-price {
+    font-weight: bold;
+    color: #39df92a9;
+    font-size: 0.7rem;
+    margin-bottom: 10px;
+  }
+  
+  .buy-chest-btn {
+    padding: 7px 16px;
+    background: #2d2d2d21;
+    backdrop-filter: blur(2px);
+    border: 1px solid #38adb669;
+    color: #39df91;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #43d1db80, 0 0 10px #43d1db60;
+  }
+  
+  .buy-chest-btn:hover:not(:disabled) {
+    background: #3d3d3d;
+  }
+  
+  .buy-chest-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    color: #87a597;
+    border: 1px solid #8ea0a169;
+    text-shadow: none;
+  }
+  
+  .buy-chest-btn:not(:disabled) {
+    background: #1dbdbd15;
+  }
+  
+  .buy-chest-btn:not(:disabled):hover {
+    background: #19e4e42c;
+    transform: rotate(1.2deg) scale(1.05);
+  }
+  
+  #close-chest-shop {
+    display: block;
+    justify-self: center;
+    padding: 10px 24px;
+    background: #2d2d2da2;
+    color: #cccccc;
+    border: 1px solid #cccccc34;
+    backdrop-filter: blur(3px);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    position: sticky;
+    bottom: 0;
+    margin: 0 -20px -20px -20px;
+    z-index: 1001;
+  }
+  
+  #close-chest-shop:hover {
+    background: #383838;
+    transform: rotate(1.2deg) scale(1.05);
+  }
 
 .inventory-overlay {
     position: fixed;
