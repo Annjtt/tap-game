@@ -128,41 +128,62 @@ export class GameCore {
     return ranks[card] || 7;
   }
 
-  addItem(item) {
-    // ✅ Проверяем, что у предмета есть карта
-    if (!item.card) {
-      console.warn('Предмет без карты:', item);
-      return;
-    }
+// Замени весь метод addItem на этот:
+addItem(item) {
+  console.log('gameCore.addItem вызван', item);
   
-    // ✅ Проверяем, есть ли уже предмет с ТАКИМ ЖЕ ИМЕНЕМ
-    const existingItem = this.items.find(i => i.name === item.name);
-  
-    if (existingItem) {
-      // Сравниваем редкость: если новый РЕЖЕ — заменяем
-      const newRank = this.getCardRank(item.card);
-      const existingRank = this.getCardRank(existingItem.card);
-      
-      if (newRank < existingRank) {
-        // Новый предмет БОЛЕЕ редкий - заменяем и даём компенсацию за старый
-        const compensation = this.getCompensationForItem(existingItem);
-        this.addCurrency(compensation);
-        const index = this.items.indexOf(existingItem);
-        this.items[index] = item;
-        Notification.show(`Предмет "${item.name}" заменен (${existingItem.card} → ${item.card}). Компенсация: ${compensation} Теней`);
-      } else {
-        // Новый предмет МЕНЕЕ редкий или ОДИНАКОВЫЙ - компенсация за НОВЫЙ предмет
-        const compensation = this.getCompensationForItem(item);
-        this.addCurrency(compensation);
-        Notification.show(`У вас уже есть "${existingItem.name}" (${existingItem.card}). Новый предмет (${item.card}) менее редкий. Компенсация: ${compensation} Теней`);
-      }
-    } else {
-      // Новый предмет - добавляем
-      this.items.push(item);
-    }
-  
-    this.triggerEvent('inventoryUpdated');
+  // Проверяем, что у предмета есть карта
+  if (!item.card) {
+    console.warn('Предмет без карты:', item);
+    return;
   }
+
+  // Проверяем, есть ли уже предмет с ТАКИМ ЖЕ ИМЕНЕМ
+  const existingItem = this.items.find(i => i.name === item.name);
+  console.log('Найден существующий предмет:', existingItem);
+
+  if (existingItem) {
+    // Единая система редкости
+    const cardRanks = { 
+      A: 0, B: 1, C: 2, D: 3, 
+      E: 4, F: 5, G: 6, H: 7 
+    };
+    
+    const newRank = cardRanks[item.card];
+    const existingRank = cardRanks[existingItem.card];
+    
+    console.log('Сравниваем редкость:', {
+      newItem: item.name,
+      newCard: item.card,
+      newRank: newRank,
+      existingItem: existingItem.name,
+      existingCard: existingItem.card,
+      existingRank: existingRank
+    });
+
+    if (newRank < existingRank) {
+      // Новый предмет БОЛЕЕ редкий - заменяем и даём компенсацию за старый
+      console.log('НОВЫЙ предмет редче СТАРОГО - ЗАМЕНЯЕМ');
+      const compensation = this.getCompensationForItem(existingItem);
+      this.addCurrency(compensation);
+      const index = this.items.indexOf(existingItem);
+      this.items[index] = item;
+      Notification.show(`Предмет "${item.name}" заменен (${existingItem.card} → ${item.card}). Компенсация: ${compensation} Теней`);
+    } else {
+      // Новый предмет МЕНЕЕ редкий или ОДИНАКОВЫЙ - компенсация за НОВЫЙ
+      console.log('НОВЫЙ предмет менее редкий или одинаковый - компенсация за НОВЫЙ');
+      const compensation = this.getCompensationForItem(item);
+      this.addCurrency(compensation);
+      Notification.show(`У вас уже есть "${existingItem.name}" (${existingItem.card}). Новый предмет (${item.card}) менее редкий. Компенсация: ${compensation} Теней`);
+    }
+  } else {
+    console.log('Добавляем НОВЫЙ предмет');
+    // Новый предмет - добавляем
+    this.items.push(item);
+  }
+
+  this.triggerEvent('inventoryUpdated');
+}
 
   // ✅ Новая функция для компенсации
   getCompensationForItem(item) {

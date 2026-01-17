@@ -122,7 +122,18 @@ export class ChestShopModal {
   }
 
   getAvailableCards(minCard, maxCard) {
-    const cardRanks = { A: 0, B: 1, C: 2, D: 3, E: 4, F: 5, G: 6, H: 7 };
+    // Единая система редкости (как в gameCore.js)
+    const cardRanks = { 
+      A: 0, // Наиболее редкая
+      B: 1, 
+      C: 2, 
+      D: 3, 
+      E: 4, 
+      F: 5, 
+      G: 6, 
+      H: 7  // Наименее редкая
+    };
+    
     const minRank = cardRanks[minCard];
     const maxRank = cardRanks[maxCard];
     
