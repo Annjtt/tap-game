@@ -1081,6 +1081,37 @@
     margin: 10px 0;
     text-shadow: 0 0 6px #2c8096b7;
   }
+
+  .effect-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    pointer-events: none;
+    background: transparent;
+  }
+  
+  .effect-image {
+    width: 100px !important;    /* ✅ Маленький размер */
+    height: 100px !important;   /* ✅ Маленький размер */
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(5) !important; /* ✅ Увеличиваем через трансформацию */
+    z-index: 9999 !important;
+    pointer-events: none !important;
+    animation: effectFadeIn 0.2s ease-out !important;
+  }
+  
+  @keyframes effectFadeIn {
+    from { opacity: 0.8; transform: translate(-50%, -50%) scale(0.3); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+  }
   
   @media (max-width: 480px) {
     .item-overlay {

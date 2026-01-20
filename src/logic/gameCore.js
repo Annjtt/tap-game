@@ -7,11 +7,13 @@ export class GameCore {
     this.baseClickValue = CONFIG.baseClickValue; // ✅ Отдельно базовая сила
     this.items = [];
     this.baseAutoIncome = 0; // ✅ Отдельно базовый авто-доход
-    
+
     // ✅ Бонусы из магазина
     this.shopClickBonus = 0;
     this.shopAutoBonus = 0;
     this.shopMultiplier = 1; // ✅ Мультипликатор (умножает общую силу)
+    this.clickCounter = 0;
+    this.lastChaosEffect = 0;
     
     this.lastSave = Date.now();
     this.bonusMultipliers = {
@@ -27,7 +29,9 @@ export class GameCore {
   }
 
   addCurrency(amount) {
+    this.clickCounter = (this.clickCounter || 0) + 1;
     this.currency += amount;
+    this.checkActiveEffects();
     this.triggerEvent('currencyChanged');
   }
 
@@ -42,15 +46,68 @@ export class GameCore {
     
     let itemBonus = 0;
     const activeItems = this.getActiveItemsByName();
-
+  
     for (const item of Object.values(activeItems)) {
       if (item.stat === 'click') {
         itemBonus += item.enhancedValue || item.baseBonus;
       }
     }
-
-    return base + shopWithMultiplier + itemBonus;
+  
+    const baseValue = base + shopWithMultiplier + itemBonus;
+    const multiplier = this.checkActiveEffects(); // Проверяем эффекты
+    
+    return baseValue * multiplier;
   }
+
+  checkActiveEffects() {
+    const activeItems = this.getActiveItemsByName();
+    
+    for (const item of Object.values(activeItems)) {
+      if (item.id === 'lightning_dagger' && item.type === 'active') {
+        // Шанс 5% умножить награду за нажатие на 2
+        if (Math.random() < 0.05) {
+          this.showLightningEffect();
+          return 2; // Умножаем награду
+        }
+      }
+      
+      if (item.id === 'chaos_seal' && item.type === 'active') {
+        // Каждые 10 нажатий — x5 награды
+        if (this.clickCounter % 10 === 0 && this.clickCounter !== this.lastChaosEffect) {
+          this.lastChaosEffect = this.clickCounter;
+          this.showChaosEffect();
+          return 5; // Умножаем награду
+        }
+      }
+    }
+    
+    return 1; // Нет умножения
+  }
+
+  showLightningEffect() {
+    import('../components/VisualEffects.js').then(({ VisualEffects }) => {
+      const clicker = document.getElementById('clicker');
+      if (clicker) {
+        if (getComputedStyle(clicker).position === 'static') {
+          clicker.style.position = 'relative';
+        }
+        VisualEffects.showLightningEffect(clicker);
+      }
+    });
+  }
+
+  showChaosEffect() {
+    import('../components/VisualEffects.js').then(({ VisualEffects }) => {
+      const clicker = document.getElementById('clicker');
+      if (clicker) {
+        if (getComputedStyle(clicker).position === 'static') {
+          clicker.style.position = 'relative';
+        }
+        VisualEffects.showChaosEffect(clicker);
+      }
+    });
+  }
+  
 
   getAutoIncome() {
     // база + (улучшения × мультипликатор) + предметы
@@ -128,7 +185,7 @@ export class GameCore {
     return ranks[card] || 7;
   }
 
-// Замени весь метод addItem на этот:
+// Метод addItem
 addItem(item) {
   console.log('gameCore.addItem вызван', item);
   

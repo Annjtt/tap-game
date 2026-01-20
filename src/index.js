@@ -45,6 +45,11 @@ function formatNumber(num) {
 
 // Обработчики событий
 clicker.addEventListener('click', () => {
+  // Устанавливаем позиционирование при первом клике
+  if (getComputedStyle(clicker).position === 'static') {
+    clicker.style.position = 'relative';
+  }
+  
   game.addCurrency(game.getClickValue());
   animateClicker();
 });

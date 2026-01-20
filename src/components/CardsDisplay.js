@@ -54,7 +54,7 @@ export class CardsDisplay {
         console.log('Автозакрытие модалки'); // ✅ Отладка
         closeAndAddItem();
       }
-    }, 5000);
+    }, 10000);
   }
 
   static getCompensation(item) {
