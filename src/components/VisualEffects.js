@@ -1,6 +1,6 @@
 export class VisualEffects {
     static showLightningEffect(targetElement) {
-      this.createEffectOverlay(targetElement, 'images/effects/lightning.gif', 2000);
+      this.createEffectOverlay(targetElement, 'images/effects/lightning.gif', 1000);
     }
   
     static showChaosEffect(targetElement) {
@@ -19,7 +19,7 @@ export class VisualEffects {
       overlay.style.top = '50%';
       overlay.style.left = '50%';
       overlay.style.transform = 'translate(-50%, -50%)';
-      overlay.style.zIndex = '9999';
+      overlay.style.zIndex = '-1000';
       overlay.style.pointerEvents = 'none';
       overlay.style.display = 'flex';
       overlay.style.justifyContent = 'center';
