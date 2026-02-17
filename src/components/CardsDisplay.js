@@ -54,7 +54,7 @@ export class CardsDisplay {
         console.log('Автозакрытие модалки'); // ✅ Отладка
         closeAndAddItem();
       }
-    }, 10000);
+    }, 90000); // Таймер автозакрытия
   }
 
   static getCompensation(item) {
