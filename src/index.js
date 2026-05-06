@@ -4,6 +4,8 @@ import { InventoryModal } from './components/InventoryModal.js';
 import { ShopModal } from './components/ShopModal.js';
 import { ProfileModal } from './components/ProfileModal.js';
 import { ChestShopModal } from './components/ChestShopModal.js'; // ✅ Новый импорт
+import { VisualEffects } from './components/VisualEffects.js';
+import { ActiveItemsHud } from './components/ActiveItemsHud.js';
 
 // Инициализация Telegram
 const Telegram = window.Telegram?.WebApp;
@@ -44,13 +46,14 @@ function formatNumber(num) {
 }
 
 // Обработчики событий
-clicker.addEventListener('click', () => {
+clicker.addEventListener('click', (event) => {
   // Устанавливаем позиционирование при первом клике
   if (getComputedStyle(clicker).position === 'static') {
     clicker.style.position = 'relative';
   }
   
-  game.addCurrency(game.getClickValue());
+  const gainedAmount = game.handleClick();
+  VisualEffects.showFloatingGain(event.clientX, event.clientY, gainedAmount);
   animateClicker();
 });
 
@@ -75,6 +78,8 @@ shopBtn.addEventListener('click', () => {
 
 // Профиль - создаём после передачи shopSystem
 const profileModal = new ProfileModal(game, Telegram);
+const activeItemsHud = new ActiveItemsHud(game);
+activeItemsHud.init();
 
 profileBtn.addEventListener('click', () => {
   profileModal.show();

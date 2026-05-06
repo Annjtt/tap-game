@@ -195,6 +195,90 @@
     backdrop-filter: blur(2px);
   }
 
+  .active-items-hud {
+    position: fixed;
+    bottom: 16%;
+    right: 16%;
+    z-index: 950;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    width: min(88px, 52vw);
+    padding: 5px;
+    border-radius: 16px;
+    background: rgba(40, 40, 40, 0.055);
+    border: 0px solid rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+  }
+
+  .active-item-btn {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 5px 1px 4px 1px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    background: rgba(20, 20, 20, 0.3);
+    color: #d8d8d8;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .active-item-btn:hover:not(:disabled) {
+    transform: scale(1.02);
+    border-color: rgba(117, 209, 255, 0.295);
+    background: rgba(30, 30, 30, 0.185);
+  }
+
+  .active-item-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.95;
+  }
+
+  .active-item-btn.active {
+    border-color: rgba(90, 214, 255, 0.479);
+    box-shadow: 0 0 12px rgba(90, 214, 255, 0.35);
+  }
+
+  .active-item-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .active-item-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .active-item-name {
+    font-family: 'Neucha', cursive;
+    font-size: 0.87rem;
+    letter-spacing: 0.8px;
+    color: #f0f0f0;
+    line-height: 1.1;
+    text-shadow: 0 0 6px #2c819675;
+    text-align: center;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
+  .active-item-status {
+    font-size: 0.72rem;
+    color: #ec6666f1;
+    margin-top: 2px;
+    letter-spacing: 0.2px;
+  }
+
   .shop-overlay {
     position: fixed;
     top: 0;

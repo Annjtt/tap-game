@@ -1,10 +1,74 @@
 export class VisualEffects {
+    static ensureFloatingGainStyles() {
+      if (document.getElementById('floating-gain-styles')) {
+        return;
+      }
+  
+      const style = document.createElement('style');
+      style.id = 'floating-gain-styles';
+      style.textContent = `
+        @keyframes floatingGainRise {
+          0% {
+            transform: translate(-50%, -10px) scale(0.92) rotate(var(--floating-tilt, 0deg));
+            opacity: 0;
+          }
+          15% {
+            transform: translate(-50%, -20px) scale(1) rotate(var(--floating-tilt, 0deg));
+            opacity: 1;
+          }
+          100% {
+            transform: translate(-50%, -78px) scale(1.03) rotate(var(--floating-tilt, 0deg));
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+  
+    static showFloatingGain(x, y, amount) {
+      this.ensureFloatingGainStyles();
+  
+      const value = Number(amount);
+      if (!Number.isFinite(value) || value <= 0) {
+        return;
+      }
+      const roundedValue = Math.round(value);
+      const randomTilt = (Math.random() * 12 - 6).toFixed(2);
+  
+      const floatingValue = document.createElement('div');
+      floatingValue.textContent = `+${roundedValue}`;
+      floatingValue.style.position = 'fixed';
+      floatingValue.style.left = `${x}px`;
+      floatingValue.style.top = `${y}px`;
+      floatingValue.style.transform = 'translate(-50%, -10px)';
+      floatingValue.style.setProperty('--floating-tilt', `${randomTilt}deg`);
+      floatingValue.style.pointerEvents = 'none';
+      floatingValue.style.zIndex = '9999';
+      floatingValue.style.color = '#f5f5f5';
+      floatingValue.style.fontWeight = '700';
+      floatingValue.style.fontSize = '16px';
+      floatingValue.style.textShadow = '0 0 4px rgba(0, 0, 0, 0.9), 0 0 10px rgba(95, 158, 255, 0.55)';
+      floatingValue.style.animation = 'floatingGainRise 650ms ease-out forwards';
+  
+      document.body.appendChild(floatingValue);
+  
+      setTimeout(() => {
+        if (floatingValue.parentNode) {
+          floatingValue.remove();
+        }
+      }, 700);
+    }
+
     static showLightningEffect(targetElement) {
-      this.createEffectOverlay(targetElement, 'images/effects/lightning.gif', 1000);
+      this.createEffectOverlay(targetElement, 'images/effects/lightning.gif', 1500);
     }
   
     static showChaosEffect(targetElement) {
-      this.createEffectOverlay(targetElement, 'images/effects/skull.gif', 1500);
+      this.createEffectOverlay(targetElement, 'images/effects/skull.gif', 2500);
+    }
+
+    static showEternalClockEffect(targetElement = null) {
+      this.createEffectOverlay(targetElement, 'images/effects/eternal_clock.gif', 2000);
     }
   
     static createEffectOverlay(targetElement, imageUrl, duration) {
@@ -19,7 +83,7 @@ export class VisualEffects {
       overlay.style.top = '50%';
       overlay.style.left = '50%';
       overlay.style.transform = 'translate(-50%, -50%)';
-      overlay.style.zIndex = '-1000';
+      overlay.style.zIndex = '900';
       overlay.style.pointerEvents = 'none';
       overlay.style.display = 'flex';
       overlay.style.justifyContent = 'center';

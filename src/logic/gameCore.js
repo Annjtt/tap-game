@@ -16,6 +16,7 @@ export class GameCore {
     this.lastChaosEffect = 0;
     
     this.lastSave = Date.now();
+    this.eternalClockActiveUntil = 0;
     this.bonusMultipliers = {
       A: 1.0,
       B: 0.8,
@@ -29,9 +30,7 @@ export class GameCore {
   }
 
   addCurrency(amount) {
-    this.clickCounter = (this.clickCounter || 0) + 1;
     this.currency += amount;
-    this.checkActiveEffects();
     this.triggerEvent('currencyChanged');
   }
 
@@ -53,21 +52,27 @@ export class GameCore {
       }
     }
   
-    const baseValue = base + shopWithMultiplier + itemBonus;
-    const multiplier = this.checkActiveEffects(); // Проверяем эффекты
-    
-    return baseValue * multiplier;
+    return base + shopWithMultiplier + itemBonus;
+  }
+
+  handleClick() {
+    this.clickCounter = (this.clickCounter || 0) + 1;
+    const multiplier = this.checkActiveEffects();
+    const amount = this.getClickValue() * multiplier;
+    this.addCurrency(amount);
+    return amount;
   }
 
   checkActiveEffects() {
     const activeItems = this.getActiveItemsByName();
+    let multiplier = this.isEternalClockActive() ? 3 : 1;
     
     for (const item of Object.values(activeItems)) {
       if (item.id === 'lightning_dagger' && item.type === 'active') {
         // Шанс 5% умножить награду за нажатие на 2
         if (Math.random() < 0.05) {
           this.showLightningEffect();
-          return 2; // Умножаем награду
+          multiplier *= 2;
         }
       }
       
@@ -76,12 +81,12 @@ export class GameCore {
         if (this.clickCounter % 10 === 0 && this.clickCounter !== this.lastChaosEffect) {
           this.lastChaosEffect = this.clickCounter;
           this.showChaosEffect();
-          return 5; // Умножаем награду
+          multiplier *= 5;
         }
       }
     }
     
-    return 1; // Нет умножения
+    return multiplier;
   }
 
   showLightningEffect() {
@@ -106,6 +111,37 @@ export class GameCore {
         VisualEffects.showChaosEffect(clicker);
       }
     });
+  }
+  
+  hasItem(itemId) {
+    return this.items.some((item) => item.id === itemId);
+  }
+
+  isEternalClockActive() {
+    return this.getEternalClockRemainingMs() > 0;
+  }
+
+  getEternalClockRemainingMs() {
+    return Math.max(0, this.eternalClockActiveUntil - Date.now());
+  }
+
+  activateEternalClock(durationMs = 10000) {
+    if (!this.hasItem('eternal_clock')) {
+      return false;
+    }
+
+    if (this.isEternalClockActive()) {
+      return false;
+    }
+
+    this.eternalClockActiveUntil = Date.now() + durationMs;
+    this.triggerEvent('eternalClockStateChanged');
+
+    setTimeout(() => {
+      this.triggerEvent('eternalClockStateChanged');
+    }, durationMs + 50);
+
+    return true;
   }
   
 
@@ -275,6 +311,7 @@ addItem(item) {
       shopMultiplier: this.shopMultiplier,
       baseAutoIncome: this.baseAutoIncome,
       items: this.items,
+      eternalClockActiveUntil: this.eternalClockActiveUntil,
       timestamp: Date.now(),
     };
     localStorage.setItem('tapGameProgress', JSON.stringify(data));
@@ -291,6 +328,7 @@ addItem(item) {
       this.shopMultiplier = data.shopMultiplier || 1;
       this.baseAutoIncome = data.baseAutoIncome || 0;
       this.items = data.items || [];
+      this.eternalClockActiveUntil = data.eternalClockActiveUntil || 0;
       this.triggerEvent('progressLoaded');
     }
   }
