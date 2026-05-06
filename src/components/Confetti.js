@@ -28,7 +28,7 @@ export class Confetti {
         confetti.style.position = 'fixed';
         confetti.style.left = `${centerX}px`;
         confetti.style.top = `${centerY}px`;
-        confetti.style.zIndex = '1000';
+        confetti.style.zIndex = '10000';
   
         document.body.appendChild(confetti);
   
@@ -69,7 +69,7 @@ export class Confetti {
         confetti.style.position = 'fixed';
         confetti.style.left = `${centerX}px`;
         confetti.style.top = `${centerY}px`;
-        confetti.style.zIndex = '999';
+        confetti.style.zIndex = '1000';
   
         document.body.appendChild(confetti);
   

@@ -197,8 +197,8 @@
 
   .active-items-hud {
     position: fixed;
-    bottom: 16%;
-    right: 16%;
+    bottom: 120px;
+    right: 19%;
     z-index: 950;
     display: none;
     flex-direction: column;
@@ -218,11 +218,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 3px;
     padding: 5px 1px 4px 1px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.082);
     border-radius: 14px;
-    background: rgba(20, 20, 20, 0.3);
+    background: rgba(20, 20, 20, 0.116);
     color: #d8d8d8;
     cursor: pointer;
     text-align: center;
@@ -261,9 +261,9 @@
 
   .active-item-name {
     font-family: 'Neucha', cursive;
-    font-size: 0.87rem;
+    font-size: 0.90rem;
     letter-spacing: 0.8px;
-    color: #f0f0f0;
+    color: #c8e5e6;
     line-height: 1.1;
     text-shadow: 0 0 6px #2c819675;
     text-align: center;
@@ -274,7 +274,7 @@
 
   .active-item-status {
     font-size: 0.72rem;
-    color: #ec6666f1;
+    color: #f55959f1;
     margin-top: 2px;
     letter-spacing: 0.2px;
   }
@@ -792,28 +792,46 @@
   .inventory-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-    gap: 10px;
+    gap: 8px;
     margin-top: 10px;
     margin-bottom: 35px;
   }
   
+  /* Анимация появления слота инвентаря */
+  @keyframes inventorySlotPopIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.85) rotate(-6deg);
+    }
+    60% {
+      opacity: 1;
+      transform: scale(1.08) rotate(3deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0);
+    }
+  }
+
   .inventory-slot {
-    width: 60px;
-    height: 60px;
+    width: 68px;
+    height: 68px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #2d2d2d;
-    border: 1px solid #404040;
-    border-radius: 8px;
+    background: #2d2d2d9a;
+    border: 1px solid #40404067;
+    border-radius: 10px;
     font-size: 2rem;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.22s cubic-bezier(.6,-0.28,.74,1.21);
+    animation: inventorySlotPopIn 0.56s cubic-bezier(.6,-0.28,.74,1.21);
   }
   
   .inventory-slot:hover {
     border-color: #606060;
-    transform: scale(1.05);
+    transform: scale(1.08);
+    z-index: 2;
   }
   
   .inventory-slot.empty {
@@ -841,17 +859,19 @@
 
   /* Стили для слотов инвентаря */
 .inventory-slot {
-    width: 65px;
-    height: 70px;
+    width: 68px;
+    height: 68px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #2d2d2d8e;
-    border: 1px solid #404040b2;
+    background: #2d2d2d50;
+    border: 1px solid #40404071;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
     overflow: hidden;
+    transition: all 0.32s cubic-bezier(.6,-0.28,.74,1.21);
+    animation: inventorySlotPopIn 0.56s cubic-bezier(.6,-0.28,.74,1.21);
   }
   
   .inventory-slot img {
@@ -863,7 +883,7 @@
   
   .inventory-slot:hover {
     border-color: #606060;
-    transform: scale(1.05);
+    transform: scale(1.05) rotate(-2deg);
   }
   
   .inventory-slot.empty {

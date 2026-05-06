@@ -64,11 +64,11 @@ export class VisualEffects {
     }
   
     static showChaosEffect(targetElement) {
-      this.createEffectOverlay(targetElement, 'images/effects/skull.gif', 2500);
+      this.createEffectOverlay(targetElement, 'images/effects/skull.gif', 1500);
     }
 
     static showEternalClockEffect(targetElement = null) {
-      this.createEffectOverlay(targetElement, 'images/effects/eternal_clock.gif', 2000);
+      this.createEffectOverlay(targetElement, 'images/effects/eternal_clock.gif', 3500);
     }
   
     static createEffectOverlay(targetElement, imageUrl, duration) {
@@ -83,7 +83,7 @@ export class VisualEffects {
       overlay.style.top = '50%';
       overlay.style.left = '50%';
       overlay.style.transform = 'translate(-50%, -50%)';
-      overlay.style.zIndex = '900';
+      overlay.style.zIndex = '-900';
       overlay.style.pointerEvents = 'none';
       overlay.style.display = 'flex';
       overlay.style.justifyContent = 'center';
