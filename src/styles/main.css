@@ -41,6 +41,14 @@
     flex-direction: column;
     gap: 10px;
     align-items: center;
+    align-self: center;
+    background-color: #0a0a0a4d;
+    backdrop-filter: blur(2px);
+    width: 250px;
+    border: 1px solid #66666649;
+    max-width: 250px;
+    
+    border-radius: 16px;
     padding: 15px 0;
     margin-top: 10px;
     margin-bottom: 20px;
@@ -197,13 +205,13 @@
 
   .active-items-hud {
     position: fixed;
-    bottom: 120px;
-    right: 19%;
+    top: 120px;
+    right: 5%;
     z-index: 950;
     display: none;
     flex-direction: column;
     gap: 10px;
-    width: min(88px, 52vw);
+    width: min(80px, 52vw);
     padding: 5px;
     border-radius: 16px;
     background: rgba(40, 40, 40, 0.055);
@@ -646,11 +654,11 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    background: #77777713;
+    background: #00000000;
     backdrop-filter: blur(2px);
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid #404040;
+    border: 0px solid #404040;
     transition: all 0.2s ease;
     min-height: 120px;
   }

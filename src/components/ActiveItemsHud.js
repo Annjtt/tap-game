@@ -51,8 +51,7 @@ export class ActiveItemsHud {
       <button type="button" class="active-item-btn ${this.game.isEternalClockActive() ? 'active' : ''}" data-item-id="eternal_clock">
         <img src="images/items/icon_item/eternal_clock.svg" alt="Часы Этерна" class="active-item-icon" />
         <div class="active-item-meta">
-          <span class="active-item-name">Часы</span>
-          <span class="active-item-name">Этерна</span>
+          <span class="active-item-name">Часы Этерна</span>
           <span class="active-item-status" id="eternal-clock-status"></span>
         </div>
       </button>

@@ -1,4 +1,4 @@
-import{C as r,i as c,N as m}from"./index-BVMGGhye.js";class d{static showCard(o,e,n){console.log("CardsDisplay.showCard вызван",{card:o,item:e,game:n}),r.show(o);const t=document.createElement("div");t.className="card-overlay";const i=c(`images/cards/${o.toLowerCase()}.png`),l=c(e.image);t.innerHTML=`
+import{C as r,i as c,N as m}from"./index-Cr1vAVaB.js";class d{static showCard(o,e,n){console.log("CardsDisplay.showCard вызван",{card:o,item:e,game:n}),r.show(o);const t=document.createElement("div");t.className="card-overlay";const i=c(`images/cards/${o.toLowerCase()}.png`),l=c(e.image);t.innerHTML=`
       <div class="card-modal">
         <div class="item-image-container">
           <img src="${l}" alt="${e.name}" class="item-image" />

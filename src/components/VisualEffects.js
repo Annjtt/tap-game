@@ -68,7 +68,7 @@ export class VisualEffects {
     }
 
     static showEternalClockEffect(targetElement = null) {
-      this.createEffectOverlay(targetElement, 'images/effects/eternal_clock.gif', 3500);
+      this.createEffectOverlay(targetElement, 'images/effects/skull.gif', 2500);
     }
   
     static createEffectOverlay(targetElement, imageUrl, duration) {
@@ -91,14 +91,17 @@ export class VisualEffects {
       
       const effectImg = document.createElement('img');
       effectImg.src = imageUrl;
-      effectImg.style.width = '100px';
-      effectImg.style.height = '100px';
+      // Размер эффекта варьируется от 70 до 180px (большой разброс)
+      const randomSize = Math.floor(Math.random() * (180 - 60 + 1)) + 20;
+      effectImg.style.width = `${randomSize}px`;
+      effectImg.style.height = `${randomSize}px`;
+      effectImg.style.mixBlendMode = 'screen';
+ 
       
       // ✅ Рандомный поворот от -180 до 180 градусов
       const randomRotation = Math.floor(Math.random() * 360) - 180;
       effectImg.style.transform = `scale(5) rotate(${randomRotation}deg)`; // ✅ Добавлен поворот
       
-      effectImg.style.animation = 'effectFadeIn 0.2s ease-out';
       effectImg.style.pointerEvents = 'none';
   
       overlay.appendChild(effectImg);
