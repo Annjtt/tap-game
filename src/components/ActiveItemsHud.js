@@ -91,17 +91,22 @@ export class ActiveItemsHud {
     const effectRemainingMs = this.getEffectRemainingMs();
     const cooldownRemainingMs = this.getCooldownRemainingMs();
 
+    // Убираем классы статуса перед установкой новых
+    status.classList.remove('active', 'cooldown');
+
     if (effectRemainingMs > 0) {
       // Эффект сейчас активен
       const seconds = (effectRemainingMs / 1000).toFixed(1);
       status.textContent = `${seconds}с`;
+      status.classList.add('active'); // Зеленый, как по стилям
       button.classList.add('active');
       button.disabled = true;
       return;
     } else if (cooldownRemainingMs > 0) {
       // Перезарядка (но эффект не активен)
       const cooldownSec = (cooldownRemainingMs / 1000).toFixed(1);
-      status.textContent = `cooldown: ${cooldownSec}с`;
+      status.textContent = `${cooldownSec}с`;
+      status.classList.add('cooldown'); // Красный, как по стилям
       button.classList.remove('active');
       button.disabled = true;
       return;
