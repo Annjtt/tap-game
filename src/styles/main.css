@@ -49,8 +49,8 @@
     max-width: 264px;
     border-radius: 36px;
     padding: 10px 0;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 30px;
+    margin-bottom: 10px;
   }
   
   .header h1 {
@@ -204,7 +204,7 @@
 
   .active-items-hud {
     position: fixed;
-    top: 120px;
+    top: 140px;
     right: 9%;
     z-index: 950;
     display: none;
