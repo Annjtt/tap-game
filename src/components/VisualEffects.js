@@ -94,15 +94,15 @@ export class VisualEffects {
     }
 
     static showLightningEffect(targetElement) {
-      this.createEffectOverlay(targetElement, 'images/effects/lightning.gif', 1500);
+      this.createEffectOverlay(targetElement, 'images/effects/lightning.gif', 2500);
     }
   
     static showChaosEffect(targetElement) {
-      this.createEffectOverlay(targetElement, 'images/effects/skull.gif', 1500);
+      this.createEffectOverlay(targetElement, 'images/effects/skull.gif', 3000);
     }
 
     static showEternalClockEffect(targetElement = null) {
-      this.createEffectOverlay(targetElement, 'images/effects/skull.gif', 2500);
+      this.createEffectOverlay(targetElement, 'images/effects/eternal_clock.gif', 5000);
     }
   
     static createEffectOverlay(targetElement, imageUrl, duration) {
@@ -126,7 +126,7 @@ export class VisualEffects {
       const effectImg = document.createElement('img');
       effectImg.src = imageUrl;
       // Размер эффекта варьируется от 70 до 180px (большой разброс)
-      const randomSize = Math.floor(Math.random() * (200 - 60 + 1)) + 20;
+      const randomSize = Math.floor(Math.random() * (200 - 70 + 1)) + 20;
       effectImg.style.width = `${randomSize}px`;
       effectImg.style.height = `${randomSize}px`;
       effectImg.style.mixBlendMode = 'screen';
