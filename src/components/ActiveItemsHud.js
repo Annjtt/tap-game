@@ -51,7 +51,6 @@ export class ActiveItemsHud {
       <button type="button" class="active-item-btn ${this.game.isEternalClockActive() ? 'active' : ''}" data-item-id="eternal_clock">
         <img src="images/items/icon_item/eternal_clock.svg" alt="Часы Этерна" class="active-item-icon" />
         <div class="active-item-meta">
-          <span class="active-item-name">Часы Этерна</span>
           <span class="active-item-status" id="eternal-clock-status"></span>
         </div>
       </button>
@@ -134,7 +133,7 @@ export class ActiveItemsHud {
     localStorage.setItem(this.lastUsedKey, Date.now().toString());
 
     VisualEffects.showEternalClockEffect();
-    Notification.show('Часы Этерна активированы! x3 на 10 секунд');
+    Notification.show('Часы Этерна активированы! Вся награда x3 на 10 секунд');
     this.updateClockStatus();
   }
 }

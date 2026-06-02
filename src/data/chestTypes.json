@@ -2,7 +2,7 @@
     {
       "id": "basic_chest",
       "name": "Обычный сундук",
-      "description": "Содержит случайный предмет и карту ранга H - C",
+      "description": "Содержит случайный предмет ранга H - C",
       "price": 1000,
       "image": "images/chests/basic.png",
       "minCard": "C",
@@ -12,7 +12,7 @@
     {
       "id": "rare_chest",
       "name": "Редкий сундук",
-      "description": "Содержит случайный предмет и карту ранга G - C",
+      "description": "Содержит случайный предмет ранга G - C",
       "price": 3000,
       "image": "images/chests/rare.png",
       "minCard": "C",
@@ -22,7 +22,7 @@
     {
       "id": "epic_chest",
       "name": "Эпический сундук Теней",
-      "description": "Содержит случайный предмет и карту ранга F - B",
+      "description": "Содержит случайный предмет ранга F - B",
       "price": 5000,
       "image": "images/chests/epic.png",
       "minCard": "B",
@@ -32,7 +32,7 @@
     {
       "id": "legendary_chest",
       "name": "Легендарный Алый сундук",
-      "description": "Содержит случайный предмет и карту ранга E - A",
+      "description": "Содержит случайный предмет ранга E - A",
       "price": 50000,
       "image": "images/chests/legendary.png",
       "minCard": "A",
@@ -42,11 +42,21 @@
     {
       "id": "mythic_chest",
       "name": "Мифический сундук Короля",
-      "description": "Содержит случайный предмет и карту ранга D - A",
+      "description": "Содержит случайный предмет ранга D - A",
       "price": 100000,
       "image": "images/chests/mythic.png",
       "minCard": "A",
       "maxCard": "D",
       "color": "#9C27B0"
+    },
+    {
+      "id": "dead_chest",
+      "name": "Сундук Мёртвого Короля",
+      "description": "Содержит случайный предмет ранга C - A",
+      "price": 500000,
+      "image": "images/chests/dead.png",
+      "minCard": "A",
+      "maxCard": "C",
+      "color": "#000000"
     }
   ]

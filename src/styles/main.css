@@ -211,11 +211,11 @@
     flex-direction: column;
     gap: 10px;
     width: min(75px, 52vw);
-    padding: 5px;
+    padding: 10px;
     border-radius: 16px;
     background: rgba(40, 40, 40, 0.055);
-    border: 0px solid rgba(255, 255, 255, 0.14);
-    backdrop-filter: blur(3px);
+    border: 0.5px solid rgba(255, 255, 255, 0.034);
+    backdrop-filter: blur(2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
   }
 
