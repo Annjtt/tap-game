@@ -47,10 +47,6 @@ export class TowerModal {
       return;
     }
 
-    // Вёрстка подогнана под tower.css (1-374), убраны лишние оборачивающие блоки,
-    // секции ужаты, чтобы весь контент максимально влезал в экран даже на мобильном.
-    // Добавлены max-width/min-width, минимизирована вложенность, пересмотрены блоки hero/boss/footer.
-
     const enemy = state.currentEnemy;
     const enemyHpPercent = state.enemyMaxHp ? Math.max(0, Math.round((state.enemyHp / state.enemyMaxHp) * 100)) : 0;
     const playerHpPercent = state.playerMaxHp ? Math.max(0, Math.round((state.playerHp / state.playerMaxHp) * 100)) : 0;
@@ -96,7 +92,15 @@ export class TowerModal {
               </div>
               <div class="tower-hero-meta">
                 <div class="tower-hero-name">${state.playerName}</div>
-                <div class="tower-hero-subtitle">HP героя · чекпоинт ${state.checkpointFloor}</div>
+                <div class="tower-hero-subtitle">
+                  <span class="tower-shop-currency" style="display:inline-flex;align-items:center;gap:5px;font-size:0.95em;padding:2px 2px 2px 2px;line-height:1.1;height:25px;min-width:0;background:transparent;">
+             
+                    <i class="fas fa-gem" style="font-size:1em;"></i>
+                    <span>${state.shadowShards}</span>
+                  </span>
+                  · чекпоинт ${state.checkpointFloor}
+                </div>
+           
               </div>
             </div>
             <div class="tower-hero-hp-block">
@@ -120,7 +124,7 @@ export class TowerModal {
               </div>
             </div>
             <div class="tower-arena-actions">
-              <button type="button" class="tower-secondary-btn" id="tower-refresh-btn">Собраться</button>
+              <button type="button" class="tower-secondary-btn" id="tower-refresh-btn">Лечение</button>
               <button type="button" class="tower-secondary-btn" id="tower-chest-btn">Тайник</button>
             </div>
           </footer>

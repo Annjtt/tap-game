@@ -47,7 +47,7 @@ export class TowerShopModal {
         <div class="tower-shop-backdrop"></div>
         <div class="tower-shop-shell">
           <header class="tower-shop-header">
-            <h2><i class="fas fa-vault"></i> Тайник Башни</h2>
+            <h2></i> Тайник Башни</h2>
             <div class="tower-shop-currency">
               <i class="fas fa-gem"></i>
               <span>${state.shadowShards}</span>
