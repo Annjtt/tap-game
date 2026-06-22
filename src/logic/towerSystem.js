@@ -1,5 +1,6 @@
 import towerFloors from '../data/towerFloors.json';
 import { Notification } from '../components/Notification.js';
+import { TowerShopSystem } from './towerShopSystem.js'; // Подключаем магазин башни
 
 const STORAGE_KEY = 'towerProgress';
 const FLOOR_CHECKPOINT_STEP = 5;
@@ -13,10 +14,14 @@ export class TowerSystem {
     this.resetState();
     this.loadProgress();
     this.startEnemyLoop();
+
+    // Инициализация магазина башни (тайника)
+    this.towerShop = new TowerShopSystem(this);
   }
 
   resetState() {
     this.isOpen = false;
+    this.isShopOpen = false; // Стейт магазина
     this.currentFloor = 1;
     this.highestFloor = 1;
     this.lastCheckpointFloor = 1;
@@ -31,6 +36,11 @@ export class TowerSystem {
     this.lastSavedAt = Date.now();
     this.defeatedBosses = [];
     this.isCleared = false;
+
+    // Сброс инициализации магазина/тайника
+    if (this.towerShop && typeof this.towerShop.resetShop === 'function') {
+      this.towerShop.resetShop();
+    }
   }
 
   getPlayerName() {
@@ -96,8 +106,35 @@ export class TowerSystem {
 
   close() {
     this.isOpen = false;
+    this.isShopOpen = false;
     this.saveProgress();
     this.triggerUpdate();
+  }
+
+  // Открыть магазин (тайник)
+  openShop() {
+    if (this.isShopOpen) return;
+    if (!this.towerShop || typeof this.towerShop.open !== 'function') return;
+    this.isShopOpen = true;
+    this.towerShop.open();
+    this.triggerUpdate();
+  }
+
+  // Закрыть магазин (тайник)
+  closeShop() {
+    if (!this.isShopOpen) return;
+    this.isShopOpen = false;
+    if (this.towerShop && typeof this.towerShop.close === 'function') this.towerShop.close();
+    this.triggerUpdate();
+  }
+
+  // Для UI-кнопки открытия магазина (тайника)
+  toggleShop() {
+    if (this.isShopOpen) {
+      this.closeShop();
+    } else {
+      this.openShop();
+    }
   }
 
   startEnemyLoop() {
@@ -106,7 +143,8 @@ export class TowerSystem {
     }
 
     this.attackTimer = setInterval(() => {
-      if (!this.isOpen || !this.currentEnemy || this.enemyHp <= 0 || this.playerHp <= 0) {
+      // В магазине не атакуем
+      if (!this.isOpen || this.isShopOpen || !this.currentEnemy || this.enemyHp <= 0 || this.playerHp <= 0) {
         return;
       }
 
@@ -153,6 +191,12 @@ export class TowerSystem {
   handleAttackClick() {
     if (!this.isOpen) {
       this.open();
+    }
+
+    // Если магазин (тайник) открыт, атака невозможна
+    if (this.isShopOpen) {
+      Notification.show('В тайнике нельзя сражаться');
+      return null;
     }
 
     this.ensureFloorState();
@@ -225,6 +269,12 @@ export class TowerSystem {
       this.lastCheckpointFloor = enemy.floor;
     }
 
+    // Открыть магазин (тайник) после прохождения каждого 5-го этажа или босса
+    if (enemy.type === 'boss' || enemy.floor % FLOOR_CHECKPOINT_STEP === 0) {
+      this.openShop();
+      Notification.show('Вы нашли тайник! Посетите магазин башни.');
+    }
+
     // Добавьте супернаграду за прохождение 10 этажей и босса (последний этаж)
     if (this.currentFloor >= this.floors[this.floors.length - 1].floor) {
       this.isCleared = true;
@@ -270,19 +320,43 @@ export class TowerSystem {
   }
 
   getFloorProgressPercent() {
-    if (!this.enemyMaxHp) {
-      return 0;
-    }
+    // Показывает прогресс прохождения всей башни в процентах.
+    // Башня из 10 этажей (или сколько реально есть в this.floors)
+    const totalFloors = this.floors.length;
+    const isFinished = this.currentFloor > totalFloors;
+    let floorProgress = 0;
 
-    const defeated = this.enemyMaxHp - this.enemyHp;
-    return Math.max(0, Math.min(100, Math.round((defeated / this.enemyMaxHp) * 100)));
+    // Суммарный прогресс: сколько этажей завершено плюс прогресс на текущем
+    if (isFinished) {
+      // Всё пройдено
+      floorProgress = 100;
+    } else {
+      // Текущий этаж -- не полностью зачтён пока босс не убит
+      // user должен видеть ровно ХХ% закончено из totalFloors: (currentFloor-1) + прогресс текущего этажа
+      let completedFloors = this.currentFloor - 1;
+      let currentFloorFraction = 0; // от 0 до 1
+
+      if (this.enemyMaxHp && this.enemyHp >= 0 && this.enemyHp <= this.enemyMaxHp) {
+        currentFloorFraction = (this.enemyMaxHp - this.enemyHp) / this.enemyMaxHp;
+        currentFloorFraction = Math.max(0, Math.min(1, currentFloorFraction));
+      }
+
+      floorProgress = ((completedFloors + currentFloorFraction) / totalFloors) * 100;
+    }
+    return Math.max(0, Math.min(100, Math.round(floorProgress)));
   }
 
   getState() {
     this.ensureFloorState();
 
+    let shopState = null;
+    if (this.towerShop && typeof this.towerShop.getState === 'function') {
+      shopState = this.towerShop.getState();
+    }
+
     return {
       isOpen: this.isOpen,
+      isShopOpen: this.isShopOpen,
       currentFloor: this.currentFloor,
       highestFloor: this.highestFloor,
       checkpointFloor: this.lastCheckpointFloor,
@@ -296,11 +370,17 @@ export class TowerSystem {
       shadowShards: this.shadowShards,
       lastAttackSummary: this.lastAttackSummary,
       isCleared: this.isCleared,
-      floorProgressPercent: this.getFloorProgressPercent()
+      floorProgressPercent: this.getFloorProgressPercent(),
+      shopState
     };
   }
 
   saveProgress() {
+    let shopData = null;
+    if (this.towerShop && typeof this.towerShop.getPersistentData === 'function') {
+      shopData = this.towerShop.getPersistentData();
+    }
+
     const payload = {
       currentFloor: this.currentFloor,
       highestFloor: this.highestFloor,
@@ -313,7 +393,8 @@ export class TowerSystem {
       defeatedBosses: this.defeatedBosses,
       isCleared: this.isCleared,
       lastEnemyAttackAt: this.lastEnemyAttackAt,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      shop: shopData
     };
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
@@ -340,6 +421,11 @@ export class TowerSystem {
       this.isCleared = Boolean(data.isCleared);
       this.lastEnemyAttackAt = data.lastEnemyAttackAt || Date.now();
       this.ensureFloorState();
+
+      // Восстанавливаем прогресс магазина (тайника), если есть
+      if (this.towerShop && typeof this.towerShop.loadPersistentData === 'function' && data.shop) {
+        this.towerShop.loadPersistentData(data.shop);
+      }
     } catch (error) {
       console.error('Не удалось загрузить прогресс башни:', error);
       this.ensureFloorState();

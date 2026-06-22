@@ -1,4 +1,5 @@
 import { Notification } from './Notification.js';
+import { TowerShopModal } from './TowerShopModal.js';
 
 export class TowerModal {
   constructor(towerSystem) {
@@ -219,7 +220,11 @@ export class TowerModal {
   }
 
   handleChest() {
-    // TODO: открыть магазин башни (Тайник)
-    Notification.show('Тайник Башни пока недоступен.');
+    import('./TowerShopModal.js').then(({ TowerShopModal }) => {
+      if (!this.towerShopModal) {
+        this.towerShopModal = new TowerShopModal(this.tower.towerShop, this.tower);
+      }
+      this.towerShopModal.show();
+    });
   }
 }

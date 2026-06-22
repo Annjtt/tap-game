@@ -373,3 +373,378 @@
   transform: rotate(1.1deg) scale(1.05);
   background: #383838d2;
 }
+.tower-shop-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tower-shop-modal {
+  background: #1a1a1a00;
+  padding: 0;
+  border-radius: 20px;
+  max-width: 90%;
+  width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 0 30px rgba(255,255,255,0.1);
+}
+
+.tower-shop-backdrop {
+  position: absolute;
+  inset: 0;
+  top: 0;
+  left: 0;
+  background: linear-gradient(121deg,#00000036 70%,#00000091 140%, #ff01ff 101%);
+  opacity: 0.93;
+  border-radius: 0px;
+  pointer-events: none;
+  box-shadow: 0 18px 46px rgba(24,22,56,0.28);
+  z-index: 1;
+}
+
+.tower-shop-shell {
+  position: relative;
+  border-radius: 28px;
+  padding: 14px 18px 40px 18px; /* bottom padding for fixed close button */
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  min-height: 340px;
+  z-index: 3003;
+  background: rgba(15, 15, 15, 0.288);
+  box-shadow: 0 12px 42px 0 rgba(34, 34, 34, 0.432);
+  pointer-events: auto;
+  overflow: hidden;
+}
+.tower-shop-shell {
+  max-height: 86vh;
+  overflow: visible;
+}
+.tower-shop-shell {
+  /* Слой для внутреннего скролла (кроме footer/close-btn) */
+}
+
+.tower-shop-modal::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+.tower-shop-shell .tower-shop-content-scroll {
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: calc(86vh - 130px);
+  padding-bottom: 6px;
+}
+.tower-shop-shell .tower-shop-content-scroll::-webkit-scrollbar {
+  width: 10px;
+  background: #29214a0d;
+}
+.tower-shop-shell .tower-shop-content-scroll::-webkit-scrollbar-thumb {
+  background: #2c2b48aa;
+  border-radius: 7px;
+}
+
+.tower-shop-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+.tower-shop-header h2 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #ffd963;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+  margin: 0;
+  flex: 1 1 auto;
+}
+.tower-shop-header i.fa-vault {
+  color: #c1b7f2;
+  font-size: 1.2em;
+}
+
+.tower-shop-currency {
+  display: flex;
+  align-items: center;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #dffbee;
+  background: rgba(63, 54, 102, 0.78);
+  border-radius: 18px;
+  padding: 4px 17px 4px 10px;
+  gap: 6px;
+}
+.tower-shop-currency i.fa-gem {
+  color: #99f2dc;
+  font-size: 1.05rem;
+}
+
+.tower-shop-close {
+  background: none;
+  border: none;
+  outline: none;
+  color: #b9acf5;
+  font-size: 1.35rem;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  transition: background 0.18s, color 0.18s;
+  cursor: pointer;
+  flex-shrink: 0;
+  z-index: 3100;
+}
+.tower-shop-close:hover {
+  background: rgba(180,160,255,0.15);
+  color: #ffae8f;
+}
+
+.tower-shop-grid {
+  display: grid;
+  grid-template-columns: 1fr; gap: 15px 0;
+  gap: 20px 18px;
+  margin-bottom: 12px;
+  margin-top: 4px;
+  flex: 1 1 auto;
+  min-height: 150px;
+}
+
+/* Айтем магазина */
+.tower-shop-item {
+  background: linear-gradient(119deg,rgba(41, 41, 41, 0.404) 75%,rgba(87, 87, 87, 0.288));
+  border: 1px solid #2c206377;
+  border-radius: 14px;
+  padding: 11px 10px 13px 12px;
+  box-shadow: 0 4px 30px 0px rgba(38,30,72,0.09);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  opacity: 1;
+  filter: none;
+  position: relative;
+  transition: box-shadow 0.17s, transform 0.18s, opacity 0.28s;
+}
+.tower-shop-item.locked {
+  opacity: 0.6;
+  filter: grayscale(0.65);
+  pointer-events: none;
+}
+.tower-shop-item.maxed {
+  border: 1.5px solid #e0de5e56;
+  background: linear-gradient(90deg, #31313117 45%, #9affee17 140%);
+  box-shadow: 0 0 0 0 #fff0, 0 6px 18px 0 #c2ad67b7 inset;
+  opacity: 0.83;
+}
+
+.tower-shop-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(120deg,#383838 60%, #000000 150%);
+  color: #d9fced;
+  font-size: 1.58rem;
+  border: 1.5px solid #636363c4;
+  margin-top: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px 0 #30265426;
+}
+.tower-shop-item.maxed .tower-shop-item-icon {
+  background: #303030;
+  color: #4bc4da;
+  border-color: #6d6d6dd2;
+}
+
+.tower-shop-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.tower-shop-item-info h3 {
+  font-size: 1.09rem;
+  margin: 0 0 2px 0;
+  font-weight: 600;
+  color: #ffdf80;
+}
+.tower-shop-item-desc {
+  font-size: 0.95rem;
+  color: #ded9e5;
+  margin: 0 0 7px 0;
+  line-height: 1.37;
+}
+.tower-shop-item-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+  font-size: 0.97rem;
+}
+.tower-shop-progress-bar {
+  background: #262940;
+  height: 13px;
+  width: 67px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #523fa039;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+.tower-shop-progress-fill {
+  background: linear-gradient(90deg, #cfd2ff 17%, #6cedcd 93%);
+  height: 100%;
+  border-radius: 8px;
+  transition: width 0.38s cubic-bezier(.64,.23,0,.97);
+}
+.tower-shop-level {
+  min-width: 52px;
+  color: #fbf5cd;
+  font-size: 0.97em;
+  text-align: center;
+}
+
+.tower-shop-current-effect {
+  color: #97ffc1;
+  font-size: 0.98em;
+  margin: 1px 0 0 0;
+}
+.tower-shop-item.maxed .tower-shop-current-effect {
+  color: #eddb91;
+}
+
+.tower-shop-item-buy {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 63px;
+  gap: 6px;
+}
+.tower-shop-buy-btn {
+  width: 100%;
+  min-width: 40px;
+  padding: 8px 8px;
+  background: linear-gradient(120deg,#31b995 70%,#9c8dea 135%);
+  color: #192019;
+  font-size: 1.01em;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: filter 0.17s, background 0.19s;
+  box-shadow: 0 3px 6px #19321a17;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+.tower-shop-buy-btn:hover:not(:disabled) {
+  filter: brightness(1.14) contrast(1.12);
+  background: linear-gradient(118deg, #aefdde 65%, #d5c4ff 120%);
+}
+.tower-shop-buy-btn.disabled,
+.tower-shop-buy-btn:disabled {
+  pointer-events: none;
+  filter: grayscale(0.76) brightness(0.9) contrast(0.8);
+  background: #807fa5;
+  color: #fff;
+  opacity: 0.68;
+}
+.tower-shop-maxed {
+  color: #d7ba53;
+  font-weight: 700;
+  background: #fff2;
+  border-radius: 12px;
+  padding: 3px 9px 4px 9px;
+  font-size: 1.03em;
+  letter-spacing: 0.7px;
+}
+
+/* Фиксированная кнопка закрытия снизу */
+.tower-shop-close-btn {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 42px;
+  min-width: 210px;
+  width: 80vw;
+  max-width: 380px;
+  margin: 0 auto;
+  min-height: 47px;
+  border-radius: 999px;
+  padding: 10px 0;
+  background: #292b3f;
+  color: #ffdfb3;
+  border: 1.2px solid #e8dab634;
+  font-size: 1.08rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.16s, color 0.18s, border 0.18s;
+  box-shadow: 0 2px 10px 0 #31243517;
+  z-index: 3200;
+  display: block;
+}
+.tower-shop-close-btn:hover,
+.tower-shop-close-btn:focus {
+  background: #ad566f;
+  color: #fff;
+  border: 1.5px solid #ffc89582;
+}
+
+
+
+/* Обеспечить скроллинг только у содержимого, а не у футера */
+.tower-shop-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  overflow: visible;
+  position: relative;
+}
+.tower-shop-header,
+.tower-shop-grid {
+  flex-shrink: 0;
+}
+.tower-shop-grid {
+  overflow-y: visible;
+}
+
+/* Вспомогательный блок для скролла внутри шела */
+.tower-shop-content-scroll {
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Контейнер, чтобы скрыть контент за фиксированной кнопкой */
+.tower-shop-shell {
+  padding-bottom: 10px;
+}
+
+
+

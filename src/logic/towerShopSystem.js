@@ -8,8 +8,10 @@ export class TowerShopSystem {
     this.items = towerShopItems.map(item => ({
       ...item,
       level: 0,
-      totalSpent: 0
+      totalSpent: 0,
+      isUnlocked: !item.unlockLevel, // Если нет порога разблокировки — доступно сразу
     }));
+    this.hasResetBefore = false;
     this.loadState();
   }
 
@@ -18,12 +20,19 @@ export class TowerShopSystem {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        const hasResetFlag = typeof parsed.hasResetBefore === "boolean" ? parsed.hasResetBefore : false;
+        this.hasResetBefore = hasResetFlag;
+        // Для поддержки сохранения старого формата объекта:
+        const savedItems = Array.isArray(parsed) ? parsed : parsed.items || [];
         this.items = this.items.map(item => {
-          const savedItem = parsed.find(s => s.id === item.id);
+          const savedItem = savedItems.find(s => s.id === item.id) || {};
           return {
             ...item,
-            level: savedItem?.level || 0,
-            totalSpent: savedItem?.totalSpent || 0
+            level: savedItem.level || 0,
+            totalSpent: savedItem.totalSpent || 0,
+            isUnlocked: typeof savedItem.isUnlocked === "boolean"
+              ? savedItem.isUnlocked
+              : (item.unlockLevel ? false : true),
           };
         });
       } catch (e) {
@@ -33,11 +42,16 @@ export class TowerShopSystem {
   }
 
   saveState() {
-    const state = this.items.map(item => ({
-      id: item.id,
-      level: item.level,
-      totalSpent: item.totalSpent
-    }));
+    // Для расширяемости: state включает hasResetBefore + items
+    const state = {
+      hasResetBefore: this.hasResetBefore,
+      items: this.items.map(item => ({
+        id: item.id,
+        level: item.level,
+        totalSpent: item.totalSpent,
+        isUnlocked: item.isUnlocked,
+      }))
+    };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
 
@@ -49,17 +63,47 @@ export class TowerShopSystem {
   }
 
   canAfford(item, shards) {
-    return shards >= this.getCurrentCost(item) && item.level < item.maxLevel;
+    return shards >= this.getCurrentCost(item) && item.level < item.maxLevel && item.isUnlocked;
   }
 
   getEffectValue(item) {
+    // Позволяет добавлять функции масштабирования эффекта
+    if (typeof item.effectFn === "function") {
+      return item.effectFn(item.level);
+    }
     return item.valuePerLevel * item.level;
+  }
+
+  unlockItemIfNeeded(item, playerFloor) {
+    // Если у магазина башни указан unlockLevel, откроем по достижению этажа
+    if (!item.isUnlocked && item.unlockLevel && playerFloor >= item.unlockLevel) {
+      item.isUnlocked = true;
+      Notification.show(`Доступно новое улучшение: "${item.name}"!`);
+      this.saveState();
+      return true;
+    }
+    return false;
+  }
+
+  autoUnlockByFloor(playerFloor) {
+    let changed = false;
+    for (const item of this.items) {
+      if (this.unlockItemIfNeeded(item, playerFloor)) {
+        changed = true;
+      }
+    }
+    if (changed) this.saveState();
   }
 
   buyUpgrade(itemId, shards) {
     const item = this.items.find(i => i.id === itemId);
     if (!item) {
       Notification.show('Улучшение не найдено');
+      return { success: false, newShards: shards };
+    }
+
+    if (!item.isUnlocked) {
+      Notification.show('Улучшение ещё не разблокировано');
       return { success: false, newShards: shards };
     }
 
@@ -74,27 +118,32 @@ export class TowerShopSystem {
       return { success: false, newShards: shards };
     }
 
-    item.level++;
+    item.level += 1;
     item.totalSpent += cost;
     this.saveState();
 
-    Notification.show(`${item.name} улучшен до уровня ${item.level}`);
+    Notification.show(`${item.name} улучшен до уровня ${item.level}${item.level === item.maxLevel ? ' (МАКС)' : ''}`);
     return { success: true, newShards: shards - cost };
   }
 
-  getAllItems(shards) {
+  getAllItems(shards, playerFloor = 1) {
+    // Можно вызвать авторазблокировку на всякий случай
+    this.autoUnlockByFloor(playerFloor);
     return this.items.map(item => ({
       ...item,
       currentCost: this.getCurrentCost(item),
       canAfford: this.canAfford(item, shards),
       effectValue: this.getEffectValue(item),
-      progressPercent: (item.level / item.maxLevel) * 100
+      progressPercent: (item.level / item.maxLevel) * 100,
+      isUnlocked: !!item.isUnlocked,
+      unlockedAt: item.unlockLevel || 1,
     }));
   }
 
   getTotalBonus(stat) {
-    const item = this.items.find(i => i.stat === stat);
-    return item ? this.getEffectValue(item) : 0;
+    return this.items
+      .filter(i => i.stat === stat && i.isUnlocked)
+      .reduce((sum, item) => sum + this.getEffectValue(item), 0);
   }
 
   resetAll() {
@@ -110,9 +159,45 @@ export class TowerShopSystem {
     this.items = this.items.map(item => ({
       ...item,
       level: 0,
-      totalSpent: 0
+      totalSpent: 0,
+      isUnlocked: item.unlockLevel ? false : true // после сброса блокируем всё, что требует unlock
     }));
+    this.hasResetBefore = true;
     this.saveState();
+    Notification.show(`Все улучшения сброшены. Вернули ${totalRefund} потраченных осколков!`);
     return totalRefund;
+  }
+
+  // Можно добавить функцию для сброса одного улучшения (по желанию)
+  resetUpgrade(itemId) {
+    const item = this.items.find(i => i.id === itemId);
+    if (!item || item.level <= 0) {
+      Notification.show('Нечего сбрасывать');
+      return 0;
+    }
+    let refund = 0;
+    for (let level = 0; level < item.level; level++) {
+      refund += Math.floor(item.baseCost * Math.pow(item.costMultiplier, level));
+    }
+    item.level = 0;
+    item.totalSpent = 0;
+    if (item.unlockLevel) item.isUnlocked = false;
+    this.saveState();
+    Notification.show(`Улучшение "${item.name}" сброшено. Возврат: ${refund} осколков.`);
+    return refund;
+  }
+
+  // Быстрый способ инфо по магазину
+  getStoreSummary() {
+    return this.items.map(item => ({
+      name: item.name,
+      level: item.level,
+      max: item.maxLevel,
+      isUnlocked: !!item.isUnlocked,
+      unlockedAt: item.unlockLevel,
+      nextCost: this.getCurrentCost(item),
+      totalSpent: item.totalSpent,
+      bonus: this.getEffectValue(item)
+    }));
   }
 }
