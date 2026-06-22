@@ -98,7 +98,7 @@ export class TowerModal {
                     <i class="fas fa-gem" style="font-size:1em;"></i>
                     <span>${state.shadowShards}</span>
                   </span>
-                  · чекпоинт ${state.checkpointFloor}
+                  · Свеча: ${state.checkpointFloor} этаж
                 </div>
            
               </div>
@@ -116,7 +116,7 @@ export class TowerModal {
           <footer class="tower-arena-footer">
             <div class="tower-arena-progress">
               <div class="tower-arena-progress-row">
-                <span>Прогресс цели</span>
+                <span>Прогресс башни</span>
                 <span>${state.floorProgressPercent}%</span>
               </div>
               <div class="tower-arena-progress-bar">

@@ -15,7 +15,7 @@
 /* ===== Модалка Tower: фон как в арене (как на главном экране) ===== */
 .tower-modal--arena-clone {
   background:
-    linear-gradient(rgba(0, 0, 0, 0.233), #000000bf),
+    linear-gradient(rgba(0, 0, 0, 0.274), #00000098),
     url('../assets/images/bg.png') center center / cover no-repeat fixed,
     #0a0a0a;
 }
@@ -24,8 +24,8 @@
 .tower-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(1px);
+  background: rgba(0, 0, 0, 0.226);
+  backdrop-filter: blur(0.5px);
 }
 
 /* ===== Контентная обёртка приложения внутри модалки ===== */
@@ -213,7 +213,11 @@
   height: 165px;
   transform: translate(-50%, -50%);
   z-index: 2;
-  animation: oreole-rotate 9s linear infinite;
+  animation-name: oreole-rotate;
+  animation-duration: 1.8s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-play-state: running !important;
   background: url('../assets/images/oreole/oreole.png') no-repeat center center;
   background-size: contain;
 }
@@ -233,7 +237,7 @@
 /* ===== Анимация нажатия на кликер ===== */
 .tower-clicker:active,
 .tower-clicker-hit {
-  transform: scale(0.95);
+  transform: scale(0.85);
 }
 
 /* ===== Отключённый кликер ===== */
@@ -246,15 +250,14 @@
 /* ===== Панель героя (обёртка группы героев) ===== */
 .tower-hero-panel {
   display: flex;
-  gap: 5px;
-  margin-top: 20px;
-  margin-bottom: 10px;
+  gap: 8px;
+  margin-top: 10px;
   flex-wrap: wrap;
   max-width: 321px;
   margin-left: auto;
   margin-right: auto;
-  padding: 14px 20px;
-  border-radius: 30px;
+  padding: 15px 20px;
+  border-radius: 30px 30px 0px 0px;
   justify-content: space-between;
   align-items: center;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -299,7 +302,7 @@
 /* ===== Имя героя ===== */
 .tower-hero-name {
   font-family: 'Neucha', cursive;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   color: #ffffff;
   line-height: 1;
 }
@@ -326,29 +329,33 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0px;
 }
 
 /* ===== Прогресс и действия арены ===== */
 .tower-arena-progress {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(10, 10, 10, 0.28);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 10, 10, 0.212);
   backdrop-filter: blur(3px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
-  border-radius: 24px;
-  padding: 12px 20px;
+  border-radius: 0px;
+  padding: 13px 20px;
   display: grid;
   gap: 2px;
   align-items: baseline;
 }
 
 .tower-arena-actions {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(10, 10, 10, 0.28);
   backdrop-filter: blur(3px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
-  border-radius: 24px;
-  padding: 12px 12px;
+  border-radius: 0px 0px 34px 34px;
+  padding: 13px 18px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 14px;
