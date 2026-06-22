@@ -225,13 +225,28 @@ export class TowerSystem {
       this.lastCheckpointFloor = enemy.floor;
     }
 
+    // Добавьте супернаграду за прохождение 10 этажей и босса (последний этаж)
     if (this.currentFloor >= this.floors[this.floors.length - 1].floor) {
       this.isCleared = true;
-      Notification.show(`Башня откликнулась вам. Получено ${enemy.reward} Теней и ${enemy.shards} осколков.`);
+      // Супернаграда
+      const superReward = 100_000;
+      this.game.addCurrency(superReward);
+
+      Notification.show(`Башня откликнулась вам. СУПЕР НАГРАДА: ${superReward.toLocaleString('ru-RU')} Теней! (и ещё ${enemy.shards} осколков)`);
+
+      // Сбросить башню на начало
+      this.currentFloor = 1;
+      this.lastCheckpointFloor = 1;
+      this.playerMaxHp = this.calculatePlayerMaxHp();
+      this.playerHp = this.playerMaxHp;
       this.enemyHp = 0;
+      this.ensureFloorState();
+      this.saveProgress();
+
       return;
     }
 
+    // Награда за обычный этаж/босса (но не за полный цикл)
     Notification.show(`Этаж ${enemy.floor} очищен. Получено ${enemy.reward} Теней и ${enemy.shards} осколков.`);
     this.currentFloor += 1;
     this.playerMaxHp = this.calculatePlayerMaxHp();
@@ -242,14 +257,15 @@ export class TowerSystem {
   }
 
   handlePlayerDefeat() {
-    const fallbackFloor = Math.max(1, this.lastCheckpointFloor);
-    this.currentFloor = fallbackFloor;
+    // Всегда возвращаться на первый этаж при поражении
+    this.currentFloor = 1;
+    this.lastCheckpointFloor = 1;
     this.playerMaxHp = this.calculatePlayerMaxHp();
     this.playerHp = this.playerMaxHp;
     this.enemyHp = 0;
     this.ensureFloorState();
     this.saveProgress();
-    Notification.show(`Башня отвергла вас. Возврат на этаж ${fallbackFloor}.`);
+    Notification.show(`Башня отвергла вас. Возврат на этаж 1.`);
     this.triggerUpdate();
   }
 
