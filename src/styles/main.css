@@ -70,7 +70,9 @@
   #tap-button,
   #open-chest,
   #shop,
-  #profile {
+  #tower-entry-btn,
+  #profile,
+  #inventory-btn {
     background: #1a1a1a;
     border: 1px solid #404040;
     color: #ffffff;
@@ -87,7 +89,9 @@
   #tap-button:hover,
   #open-chest:hover,
   #shop:hover,
-  #profile:hover {
+  #tower-entry-btn:hover,
+  #profile:hover,
+  #inventory-btn:hover {
     background: #2d2d2d;
     transform: scale(1.1);
   }
@@ -105,7 +109,7 @@
     top: 80px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
-    background: transparent;
+    background: #1a1a1a8c;
     backdrop-filter: blur(4px);
     color: #ffffff;
     padding: 16px 24px;
@@ -116,7 +120,7 @@
     line-height: 1.5;
     box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 30px rgba(255,255,255,0.1);
     border: 1px solid rgba(255,255,255,0.1);
-    z-index: 2000;
+    z-index: 3001;
     opacity: 0;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
@@ -186,20 +190,29 @@
   
   .ui-panel {
     display: flex;
-    gap: 14px;
+    gap: 11px;
     margin-top: 20px;
     margin-bottom: 20px;
     flex-wrap: wrap;
-    max-width: 290px;
+    max-width: 360px;
     margin-left: auto;
     margin-right: auto;
-    padding: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
-    border-radius: 30px;
+    padding: 10px 14px;
+    border-radius: 999px;
     justify-content: center;
-    border: 1px solid #2d2d2d;
-    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(10, 10, 10, 0.28);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+  }
+
+  .ui-panel #tower-entry-btn {
+    border-color: rgba(180, 122, 255, 0.329);
+    box-shadow: 0 0 18px rgba(146, 76, 255, 0.18);
+  }
+  .ui-panel #tower-entry-btn:hover {
+    box-shadow: 0 0 14px 4px rgba(180, 122, 255, 0.26);
+    background: rgba(145, 76, 255, 0.116);
   }
 
   .active-items-hud {
@@ -209,12 +222,12 @@
     z-index: 950;
     display: none;
     flex-direction: column;
-    gap: 10px;
+    gap: 0px;
     width: min(75px, 52vw);
-    padding: 10px;
+    padding: 2px 6px 2px 6px;
     border-radius: 16px;
     background: rgba(40, 40, 40, 0.055);
-    border: 0.5px solid rgba(255, 255, 255, 0.034);
+    border: 0px solid rgba(255, 255, 255, 0.034);
     backdrop-filter: blur(2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
   }

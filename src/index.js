@@ -6,6 +6,8 @@ import { ProfileModal } from './components/ProfileModal.js';
 import { ChestShopModal } from './components/ChestShopModal.js'; // ✅ Новый импорт
 import { VisualEffects } from './components/VisualEffects.js';
 import { ActiveItemsHud } from './components/ActiveItemsHud.js';
+import { TowerSystem } from './logic/towerSystem.js';
+import { TowerModal } from './components/TowerModal.js';
 
 // Инициализация Telegram
 const Telegram = window.Telegram?.WebApp;
@@ -32,6 +34,7 @@ const clicker = document.getElementById('clicker');
 const openChestBtn = document.getElementById('open-chest');
 const inventoryBtn = document.getElementById('inventory-btn');
 const shopBtn = document.getElementById('shop');
+const towerEntryBtn = document.getElementById('tower-entry-btn');
 const profileBtn = document.getElementById('profile');
 
 // Обновление валюты
@@ -45,6 +48,9 @@ function formatNumber(num) {
   return num.toFixed(2);
 }
 
+const towerSystem = new TowerSystem(game, Telegram);
+const towerModal = new TowerModal(towerSystem);
+
 // Обработчики событий
 clicker.addEventListener('click', (event) => {
   // Устанавливаем позиционирование при первом клике
@@ -53,7 +59,9 @@ clicker.addEventListener('click', (event) => {
   }
   
   const gainedAmount = game.handleClick();
-  VisualEffects.showFloatingGain(event.clientX, event.clientY, gainedAmount);
+  VisualEffects.showFloatingGain(event.clientX, event.clientY, gainedAmount, {
+    isEternalClockActive: game.isEternalClockActive()
+  });
   animateClicker();
 });
 
@@ -75,6 +83,14 @@ inventoryBtn.addEventListener('click', () => {
 shopBtn.addEventListener('click', () => {
   shopModal.show();
 });
+
+if (towerEntryBtn) {
+  towerEntryBtn.addEventListener('click', () => {
+    towerModal.show();
+  });
+} else {
+  console.warn('Кнопка входа в Башню Теней не найдена в DOM');
+}
 
 // Профиль - создаём после передачи shopSystem
 const profileModal = new ProfileModal(game, Telegram);
@@ -99,6 +115,7 @@ document.addEventListener('currencyChanged', updateCurrencyDisplay);
 // Автосохранение
 setInterval(() => {
   game.saveProgress();
+  towerSystem.saveProgress();
 }, CONFIG.saveInterval);
 
 // Запускаем авто-доход

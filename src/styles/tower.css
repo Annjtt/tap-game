@@ -1,0 +1,361 @@
+.tower-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+}
+
+/* ===== Модалка Tower: контейнер и фон ===== */
+.tower-modal {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* ===== Модалка Tower: фон как в арене (как на главном экране) ===== */
+.tower-modal--arena-clone {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.233), #000000bf),
+    url('../assets/images/bg.png') center center / cover no-repeat fixed,
+    #0a0a0a;
+}
+
+/* ===== Бэкдроп модального окна ===== */
+.tower-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(1px);
+}
+
+/* ===== Контентная обёртка приложения внутри модалки ===== */
+.tower-app {
+  position: relative;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 45px 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Заголовок Tower (клон стиля header) ===== */
+.tower-header-clone {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  align-self: center;
+  background-color: #0a0a0a41;
+  backdrop-filter: blur(2px);
+  width: 364px;
+  border: 1px solid #66666649;
+  max-width: 364px;
+  border-radius: 36px;
+  padding: 10px 0;
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+/* ===== Панель босса ===== */
+.tower-boss-panel {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  align-self: center;
+  background-color: transparent;
+  width: 340px;
+  border-top: 1px solid #66666649;
+  max-width: 340px;
+  border-radius: 0px;
+  padding: 10px 26px;
+  position: relative;
+}
+
+/* ===== Верхняя часть панели босса ===== */
+.tower-boss-panel-top {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 0px;
+}
+
+/* ===== Мелкий субзаголовок (kicker) босса ===== */
+.tower-boss-kicker {
+  font-family: 'Neucha', cursive;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  color: #d6c6ff;
+}
+
+/* ===== Кнопка закрытия модального окна ===== */
+.tower-close-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #404040;
+  background: #1a1a1a;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tower-close-btn:hover {
+  background: #2d2d2d;
+  transform: scale(1.05);
+}
+
+/* ===== Имя босса ===== */
+.tower-boss-panel-name {
+  font-family: 'Neucha', cursive;
+  font-size: 1.45rem;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+/* ===== Метаданные босса, субтитлы ===== */
+.tower-boss-panel-meta,
+.tower-hero-subtitle,
+.tower-arena-progress-row,
+.tower-boss-panel-hp {
+  color: #bdbdbd;
+  font-size: 0.82rem;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+/* ===== Базы для индикаторов — полоски хп (босса, героя, арены) ===== */
+.tower-boss-panel-bar,
+.tower-hero-hp-bar,
+.tower-arena-progress-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+/* ===== Заполнители полосок — анимация заполнения ===== */
+.tower-boss-panel-bar-fill,
+.tower-hero-hp-fill,
+.tower-arena-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.22s ease;
+}
+
+/* ===== Градиенты заполнения полосок ===== */
+.tower-boss-panel-bar-fill {
+  background: linear-gradient(90deg, #c73d3d, #ff946a);
+}
+.tower-hero-hp-fill {
+  background: linear-gradient(90deg, #39df91, #40989e);
+}
+.tower-arena-progress-fill {
+  background: linear-gradient(90deg, #7250ec, #cf98ff);
+}
+
+/* ===== Зона игры (центральная часть) ===== */
+.tower-game-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1px 0;
+}
+
+/* ===== Кликер-кнопка в центре ===== */
+.tower-clicker {
+  position: relative;
+  width: 155px;
+  height: 155px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s ease;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+  box-shadow: 0 0 20px rgba(255,255,255,0.05);
+  z-index: 1;
+  overflow: visible;
+}
+
+/* ===== Центральная заливка (glare) кликера ===== */
+.tower-clicker-core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255,255,255,0.12), transparent 20%),
+    linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+}
+
+/* ===== Орёл вокруг кликера ===== */
+.tower-clicker-oreole {
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 165px;
+  height: 165px;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  animation: oreole-rotate 9s linear infinite;
+  background: url('../assets/images/oreole/oreole.png') no-repeat center center;
+  background-size: contain;
+}
+
+/* ===== Символ-глиф кликера (буква) ===== */
+.tower-clicker-glyph {
+  position: relative;
+  z-index: 3;
+  font-family: 'Neucha', cursive;
+  font-size: 4.2rem;
+  color: #e9defd;
+  text-shadow: 0 0 18px rgba(172, 98, 255, 0.55);
+  line-height: 1;
+  
+}
+
+/* ===== Анимация нажатия на кликер ===== */
+.tower-clicker:active,
+.tower-clicker-hit {
+  transform: scale(0.95);
+}
+
+/* ===== Отключённый кликер ===== */
+.tower-clicker.is-disabled,
+.tower-clicker:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== Панель героя (обёртка группы героев) ===== */
+.tower-hero-panel {
+  display: flex;
+  gap: 5px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  max-width: 364px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 14px 20px;
+  border-radius: 30px;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 10, 10, 0.205);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+}
+
+/* ===== Блок с основным контентом героя (аватар+имя+мета) ===== */
+.tower-hero-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* ===== Контейнер с аватаром героя ===== */
+.tower-hero-avatar-wrap {
+  flex-shrink: 0;
+}
+
+/* ===== Аватар героя и плейсхолдер ===== */
+.tower-hero-avatar,
+.tower-hero-avatar--placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1a1a1a;
+  border: 1px solid #404040;
+  color: #fff;
+}
+
+/* ===== Метаинформация героя ===== */
+.tower-hero-meta {
+  min-width: 0;
+}
+
+/* ===== Имя героя ===== */
+.tower-hero-name {
+  font-family: 'Neucha', cursive;
+  font-size: 1.15rem;
+  color: #ffffff;
+  line-height: 1;
+}
+
+/* ===== Блок полоски хп героя ===== */
+.tower-hero-hp-block {
+  flex: 1;
+  min-width: 170px;
+}
+
+/* ===== Ряды с хп и прогрессом ===== */
+.tower-hero-hp-row,
+.tower-arena-progress-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+/* ===== Нижний футер арены ===== */
+.tower-arena-footer {
+  width: min(360px, calc(100% - 24px));
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== Прогресс и действия арены ===== */
+.tower-arena-progress,
+.tower-arena-actions {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 10, 10, 0.28);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+  border-radius: 24px;
+  padding: 12px 18px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  align-items: baseline;
+}
+
+/* ===== Вторичная кнопка (например, выход или действие) ===== */
+.tower-secondary-btn {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 999px;
+  padding: 10px 24px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  background: #2d2d2da2;
+  border: 1px solid #cccccc34;
+  color: #fff;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(3px);
+}
+.tower-secondary-btn:hover {
+  transform: rotate(1.1deg) scale(1.05);
+  background: #383838d2;
+}

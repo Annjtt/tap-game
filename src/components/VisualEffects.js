@@ -25,48 +25,57 @@ export class VisualEffects {
       document.head.appendChild(style);
     }
   
-    /**
+     /**
      * Показывает всплывающую индикацию награды (+число) с учетом предметных и временных эффектов.
      * @param {number} x
      * @param {number} y
      * @param {number|string} amount
-     * @param {object} [options] - { sourceItemId, isEternalClockActive }
+     * @param {object} [options] - { sourceItemId, isEternalClockActive, isEnemyAttack, isHeal }
      */
     static showFloatingGain(x, y, amount, options = {}) {
       this.ensureFloatingGainStyles();
 
       const value = Number(amount);
-      if (!Number.isFinite(value) || value <= 0) {
+      if (!Number.isFinite(value) || value === 0) {
         return;
       }
-      const roundedValue = Math.round(value);
+      const roundedValue = Math.round(Math.abs(value));
       const randomTilt = (Math.random() * 26 - 3).toFixed(2);
+      const isEnemyAttack = options.isEnemyAttack === true;
+      const isHeal = options.isHeal === true;
 
       // По умолчанию цвет
-      let color = '#f5f5f5';
-      let textShadow = '0 0 4px rgba(0, 0, 0, 0.92), 0 0 10px rgba(65, 65, 65, 0.63)';
+      let color = isEnemyAttack ? '#ff4242' : '#f5f5f5';
+      let textShadow = isEnemyAttack
+        ? '0 0 4px rgba(0, 0, 0, 0.92), 0 0 10px rgba(255, 66, 66, 0.8)'
+        : '0 0 4px rgba(0, 0, 0, 0.92), 0 0 10px rgba(65, 65, 65, 0.63)';
       let fontWeight = '700';
       let styleBoost = false;
+      let prefix = isEnemyAttack ? '' : '+';
 
       // Особые цвета: lightning_dagger, chaos_seal, super-ярко если eternal_clock
-      if (options.isEternalClockActive) {
-        // Эффект Этерна — особый яркий стиль
-        color = '#fff200'; // очень ярко-жёлтый цвет самих букв
-        textShadow = '0 0 16px rgb(111, 0, 255), 0 0 28px rgb(167, 19, 197), 0 0 60px #fff200, 0 0 95px #ff0080'; // добавлено больше glow
+      if (options.isEternalClockActive && !isEnemyAttack) {
+        color = '#fff200';
+        textShadow = '0 0 16px rgb(111, 0, 255), 0 0 28px rgb(167, 19, 197), 0 0 60px #fff200, 0 0 95px #ff0080';
         fontWeight = '900';
         styleBoost = true;
-      } else if (options.sourceItemId === 'lightning_dagger') {
+      } else if (options.sourceItemId === 'lightning_dagger' && !isEnemyAttack) {
         color = '#ffe021';
-        textShadow = '0 0 8px rgba(135, 255, 249, 0.74), 0 0 18pxrgba(139, 228, 255, 0.73), 0 0 24pxrgba(255, 0, 234, 0.9)';
+        textShadow = '0 0 8px rgba(135, 255, 249, 0.74), 0 0 18px rgba(139, 228, 255, 0.73), 0 0 24px rgba(255, 0, 234, 0.9)';
         fontWeight = '900';
-      } else if (options.sourceItemId === 'chaos_seal') {
-        color = '#b700ff'; // Ярко фиолетовый
-        textShadow = '0 0 10px rgb(255, 2, 153), 0 0 28pxrgba(170, 2, 255, 0.78)';
+      } else if (options.sourceItemId === 'chaos_seal' && !isEnemyAttack) {
+        color = '#b700ff';
+        textShadow = '0 0 10px rgb(255, 2, 153), 0 0 28px rgba(170, 2, 255, 0.78)';
         fontWeight = '900';
+      } else if (isHeal) {
+        color = '#41d87c';
+        textShadow = '0 0 8px rgba(65, 216, 124, 0.8), 0 0 16px rgba(165, 245, 158, 0.6)';
+        fontWeight = '800';
+        prefix = '+';
       }
 
       const floatingValue = document.createElement('div');
-      floatingValue.textContent = `+${roundedValue}`;
+      floatingValue.textContent = `${prefix}${roundedValue}`;
       floatingValue.style.position = 'fixed';
       floatingValue.style.left = `${x}px`;
       floatingValue.style.top = `${y}px`;

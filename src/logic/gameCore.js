@@ -63,6 +63,15 @@ export class GameCore {
     return amount;
   }
 
+  getPlayerDisplayName(telegram) {
+    const user = telegram?.initDataUnsafe?.user;
+    if (!user) {
+      return 'Странник Тени';
+    }
+
+    return [user.first_name, user.last_name].filter(Boolean).join(' ') || user.username || 'Странник Тени';
+  }
+
   checkActiveEffects() {
     const activeItems = this.getActiveItemsByName();
     let multiplier = this.isEternalClockActive() ? 3 : 1;

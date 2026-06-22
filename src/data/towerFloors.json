@@ -1,0 +1,122 @@
+[
+  {
+    "floor": 1,
+    "enemyId": "whispering_shade",
+    "name": "Шепчущая Тень",
+    "type": "normal",
+    "maxHp": 600,
+    "damage": 4,
+    "attackIntervalMs": 2200,
+    "reward": 45,
+    "shards": 1,
+    "description": "Тень на пороге башни испытывает силу первого удара."
+  },
+  {
+    "floor": 2,
+    "enemyId": "ink_hollow",
+    "name": "Чернильная Полость",
+    "type": "normal",
+    "maxHp": 950,
+    "damage": 6,
+    "attackIntervalMs": 2100,
+    "reward": 60,
+    "shards": 1,
+    "description": "Собирает вокруг себя сгустки живых чернил."
+  },
+  {
+    "floor": 3,
+    "enemyId": "veil_eater",
+    "name": "Пожиратель Завесы",
+    "type": "normal",
+    "maxHp": 1400,
+    "damage": 7,
+    "attackIntervalMs": 2000,
+    "reward": 85,
+    "shards": 2,
+    "description": "Хищная тень, что питается чужой решимостью."
+  },
+  {
+    "floor": 4,
+    "enemyId": "echo_watcher",
+    "name": "Смотритель Эха",
+    "type": "normal",
+    "maxHp": 1900,
+    "damage": 9,
+    "attackIntervalMs": 1900,
+    "reward": 120,
+    "shards": 2,
+    "description": "Отражает каждый промах тяжёлым взором."
+  },
+  {
+    "floor": 5,
+    "enemyId": "archivist_of_dusk",
+    "name": "Архивариус Сумрака",
+    "type": "boss",
+    "maxHp": 3200,
+    "damage": 14,
+    "attackIntervalMs": 1800,
+    "reward": 260,
+    "shards": 4,
+    "description": "Первый хранитель Башни. Его свитки режут не хуже клинка."
+  },
+  {
+    "floor": 6,
+    "enemyId": "ashen_knight",
+    "name": "Пепельный Рыцарь",
+    "type": "normal",
+    "maxHp": 2600,
+    "damage": 12,
+    "attackIntervalMs": 1750,
+    "reward": 170,
+    "shards": 2,
+    "description": "В его доспехах слышится шёпот угасших залов."
+  },
+  {
+    "floor": 7,
+    "enemyId": "mirror_fang",
+    "name": "Зеркальный Клык",
+    "type": "normal",
+    "maxHp": 3300,
+    "damage": 14,
+    "attackIntervalMs": 1700,
+    "reward": 220,
+    "shards": 3,
+    "description": "Острый как стекло, быстрый как отражение."
+  },
+  {
+    "floor": 8,
+    "enemyId": "mournful_bell",
+    "name": "Скорбный Колокол",
+    "type": "normal",
+    "maxHp": 4200,
+    "damage": 16,
+    "attackIntervalMs": 1650,
+    "reward": 290,
+    "shards": 3,
+    "description": "Каждый удар звучит как похоронный звон для слабых."
+  },
+  {
+    "floor": 9,
+    "enemyId": "faceless_scribe",
+    "name": "Безликий Писец",
+    "type": "normal",
+    "maxHp": 5200,
+    "damage": 18,
+    "attackIntervalMs": 1600,
+    "reward": 360,
+    "shards": 4,
+    "description": "Пишет судьбу дуэли на собственных тенях."
+  },
+  {
+    "floor": 10,
+    "enemyId": "king_of_shadows",
+    "name": "Король Теней",
+    "type": "boss",
+    "maxHp": 7600,
+    "damage": 24,
+    "attackIntervalMs": 1500,
+    "reward": 650,
+    "shards": 8,
+    "description": "Тронный владыка первого крыла башни."
+  }
+]
