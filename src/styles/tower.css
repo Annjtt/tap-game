@@ -33,7 +33,7 @@
   position: relative;
   max-width: 480px;
   margin: 0 auto;
-  padding: 45px 0;
+  padding: 45px 0 45px 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -49,12 +49,12 @@
   align-self: center;
   background-color: #0a0a0a41;
   backdrop-filter: blur(2px);
-  width: 364px;
+  width: 321px;
   border: 1px solid #66666649;
-  max-width: 364px;
+  max-width: 321px;
   border-radius: 36px;
   padding: 10px 0;
-  margin-top: 0px;
+  margin-top: 25px;
   margin-bottom: 10px;
 }
 
@@ -69,7 +69,7 @@
   background-color: transparent;
   width: 340px;
   border-top: 1px solid #66666649;
-  max-width: 340px;
+  max-width: 321px;
   border-radius: 0px;
   padding: 10px 26px;
   position: relative;
@@ -140,6 +140,9 @@
   background: rgba(255, 255, 255, 0.08);
   border-radius: 999px;
   overflow: hidden;
+  margin-top: auto;
+  margin-bottom: auto;
+  /* Для родителя .tower-arena-progress или .tower-arena-progress-row должен быть задан height или flex-grow, чтобы это сработало */
 }
 
 /* ===== Заполнители полосок — анимация заполнения ===== */
@@ -247,7 +250,7 @@
   margin-top: 20px;
   margin-bottom: 10px;
   flex-wrap: wrap;
-  max-width: 364px;
+  max-width: 321px;
   margin-left: auto;
   margin-right: auto;
   padding: 14px 20px;
@@ -319,7 +322,7 @@
 
 /* ===== Нижний футер арены ===== */
 .tower-arena-footer {
-  width: min(360px, calc(100% - 24px));
+  width: min(321px, calc(100% - 24px));
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -327,17 +330,28 @@
 }
 
 /* ===== Прогресс и действия арены ===== */
-.tower-arena-progress,
+.tower-arena-progress {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 10, 10, 0.28);
+  backdrop-filter: blur(3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+  border-radius: 24px;
+  padding: 12px 20px;
+  display: grid;
+  gap: 2px;
+  align-items: baseline;
+}
+
 .tower-arena-actions {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(10, 10, 10, 0.28);
   backdrop-filter: blur(3px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
   border-radius: 24px;
-  padding: 12px 18px;
+  padding: 12px 12px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
+  gap: 14px;
   align-items: baseline;
 }
 
