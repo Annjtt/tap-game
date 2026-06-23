@@ -375,10 +375,11 @@ export class TowerSystem {
 
     if (this.currentFloor >= this.floors[this.floors.length - 1].floor) {
       this.isCleared = true;
-      const superReward = 100_000;
+      const superReward = 10_000;
+ 
       this.game.addCurrency(superReward);
 
-      Notification.show(`Башня откликнулась вам. СУПЕР НАГРАДА: ${superReward.toLocaleString('ru-RU')} Теней! (и ещё ${shards} осколков)`);
+      Notification.show(`Башня откликнулась вам. НАГРАДА: ${superReward.toLocaleString('ru-RU')} Теней! и ${shards} осколков`);
 
       this.currentFloor = 1;
       this.lastCheckpointFloor = 1;
