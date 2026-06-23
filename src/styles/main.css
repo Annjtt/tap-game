@@ -380,7 +380,10 @@
   .shop-modal {
     background: #1a1a1a;
     padding: 20px;
-    border-radius: 12px;
+    border-radius: 18px;
+    border-top: 1px solid #66666649;
+    border-right: 1px solid #66666649;
+    border-left: 1px solid #66666649;
     max-width: 90%;
     width: 500px;
     max-height: 80vh;
@@ -393,7 +396,7 @@
     text-align: center;
     margin-bottom: 20px;
     font-size: 1.5rem;
-    color: #e0e0e0;
+    color: #97cace;
     border-bottom: 1px solid #2d2d2d;
     padding-bottom: 10px;
   }
@@ -700,7 +703,9 @@
   .chest-shop-modal {
     background: #88888818;
     backdrop-filter: blur(2px);
-    border: 1px solid #4444446c;
+    border-top: 1px solid #66666649;
+    border-right: 1px solid #66666649;
+    border-left: 1px solid #66666649;
     padding: 20px;
     border-radius: 12px;
     max-width: 90%;
@@ -716,7 +721,7 @@
     text-align: center;
     margin-bottom: 15px;
     font-size: 1.5rem;
-    color: #e0e0e0;
+    color: #97cace;
   }
   
   .chest-shop-grid {
@@ -807,7 +812,7 @@
   }
   
   .buy-chest-btn:not(:disabled) {
-    background: #1dbdbd15;
+    background: #7e8f8f1f;
   }
   
   .buy-chest-btn:not(:disabled):hover {
@@ -870,7 +875,7 @@
     text-align: center;
     margin-bottom: 15px;
     font-size: 1.4rem;
-    color: #e0e0e0;
+    color: #97cace;
   }
   
   .inventory-grid {
@@ -971,8 +976,9 @@
   }
   
   .inventory-slot.empty {
-    background: #1a1a1a;
+    background: radial-gradient(ellipse 60% 60% at 50% 40%, #38383791 70%, #18181c1c 100%);
     border: 1px dashed #404040;
+    box-shadow: 0 3px 12px 0 #161622 inset, 0 1.5px 8px #ffffff0a inset, 0 2.5px 0 #4444440c;
   }
 
   .profile-overlay {
@@ -990,19 +996,23 @@
   }
   
   .profile-modal {
-    background: #1a1a1a;
+    background: #25252567;
     padding: 20px;
     border-radius: 12px;
     max-width: 90%;
     width: 400px;
-    max-height: 80vh;
+    max-height: 82vh;
     overflow-y: auto;
     scrollbar-width: none;
+    border-top: 1px solid #66666649;
+    border-right: 1px solid #66666649;
+    border-left: 1px solid #66666649;
     box-shadow: 0 0 30px rgba(255,255,255,0.1);
     animation: popIn 0.4s ease;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
+    backdrop-filter: blur(2px);
   }
   
   .profile-header {
@@ -1063,11 +1073,12 @@
   
   .profile-stats h3 {
     font-family: 'Neucha', cursive;
-    color: #e0e0e0;
+    color: #7dc5ca;
     margin: 0 0 10px 0;
     text-align: center;
     border-bottom: 1px solid #2d2d2d;
     padding-bottom: 5px;
+    letter-spacing: 0.75px;
   }
   
   .stat-item {
@@ -1083,10 +1094,10 @@
   }
   
   .stat-value {
-    color: #cccccc;
+    color: #97cace;
     font-weight: bold;
     font-family: 'Neucha', cursive;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
   }
   
   #close-profile {
@@ -1119,7 +1130,7 @@
   .reset-btn {
     width: 100%;
     padding: 12px;
-    background: #444444;
+    background: #44444481;
     border: none;
     border-radius: 6px;
     color: #cccccc;
@@ -1130,8 +1141,8 @@
   }
   
   .reset-btn:hover {
-    background: #79161693;
-    transform: scale(1.02);
+    background: #7dc5ca7c;
+    transform: scale(0.97);
   }
   
   .reset-btn:active {

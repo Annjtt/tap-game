@@ -595,18 +595,21 @@
   border-radius: 28px;
   padding: 14px 18px 40px 18px; /* bottom padding for fixed close button */
   display: flex;
+  border-top: 1px solid #66666649;
+  border-right: 1px solid #66666649;
+  border-left: 1px solid #66666649;
   flex-direction: column;
   width: 420px;
   max-width: calc(100vw - 32px);
   min-height: 340px;
   z-index: 3003;
-  background: rgba(15, 15, 15, 0.288);
+  background: rgba(49, 49, 49, 0.288);
   box-shadow: 0 12px 42px 0 rgba(34, 34, 34, 0.432);
   pointer-events: auto;
   overflow: hidden;
 }
 .tower-shop-shell {
-  max-height: 86vh;
+  max-height: 100%;
   overflow: visible;
 }
 
@@ -635,18 +638,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
+  gap: 10px;
   margin-bottom: 18px;
 }
 .tower-shop-header h2 {
   font-size: 1.45rem;
   font-weight: 600;
-  color: #c4c4c4;
+  color: #97cace;
   display: flex;
   align-items: center;
   gap: 10px;
   letter-spacing: 1.1px;
   margin: 0;
+  margin-left: 8px;
   flex: 1 1 auto;
 }
 .tower-shop-header i.fa-vault {
@@ -702,14 +706,18 @@
 .tower-shop-actions {
   display: flex;
   justify-content: flex-end;
+  margin-top: 12px;
   margin-bottom: 12px;
+  align-self: flex-end;
+  order: 99;
+  align-self: center;
 }
 
 .tower-shop-reset-btn {
   min-height: 40px;
   border-radius: 999px;
   padding: 8px 16px;
-  background: rgba(100, 24, 24, 0.45);
+  background: rgba(128, 31, 31, 0.45);
   color: #ffd7d7;
   border: 1px solid rgba(255, 140, 140, 0.28);
   cursor: pointer;
@@ -856,7 +864,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 3px;
 }
 .tower-shop-buy-btn:hover:not(:disabled) {
   filter: brightness(1.14) contrast(1.12);
@@ -886,11 +894,9 @@
   left: 50%;
   transform: translateX(-50%);
   bottom: 42px;
-  min-width: 110px;
-  width: 80vw;
-  max-width: 180px;
+  min-width: 100px;
+  width: 40vw;
   margin: 0 auto;
-  min-height: 47px;
   border-radius: 999px;
   padding: 10px 0;
   background: #3030306e;
@@ -906,7 +912,7 @@
 }
 .tower-shop-close-btn:hover,
 .tower-shop-close-btn:focus {
-  background: #ad566f2a;
+  background: #7575754b;
   color: #fff;
   border: 1.5px solid #ffc8952c;
 }
@@ -914,13 +920,6 @@
 
 
 /* Обеспечить скроллинг только у содержимого, а не у футера */
-.tower-shop-shell {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  overflow: visible;
-  position: relative;
-}
 .tower-shop-header,
 .tower-shop-grid {
   flex-shrink: 0;
@@ -934,11 +933,6 @@
   overflow-y: auto;
   flex: 1 1 auto;
   min-height: 0;
-}
-
-/* Контейнер, чтобы скрыть контент за фиксированной кнопкой */
-.tower-shop-shell {
-  padding-bottom: 10px;
 }
 
 

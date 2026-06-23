@@ -44,6 +44,11 @@ export class ProfileModal {
           <span class="stat-value">+${this.tower.getRegenPerHit()}</span>
         </div>
       </div>
+      <button id="reset-tower-shop" class="reset-btn">
+        <i class="fas fa-dungeon" style="margin-right: 6px;"></i>
+        Сбросить улучшения башни
+      </button>
+ 
     ` : '';
 
     this.container = document.createElement('div');
@@ -78,10 +83,13 @@ export class ProfileModal {
             <span class="stat-value">${this.game.items.length}</span>
           </div>
         </div>
+        <button id="reset-shop" class="reset-btn">
+          <i class="fas fa-store" style="margin-right: 6px;"></i>
+          Сбросить улучшения
+        </button> 
 
         ${towerSection}
-        
-        <button id="reset-shop" class="reset-btn">Сбросить улучшения</button>
+          
         <button id="close-profile"><i class="fas fa-times"></i> Закрыть</button>
       </div>
     `;
@@ -106,6 +114,7 @@ export class ProfileModal {
   bindActions() {
     const closeBtn = this.container.querySelector('#close-profile');
     const resetBtn = this.container.querySelector('#reset-shop');
+    const resetTowerBtn = this.container.querySelector('#reset-tower-shop');
 
     resetBtn?.addEventListener('click', () => {
       if (confirm('Вы уверены, что хотите сбросить все улучшения магазина? Вы получите все Тени за потраченные улучшения.')) {
@@ -115,6 +124,13 @@ export class ProfileModal {
         } else {
           alert('Система магазина недоступна');
         }
+      }
+    });
+
+    resetTowerBtn?.addEventListener('click', () => {
+      if (confirm('Вы уверены, что хотите сбросить все улучшения башни? Осколки будут возвращены.')) {
+        const refund = this.tower.resetShopUpgrades();
+        alert(`Улучшения башни сброшены. Получено: ${refund} осколков`);
       }
     });
 
