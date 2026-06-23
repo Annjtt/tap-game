@@ -2,8 +2,9 @@ import { Notification } from './Notification.js';
 import { TowerShopModal } from './TowerShopModal.js';
 
 export class TowerModal {
-  constructor(towerSystem) {
+  constructor(towerSystem, onProfileOpen) {
     this.tower = towerSystem;
+    this.onProfileOpen = onProfileOpen;
     this.isOpen = false;
     this.container = null;
     this.boundUpdate = (event) => this.render(event.detail);
@@ -138,6 +139,14 @@ export class TowerModal {
       : '<div class="tower-hero-avatar tower-hero-avatar--placeholder"><i class="fas fa-user"></i></div>';
 
     avatarWrap.innerHTML = heroAvatar;
+    avatarWrap.style.cursor = 'pointer';
+    avatarWrap.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (this.onProfileOpen) {
+        this.hide();
+        this.onProfileOpen();
+      }
+    });
     this.container.querySelector('.tower-boss-kicker').textContent = floorTypeLabel;
     this.container.querySelector('.tower-boss-panel-name').textContent = enemy?.name || 'Неизвестная Тень';
     this.container.querySelector('.tower-boss-panel-bar-fill').style.width = `${enemyHpPercent}%`;

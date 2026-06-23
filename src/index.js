@@ -49,7 +49,7 @@ function formatNumber(num) {
 }
 
 const towerSystem = new TowerSystem(game, Telegram);
-const towerModal = new TowerModal(towerSystem);
+const towerModal = new TowerModal(towerSystem, () => profileModal.show());
 
 // Обработчики событий
 clicker.addEventListener('click', (event) => {

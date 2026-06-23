@@ -3,15 +3,22 @@ export class ProfileModal {
     this.game = gameCore;
     this.telegram = telegram;
     this.tower = towerSystem || null;
+    this.isOpen = false;
+    this.container = null;
   }
 
   show() {
-    const user = this.telegram?.initDataUnsafe?.user;
-
-    if (!user) {
-      alert('Не удалось получить данные пользователя из Telegram');
+    if (this.isOpen) {
       return;
     }
+
+    this.isOpen = true;
+
+    const user = this.telegram?.initDataUnsafe?.user;
+    const playerName = this.game.getPlayerDisplayName(this.telegram);
+    const avatarUrl = user?.photo_url || '';
+    const username = user?.username || null;
+    const userId = user?.id || null;
 
     const towerSection = this.tower ? `
       <div class="profile-stats">
@@ -39,16 +46,16 @@ export class ProfileModal {
       </div>
     ` : '';
 
-    const container = document.createElement('div');
-    container.className = 'profile-overlay';
-    container.innerHTML = `
+    this.container = document.createElement('div');
+    this.container.className = 'profile-overlay';
+    this.container.innerHTML = `
       <div class="profile-modal">
         <div class="profile-header">
-          <img src="${user.photo_url || 'https://via.placeholder.com/80'}" alt="Avatar" class="profile-avatar" onerror="this.src='https://via.placeholder.com/80'">
+          ${avatarUrl ? `<img src="${avatarUrl}" alt="Avatar" class="profile-avatar">` : '<div class="profile-avatar profile-avatar--placeholder"><i class="fas fa-user"></i></div>'}
           <div class="profile-info">
-            <h2 class="profile-name">${user.first_name} ${user.last_name || ''}</h2>
-            <p class="profile-username">@${user.username || 'N/A'}</p>
-            <p class="profile-id">ID: ${user.id}</p>
+            <h2 class="profile-name">${playerName}</h2>
+            ${username ? `<p class="profile-username">@${username}</p>` : ''}
+            ${userId ? `<p class="profile-id">ID: ${userId}</p>` : ''}
           </div>
         </div>
         
@@ -79,12 +86,29 @@ export class ProfileModal {
       </div>
     `;
 
-    document.body.appendChild(container);
+    document.body.appendChild(this.container);
+    this.bindActions();
+  }
 
-    // Обработчик сброса улучшений
-    document.getElementById('reset-shop').addEventListener('click', () => {
+  hide() {
+    if (!this.isOpen || !this.container) {
+      return;
+    }
+
+    if (this.container.parentNode) {
+      this.container.parentNode.removeChild(this.container);
+    }
+
+    this.container = null;
+    this.isOpen = false;
+  }
+
+  bindActions() {
+    const closeBtn = this.container.querySelector('#close-profile');
+    const resetBtn = this.container.querySelector('#reset-shop');
+
+    resetBtn?.addEventListener('click', () => {
       if (confirm('Вы уверены, что хотите сбросить все улучшения магазина? Вы получите все Тени за потраченные улучшения.')) {
-        // Проверяем наличие shopSystem
         if (this.game.shopSystem) {
           const refund = this.game.shopSystem.resetAllUpgrades();
           alert(`Улучшения сброшены. Получено: ${refund} Теней`);
@@ -94,8 +118,6 @@ export class ProfileModal {
       }
     });
 
-    document.getElementById('close-profile').addEventListener('click', () => {
-      document.body.removeChild(container);
-    });
+    closeBtn?.addEventListener('click', () => this.hide());
   }
 }
