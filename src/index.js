@@ -94,7 +94,7 @@ if (towerEntryBtn) {
 }
 
 // Профиль - создаём после передачи shopSystem
-const profileModal = new ProfileModal(game, Telegram);
+const profileModal = new ProfileModal(game, Telegram, towerSystem);
 const activeItemsHud = new ActiveItemsHud(game);
 activeItemsHud.init();
 

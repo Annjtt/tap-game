@@ -1,7 +1,8 @@
 export class ProfileModal {
-  constructor(gameCore, telegram) {
+  constructor(gameCore, telegram, towerSystem) {
     this.game = gameCore;
     this.telegram = telegram;
+    this.tower = towerSystem || null;
   }
 
   show() {
@@ -11,6 +12,32 @@ export class ProfileModal {
       alert('Не удалось получить данные пользователя из Telegram');
       return;
     }
+
+    const towerSection = this.tower ? `
+      <div class="profile-stats">
+        <h3>Башня Теней</h3>
+        <div class="stat-item">
+          <span class="stat-label">Похождений башни:</span>
+          <span class="stat-value">${this.tower.getTowerRunCount()}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Осколков:</span>
+          <span class="stat-value">${this.tower.getShadowShards()}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Базовый урон:</span>
+          <span class="stat-value">${this.tower.getBaseTowerDamage().toFixed(2)}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Макс. HP:</span>
+          <span class="stat-value">${this.tower.getMaxHp()}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Восстановление HP/удар:</span>
+          <span class="stat-value">+${this.tower.getRegenPerHit()}</span>
+        </div>
+      </div>
+    ` : '';
 
     const container = document.createElement('div');
     container.className = 'profile-overlay';
@@ -44,6 +71,8 @@ export class ProfileModal {
             <span class="stat-value">${this.game.items.length}</span>
           </div>
         </div>
+
+        ${towerSection}
         
         <button id="reset-shop" class="reset-btn">Сбросить улучшения</button>
         <button id="close-profile"><i class="fas fa-times"></i> Закрыть</button>

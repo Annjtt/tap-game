@@ -41,6 +41,7 @@ export class TowerSystem {
     this.lastAutoDamageAt = Date.now();
     this.defeatedBosses = [];
     this.isCleared = false;
+    this.towerRunCount = 0;
 
     if (this.towerShop && typeof this.towerShop.resetShop === 'function') {
       this.towerShop.resetShop();
@@ -65,6 +66,29 @@ export class TowerSystem {
     }
 
     return this.towerShop.getTotalBonus(stat);
+  }
+
+  getTowerRunCount() {
+    return this.towerRunCount;
+  }
+
+  getShadowShards() {
+    return this.shadowShards;
+  }
+
+  getBaseTowerDamage() {
+    const baseDamage = this.game.getClickValue();
+    const modifiers = this.getItemCombatModifiers();
+    const towerDamageBonus = this.getShopBonus('damage_percent');
+    return Math.max(1, (baseDamage + modifiers.flatDamage) * (1 + towerDamageBonus / 100));
+  }
+
+  getMaxHp() {
+    return this.calculatePlayerMaxHp();
+  }
+
+  getRegenPerHit() {
+    return this.getRegenerationPerHit();
   }
 
   ensureFloorState() {
@@ -375,6 +399,7 @@ export class TowerSystem {
 
     if (this.currentFloor >= this.floors[this.floors.length - 1].floor) {
       this.isCleared = true;
+      this.towerRunCount += 1;
       const superReward = 10_000;
  
       this.game.addCurrency(superReward);
@@ -496,6 +521,7 @@ export class TowerSystem {
       shadowShards: this.shadowShards,
       defeatedBosses: this.defeatedBosses,
       isCleared: this.isCleared,
+      towerRunCount: this.towerRunCount,
       lastEnemyAttackAt: this.lastEnemyAttackAt,
       lastAutoDamageAt: this.lastAutoDamageAt,
       timestamp: Date.now(),
@@ -524,6 +550,7 @@ export class TowerSystem {
       this.shadowShards = data.shadowShards || 0;
       this.defeatedBosses = Array.isArray(data.defeatedBosses) ? data.defeatedBosses : [];
       this.isCleared = Boolean(data.isCleared);
+      this.towerRunCount = data.towerRunCount || 0;
       this.lastEnemyAttackAt = data.lastEnemyAttackAt || Date.now();
       this.lastAutoDamageAt = data.lastAutoDamageAt || Date.now();
       this.ensureFloorState();
