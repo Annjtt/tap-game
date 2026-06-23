@@ -1,5 +1,3 @@
-import { Notification } from './Notification.js';
-
 export class TowerShopModal {
   constructor(towerShopSystem, towerSystem) {
     this.shop = towerShopSystem;
@@ -42,29 +40,37 @@ export class TowerShopModal {
     const state = this.tower.getState();
     const items = this.shop.getAllItems(state.shadowShards);
 
-    this.container.innerHTML = `
-      <div class="tower-shop-modal">
-        <div class="tower-shop-backdrop"></div>
-        <div class="tower-shop-shell">
-          <header class="tower-shop-header">
-            <h2></i> Тайник Башни</h2>
-            <div class="tower-shop-currency">
-              <i class="fas fa-gem"></i>
-              <span>${state.shadowShards}</span>
-            </div>
-            <button type="button" class="tower-shop-close" id="close-tower-shop"><i class="fas fa-times"></i></button>
-          </header>
+    if (!this.container.firstElementChild) {
+      this.container.innerHTML = `
+        <div class="tower-shop-modal">
+          <div class="tower-shop-backdrop"></div>
+          <div class="tower-shop-shell">
+            <header class="tower-shop-header">
+              <h2></i> Тайник Башни</h2>
+              <div class="tower-shop-currency">
+                <i class="fas fa-gem"></i>
+                <span class="tower-shop-currency-value"></span>
+              </div>
+              <button type="button" class="tower-shop-close" id="close-tower-shop"><i class="fas fa-times"></i></button>
+            </header>
 
-          <div class="tower-shop-grid">
-            ${items.map(item => this.renderItem(item)).join('')}
+            <div class="tower-shop-grid"></div>
+
+            <button type="button" class="tower-shop-close-btn" id="close-tower-shop-btn">Закрыть</button>
           </div>
-
-          <button type="button" class="tower-shop-close-btn" id="close-tower-shop-btn">Закрыть</button>
         </div>
-      </div>
-    `;
+      `;
 
-    this.bindActions();
+      this.bindActions();
+    }
+
+    this.updateState(state, items);
+  }
+
+  updateState(state, items) {
+    this.container.querySelector('.tower-shop-currency-value').textContent = state.shadowShards;
+    this.container.querySelector('.tower-shop-grid').innerHTML = items.map(item => this.renderItem(item)).join('');
+    this.bindBuyActions();
   }
 
   renderItem(item) {
@@ -142,10 +148,13 @@ export class TowerShopModal {
   bindActions() {
     const closeBtn = this.container.querySelector('#close-tower-shop');
     const closeBtn2 = this.container.querySelector('#close-tower-shop-btn');
-    const buyBtns = this.container.querySelectorAll('.tower-shop-buy-btn');
 
     closeBtn?.addEventListener('click', () => this.hide());
     closeBtn2?.addEventListener('click', () => this.hide());
+  }
+
+  bindBuyActions() {
+    const buyBtns = this.container.querySelectorAll('.tower-shop-buy-btn');
 
     buyBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {

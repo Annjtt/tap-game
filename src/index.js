@@ -58,9 +58,10 @@ clicker.addEventListener('click', (event) => {
     clicker.style.position = 'relative';
   }
   
-  const gainedAmount = game.handleClick();
-  VisualEffects.showFloatingGain(event.clientX, event.clientY, gainedAmount, {
-    isEternalClockActive: game.isEternalClockActive()
+  const clickSummary = game.handleClick();
+  VisualEffects.showFloatingGain(event.clientX, event.clientY, clickSummary.amount, {
+    sourceItemId: clickSummary.sourceItemId,
+    isEternalClockActive: clickSummary.isEternalClockActive
   });
   animateClicker();
 });

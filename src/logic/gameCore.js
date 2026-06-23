@@ -57,10 +57,14 @@ export class GameCore {
 
   handleClick() {
     this.clickCounter = (this.clickCounter || 0) + 1;
-    const multiplier = this.checkActiveEffects();
-    const amount = this.getClickValue() * multiplier;
+    const effectSummary = this.checkActiveEffects();
+    const amount = this.getClickValue() * effectSummary.multiplier;
     this.addCurrency(amount);
-    return amount;
+    return {
+      amount,
+      sourceItemId: effectSummary.sourceItemId,
+      isEternalClockActive: effectSummary.isEternalClockActive
+    };
   }
 
   getPlayerDisplayName(telegram) {
@@ -75,6 +79,7 @@ export class GameCore {
   checkActiveEffects() {
     const activeItems = this.getActiveItemsByName();
     let multiplier = this.isEternalClockActive() ? 3 : 1;
+    let sourceItemId = null;
     
     for (const item of Object.values(activeItems)) {
       if (item.id === 'lightning_dagger' && item.type === 'active') {
@@ -82,6 +87,7 @@ export class GameCore {
         if (Math.random() < 0.05) {
           this.showLightningEffect();
           multiplier *= 2;
+          sourceItemId = 'lightning_dagger';
         }
       }
       
@@ -91,11 +97,16 @@ export class GameCore {
           this.lastChaosEffect = this.clickCounter;
           this.showChaosEffect();
           multiplier *= 5;
+          sourceItemId = 'chaos_seal';
         }
       }
     }
     
-    return multiplier;
+    return {
+      multiplier,
+      sourceItemId,
+      isEternalClockActive: this.isEternalClockActive()
+    };
   }
 
   showLightningEffect() {
