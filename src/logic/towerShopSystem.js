@@ -12,6 +12,7 @@ export class TowerShopSystem {
       isUnlocked: !item.unlockLevel, // Если нет порога разблокировки — доступно сразу
     }));
     this.hasResetBefore = false;
+    this.isOpen = false;
     this.loadState();
   }
 
@@ -20,30 +21,37 @@ export class TowerShopSystem {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        const hasResetFlag = typeof parsed.hasResetBefore === "boolean" ? parsed.hasResetBefore : false;
-        this.hasResetBefore = hasResetFlag;
-        // Для поддержки сохранения старого формата объекта:
-        const savedItems = Array.isArray(parsed) ? parsed : parsed.items || [];
-        this.items = this.items.map(item => {
-          const savedItem = savedItems.find(s => s.id === item.id) || {};
-          return {
-            ...item,
-            level: savedItem.level || 0,
-            totalSpent: savedItem.totalSpent || 0,
-            isUnlocked: typeof savedItem.isUnlocked === "boolean"
-              ? savedItem.isUnlocked
-              : (item.unlockLevel ? false : true),
-          };
-        });
+        this.applyPersistentData(parsed);
       } catch (e) {
         console.error('Ошибка загрузки прогресса Тайника:', e);
       }
     }
   }
 
+  applyPersistentData(parsed) {
+    const hasResetFlag = typeof parsed.hasResetBefore === "boolean" ? parsed.hasResetBefore : false;
+    this.hasResetBefore = hasResetFlag;
+    const savedItems = Array.isArray(parsed) ? parsed : parsed.items || [];
+    this.items = this.items.map(item => {
+      const savedItem = savedItems.find(s => s.id === item.id) || {};
+      return {
+        ...item,
+        level: savedItem.level || 0,
+        totalSpent: savedItem.totalSpent || 0,
+        isUnlocked: typeof savedItem.isUnlocked === "boolean"
+          ? savedItem.isUnlocked
+          : (item.unlockLevel ? false : true),
+      };
+    });
+  }
+
   saveState() {
-    // Для расширяемости: state включает hasResetBefore + items
-    const state = {
+    const state = this.getPersistentData();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  getPersistentData() {
+    return {
       hasResetBefore: this.hasResetBefore,
       items: this.items.map(item => ({
         id: item.id,
@@ -52,7 +60,48 @@ export class TowerShopSystem {
         isUnlocked: item.isUnlocked,
       }))
     };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  loadPersistentData(data) {
+    if (!data) {
+      return;
+    }
+
+    this.applyPersistentData(data);
+    this.saveState();
+  }
+
+  resetShop() {
+    this.items = towerShopItems.map(item => ({
+      ...item,
+      level: 0,
+      totalSpent: 0,
+      isUnlocked: !item.unlockLevel,
+    }));
+    this.hasResetBefore = false;
+    this.isOpen = false;
+    this.saveState();
+  }
+
+  open() {
+    this.isOpen = true;
+  }
+
+  close() {
+    this.isOpen = false;
+  }
+
+  getState() {
+    return {
+      isOpen: this.isOpen,
+      hasResetBefore: this.hasResetBefore,
+      items: this.items.map(item => ({
+        id: item.id,
+        level: item.level,
+        totalSpent: item.totalSpent,
+        isUnlocked: item.isUnlocked,
+      }))
+    };
   }
 
   getCurrentCost(item) {
@@ -67,7 +116,6 @@ export class TowerShopSystem {
   }
 
   getEffectValue(item) {
-    // Позволяет добавлять функции масштабирования эффекта
     if (typeof item.effectFn === "function") {
       return item.effectFn(item.level);
     }
@@ -75,7 +123,6 @@ export class TowerShopSystem {
   }
 
   unlockItemIfNeeded(item, playerFloor) {
-    // Если у магазина башни указан unlockLevel, откроем по достижению этажа
     if (!item.isUnlocked && item.unlockLevel && playerFloor >= item.unlockLevel) {
       item.isUnlocked = true;
       Notification.show(`Доступно новое улучшение: "${item.name}"!`);
@@ -127,7 +174,6 @@ export class TowerShopSystem {
   }
 
   getAllItems(shards, playerFloor = 1) {
-    // Можно вызвать авторазблокировку на всякий случай
     this.autoUnlockByFloor(playerFloor);
     return this.items.map(item => ({
       ...item,
@@ -160,7 +206,7 @@ export class TowerShopSystem {
       ...item,
       level: 0,
       totalSpent: 0,
-      isUnlocked: item.unlockLevel ? false : true // после сброса блокируем всё, что требует unlock
+      isUnlocked: item.unlockLevel ? false : true
     }));
     this.hasResetBefore = true;
     this.saveState();
@@ -168,7 +214,6 @@ export class TowerShopSystem {
     return totalRefund;
   }
 
-  // Можно добавить функцию для сброса одного улучшения (по желанию)
   resetUpgrade(itemId) {
     const item = this.items.find(i => i.id === itemId);
     if (!item || item.level <= 0) {
@@ -187,7 +232,6 @@ export class TowerShopSystem {
     return refund;
   }
 
-  // Быстрый способ инфо по магазину
   getStoreSummary() {
     return this.items.map(item => ({
       name: item.name,

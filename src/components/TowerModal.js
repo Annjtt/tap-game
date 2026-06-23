@@ -247,6 +247,8 @@ export class TowerModal {
   }
 
   handleChest() {
+    this.tower.openShop();
+
     import('./TowerShopModal.js').then(({ TowerShopModal }) => {
       if (!this.towerShopModal) {
         this.towerShopModal = new TowerShopModal(this.tower.towerShop, this.tower);

@@ -544,6 +544,28 @@
   min-height: 150px;
 }
 
+.tower-shop-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.tower-shop-reset-btn {
+  min-height: 40px;
+  border-radius: 999px;
+  padding: 8px 16px;
+  background: rgba(100, 24, 24, 0.45);
+  color: #ffd7d7;
+  border: 1px solid rgba(255, 140, 140, 0.28);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.tower-shop-reset-btn:hover {
+  background: rgba(140, 30, 30, 0.65);
+  transform: scale(1.03);
+}
+
 /* Айтем магазина */
 .tower-shop-item {
   background: linear-gradient(119deg,rgba(41, 41, 41, 0.404) 75%,rgba(87, 87, 87, 0.288));

@@ -32,13 +32,14 @@ export class TowerShopModal {
     }
     this.container = null;
     this.isOpen = false;
+    this.tower.closeShop();
   }
 
   render() {
     if (!this.container) return;
 
     const state = this.tower.getState();
-    const items = this.shop.getAllItems(state.shadowShards);
+    const items = this.shop.getAllItems(state.shadowShards, state.currentFloor);
 
     if (!this.container.firstElementChild) {
       this.container.innerHTML = `
@@ -53,6 +54,10 @@ export class TowerShopModal {
               </div>
               <button type="button" class="tower-shop-close" id="close-tower-shop"><i class="fas fa-times"></i></button>
             </header>
+
+            <div class="tower-shop-actions">
+              <button type="button" class="tower-shop-reset-btn" id="tower-shop-reset-btn">Сбросить улучшения</button>
+            </div>
 
             <div class="tower-shop-grid"></div>
 
@@ -77,6 +82,7 @@ export class TowerShopModal {
     const canAfford = item.canAfford;
     const isMaxLevel = item.level >= item.maxLevel;
     const effectText = this.formatEffect(item);
+    const descriptionValue = item.effectValue > 0 ? item.effectValue : item.valuePerLevel;
 
     return `
       <div class="tower-shop-item ${isMaxLevel ? 'maxed' : ''} ${!canAfford && !isMaxLevel ? 'locked' : ''}">
@@ -85,7 +91,7 @@ export class TowerShopModal {
         </div>
         <div class="tower-shop-item-info">
           <h3>${item.name}</h3>
-          <p class="tower-shop-item-desc">${item.description.replace('{value}', item.valuePerLevel)}</p>
+          <p class="tower-shop-item-desc">${item.description.replace('{value}', descriptionValue)}</p>
           <div class="tower-shop-item-progress">
             <div class="tower-shop-progress-bar">
               <div class="tower-shop-progress-fill" style="width:${item.progressPercent}%"></div>
@@ -148,9 +154,11 @@ export class TowerShopModal {
   bindActions() {
     const closeBtn = this.container.querySelector('#close-tower-shop');
     const closeBtn2 = this.container.querySelector('#close-tower-shop-btn');
+    const resetBtn = this.container.querySelector('#tower-shop-reset-btn');
 
     closeBtn?.addEventListener('click', () => this.hide());
     closeBtn2?.addEventListener('click', () => this.hide());
+    resetBtn?.addEventListener('click', () => this.handleReset());
   }
 
   bindBuyActions() {
@@ -169,7 +177,17 @@ export class TowerShopModal {
     const result = this.shop.buyUpgrade(itemId, state.shadowShards);
     if (result.success) {
       this.tower.shadowShards = result.newShards;
+      this.tower.playerMaxHp = this.tower.calculatePlayerMaxHp();
+      this.tower.playerHp = Math.min(this.tower.playerHp, this.tower.playerMaxHp);
+      this.tower.saveProgress();
       this.tower.triggerUpdate();
+      this.render();
+    }
+  }
+
+  handleReset() {
+    const refund = this.tower.resetShopUpgrades();
+    if (refund > 0) {
       this.render();
     }
   }

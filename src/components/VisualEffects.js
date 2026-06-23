@@ -67,6 +67,14 @@ export class VisualEffects {
         color = '#b700ff';
         textShadow = '0 0 10px rgb(255, 2, 153), 0 0 28px rgba(170, 2, 255, 0.78)';
         fontWeight = '900';
+      } else if (options.sourceItemId === 'tower_crit_damage' && !isEnemyAttack) {
+        color = '#ff7a18';
+        textShadow = '0 0 10px rgba(255, 122, 24, 0.9), 0 0 22px rgba(255, 208, 0, 0.75)';
+        fontWeight = '900';
+      } else if (options.sourceItemId === 'tower_auto_damage' && !isEnemyAttack) {
+        color = '#7cf7ff';
+        textShadow = '0 0 8px rgba(124, 247, 255, 0.85), 0 0 20px rgba(130, 150, 255, 0.6)';
+        fontWeight = '800';
       } else if (isHeal) {
         color = '#41d87c';
         textShadow = '0 0 8px rgba(65, 216, 124, 0.8), 0 0 16px rgba(165, 245, 158, 0.6)';
