@@ -68,7 +68,7 @@
     "damage": 140,
     "attackIntervalMs": 1650,
     "reward": 2470,
-    "shards": 2,
+    "shards": 3,
     "description": "В его доспехах слышится шёпот угасших залов."
   },
   {
@@ -80,7 +80,7 @@
     "damage": 144,
     "attackIntervalMs": 1600,
     "reward": 2820,
-    "shards": 3,
+    "shards": 4,
     "description": "Острый как стекло, быстрый как отражение."
   },
   {
@@ -92,7 +92,7 @@
     "damage": 157,
     "attackIntervalMs": 1550,
     "reward": 3290,
-    "shards": 3,
+    "shards": 4,
     "description": "Каждый удар звучит как похоронный звон для слабых."
   },
   {
@@ -104,7 +104,7 @@
     "damage": 164,
     "attackIntervalMs": 1500,
     "reward": 3960,
-    "shards": 4,
+    "shards": 5,
     "description": "Пишет судьбу дуэли на собственных тенях."
   },
   {
@@ -116,7 +116,7 @@
     "damage": 283,
     "attackIntervalMs": 1400,
     "reward": 10650,
-    "shards": 8,
+    "shards": 10,
     "description": "Тронный владыка первого крыла башни."
   }
 ]

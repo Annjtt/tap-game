@@ -1,5 +1,5 @@
 export class Notification {
-    static show(message, duration = 2000) {
+    static show(message, duration = 1000) {
       const notification = document.createElement('div');
       notification.className = 'notification';
       notification.textContent = message;

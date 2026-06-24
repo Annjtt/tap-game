@@ -16,7 +16,7 @@
 .tower-modal--arena-clone {
   background:
     linear-gradient(rgba(0, 0, 0, 0.274), #00000098),
-    url('../assets/images/bg.png') center center / cover no-repeat fixed,
+    url('../assets/images/bg-tower.png') center center / cover no-repeat fixed,
     #0a0a0a;
 }
 
@@ -184,7 +184,7 @@
   align-items: center;
   cursor: pointer;
   user-select: none;
-  transition: transform 0.1s ease;
+  transition: transform 1.3s ease;
   border-radius: 50%;
   border: none;
   background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
@@ -198,10 +198,10 @@
 }
 @keyframes tower-clicker-hit-press {
   0% {
-    transform: scale(1.1);
+    transform: scale(0.9);
   }
-  55% {
-    transform: scale(0.65);
+  40% {
+    transform: scale(0.8);
   }
   100% {
     transform: scale(1.1);
@@ -285,49 +285,20 @@
 /* Внешнее кольцо свечения, в основном на краях */
 .tower-clicker-hit::before {
   width: 140px; height: 140px;
-  background:
-    radial-gradient(circle at 50% 50%,
-      rgba(250,45,45,0.03) 0%,
-      rgba(255,60,40,0.10) 39%,
-      rgba(250,90,72,0.11) 62%,
-      rgba(239,31,98,0.13) 77%,
-      rgba(229,10,70,0.19) 84%,
-      rgba(255,55,90,0.23) 91%,
-      rgba(255,115,110,0.08) 97%,
-      transparent 100%
-    );
   box-shadow:
-    0 0 30px 15px rgba(255,33,80,0.11),
-    0 0 55px 20px rgba(221,15,75,0.05),
-    0 0 90px 36px rgba(255,80,80,0.07);
+    0 0 20px 10px rgba(177, 255, 33, 0.11),
+    0 0 45px 15px rgba(36, 15, 221, 0.05),
+    0 0 70px 25px rgba(80, 176, 255, 0.07);
   filter: blur(7px) brightness(0.94) saturate(1.07);
-  animation-delay: 0s;
+  animation-delay: 1s;
 }
 
 /* Второе внешнее свечение с разными оттенками — больше краски и "рандома" */
 .tower-clicker-hit::after {
   width: 115px; height: 115px;
-  background:
-    radial-gradient(circle at 51% 60%,
-      rgba(255,104,104,0.02) 0%,
-      rgba(245,16,80,0.03) 41%,
-      rgba(255,55,140,0.10) 69%,
-      rgba(180,35,125,0.11) 80%,
-      rgba(255,80,60,0.19) 93%,
-      transparent 100%
-    )
-    , conic-gradient(
-      from 10deg at 51% 58%,
-      rgba(255,70,100,0.015) 14deg,
-      rgba(255,35,100,0.09) 67deg,
-      rgba(255,82,45,0.09) 133deg,
-      rgba(255,33,65,0.07) 217deg,
-      rgba(247,80,126,0.13) 297deg,
-      rgba(255,95,90,0.05) 360deg
-    );
   box-shadow:
-    0 0 30px 10px rgba(255,36,75,0.09),
-    0 0 38px 18px rgba(255,50,50,0.056),
+    0 0 30px 10px rgba(255, 36, 36, 0.09),
+    0 0 38px 18px rgba(50, 98, 255, 0.056),
     0 0 90px 32px rgba(255,60,88,0.04);
   filter: blur(4.5px) brightness(0.97) saturate(1.06) hue-rotate(-8deg);
   mix-blend-mode: lighter;
@@ -337,38 +308,38 @@
 @keyframes tower-clicker-glow-hit {
   0% {
     box-shadow:
-      0 0 0 0px rgba(229,10,70,0.09),
-      0 0 0 0px rgba(255,33,80,0.035),
-      0 0 0 0px rgba(255,30,80,0.00);
+      0 0 0 0px rgba(229, 10, 10, 0.09),
+      0 0 0 0px rgba(33, 85, 255, 0.035),
+      0 0 0 0px rgba(173, 30, 255, 0);
     filter: brightness(0.99) drop-shadow(0 0 0px #ff355444);
   }
   13% {
     box-shadow:
-      0 0 32px 17px rgba(255,55,90,0.13),
-      0 0 52px 21px rgba(239,31,98,0.11),
-      0 0 90px 29px rgba(255,80,100,0.10);
+      0 0 32px 20px rgba(255, 55, 55, 0.363),
+      0 0 52px 21px rgba(31, 114, 239, 0.548),
+      0 0 90px 29px rgba(116, 0, 170, 0.192);
     filter: brightness(1.04) drop-shadow(0 0 31px #ff355467);
   }
   37% {
     /* Меньше эффекта в центре/более прозрачный эффект */
     box-shadow:
-      0 0 6px 8px rgba(255,45,60,0.017),
-      0 0 20px 19px rgba(255,80,88,0.09),
-      0 0 27px 32px rgba(239,31,98,0.04);
+      0 0 6px 8px rgba(171, 45, 255, 0.017),
+      0 0 20px 19px rgba(80, 121, 255, 0.09),
+      0 0 27px 32px rgba(239, 31, 31, 0.04);
     filter: brightness(0.97) drop-shadow(0 0 7px #ff355429);
   }
   59% {
     box-shadow:
-      0 0 31px 17px rgba(255,55,90,0.10),
-      0 0 47px 31px rgba(255,60,80,0.08),
-      0 0 68px 19px rgba(255,115,110,0.05);
+      0 0 31px 17px rgba(255, 55, 55, 0.1),
+      0 0 47px 31px rgba(60, 122, 255, 0.08),
+      0 0 68px 19px rgba(250, 110, 255, 0.05);
     filter: brightness(1.01) contrast(1.04);
   }
   100% {
     box-shadow:
-      0 0 0 0px rgba(229,10,70,0.025),
-      0 0 0 0px rgba(255,33,80,0.00),
-      0 0 0 0px rgba(221,0,19,0.00);
+      0 0 0 0px rgba(229, 10, 10, 0.025),
+      0 0 0 0px rgba(33, 122, 255, 0),
+      0 0 0 0px rgba(133, 0, 221, 0);
     filter: brightness(1);
   }
 }
@@ -457,8 +428,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #1a1a1a;
-  border: 1px solid #404040;
+  background: #1a1a1a4b;
+  border: 1px solid #404040e3;
   color: #fff;
 }
 
@@ -538,15 +509,15 @@
   padding: 10px 24px;
   cursor: pointer;
   font-size: 0.95rem;
-  background: #2d2d2da2;
-  border: 1px solid #cccccc34;
+  background: #1d1d1d59;
+  border: 1px solid #cccccc28;
   color: #fff;
   transition: all 0.3s ease;
   backdrop-filter: blur(3px);
 }
 .tower-secondary-btn:hover {
   transform: rotate(1.1deg) scale(1.05);
-  background: #383838d2;
+  background: #383838a8;
 }
 .tower-shop-overlay {
   position: fixed;
