@@ -98,9 +98,10 @@ export class ChestShopModal {
     const items = [
       { id: "lightning_dagger", name: "Кинжал молнии", type: "active", baseBonus: 0.05, price: 5000, effect: "Шанс 5% умножить награду за нажатие на 2", stat: "click", image: "images/items/lightning_dagger.jpg" },
       { id: "chaos_seal", name: "Печать Хаоса", type: "active", baseBonus: 0.03, price: 8000, effect: "Каждые 10 нажатий — x5 награды", stat: "click", image: "images/items/chaos_seal.jpg" },
-      { id: "gloves_of_rage", name: "Перчатки Гнева", type: "passive", baseBonus: 1, price: 3000, effect: "+1 Тень за нажатие", stat: "click", image: "images/items/gloves_of_rage.jpg" },
+      { id: "gloves_of_rage", name: "Перчатки Гнева", type: "passive", baseBonus: 5, price: 3000, effect: "+5 к силе нажатия (умножается на множитель магазина)", stat: "click", image: "images/items/gloves_of_rage.jpg" },
       { id: "eternal_clock", name: "Часы Этерна", type: "active", baseBonus: 0.1, price: 12000, effect: "На 10 секунд все нажатия дают x3", stat: "click", image: "images/items/eternal_clock.jpg" },
-      { id: "shadow_hood", name: "Капюшон Тени", type: "passive", baseBonus: 0.05, price: 2000, effect: "+5% к авто-добыванию", stat: "auto", image: "images/items/shadow_hood.jpg" }
+      { id: "shadow_hood", name: "Капюшон Тени", type: "passive", baseBonus: 0.05, price: 2000, effect: "+5% к авто-добыванию", stat: "auto", image: "images/items/shadow_hood.jpg" },
+      { id: "scythe_of_gods", name: "Коса богов", type: "passive", baseBonus: 2, price: 10000, effect: "Даёт шанс крит. удара и увеличивает его силу", stat: "click", image: "images/items/scythe_of_gods.jpg" }
     ];
     
     const randomItem = items[Math.floor(Math.random() * items.length)];

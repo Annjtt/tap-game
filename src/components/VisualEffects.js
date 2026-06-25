@@ -67,7 +67,7 @@ export class VisualEffects {
         color = '#b700ff';
         textShadow = '0 0 10px rgb(255, 2, 153), 0 0 28px rgba(170, 2, 255, 0.78)';
         fontWeight = '900';
-      } else if (options.sourceItemId === 'tower_crit_damage' && !isEnemyAttack) {
+      } else if ((options.sourceItemId === 'tower_crit_damage' || options.sourceItemId === 'scythe_crit') && !isEnemyAttack) {
         color = '#ff7a18';
         textShadow = '0 0 10px rgba(255, 122, 24, 0.9), 0 0 22px rgba(255, 208, 0, 0.75)';
         fontWeight = '900';
@@ -118,6 +118,41 @@ export class VisualEffects {
       this.createEffectOverlay(targetElement, 'images/effects/skull.gif', 3000);
     }
 
+    static showCritEffect(targetElement) {
+      if (!targetElement) return;
+      const rect = targetElement.getBoundingClientRect();
+
+      // Orange burst ring
+      if (!document.getElementById('crit-burst-keyframes')) {
+        const style = document.createElement('style');
+        style.id = 'crit-burst-keyframes';
+        style.innerHTML = `
+          @keyframes crit-burst {
+            0% { width: 0; height: 0; opacity: 1; }
+            100% { width: 220px; height: 220px; opacity: 0; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      const burst = document.createElement('div');
+      burst.style.cssText = `
+        position: fixed;
+        left: ${rect.left + rect.width / 2}px;
+        top: ${rect.top + rect.height / 2}px;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 122, 24, 0.5), transparent);
+        pointer-events: none;
+        z-index: 9997;
+        transform: translate(-50%, -50%);
+        animation: crit-burst 0.5s ease-out forwards;
+      `;
+      document.body.appendChild(burst);
+      setTimeout(() => burst.remove(), 600);
+    }
+
     static showEternalClockEffect(targetElement = null) {
       this.createEffectOverlay(targetElement, 'images/effects/eternal_clock.gif', 5000);
     }
@@ -128,17 +163,46 @@ export class VisualEffects {
         existingOverlay.remove();
       }
 
+      const isLightning = imageUrl.includes('lightning');
+      const isTowerOpen = !!document.querySelector('.tower-overlay');
+
+      // Compute center position: clicker center or viewport center fallback
+      let centerX, centerY;
+      if (targetElement) {
+        const rect = targetElement.getBoundingClientRect();
+        centerX = rect.left + rect.width / 2;
+        centerY = rect.top + rect.height / 2;
+      } else {
+        centerX = window.innerWidth / 2;
+        centerY = window.innerHeight / 2;
+      }
+
       const overlay = document.createElement('div');
       overlay.className = 'global-effect-overlay';
-      overlay.style.position = 'fixed';
-      overlay.style.top = '50%';
-      overlay.style.left = '50%';
-      overlay.style.transform = 'translate(-50%, -50%)';
-      overlay.style.zIndex = '-900';
       overlay.style.pointerEvents = 'none';
       overlay.style.display = 'flex';
       overlay.style.justifyContent = 'center';
       overlay.style.alignItems = 'center';
+
+      if (isTowerOpen && !isLightning) {
+        // Tower: append inside tower-overlay, behind clicker (z-index: 0 < z-index: 1)
+        const towerOverlay = document.querySelector('.tower-overlay');
+        const towerRect = towerOverlay.getBoundingClientRect();
+        overlay.style.position = 'absolute';
+        overlay.style.left = (centerX - towerRect.left) + 'px';
+        overlay.style.top = (centerY - towerRect.top) + 'px';
+        overlay.style.transform = 'translate(-50%, -50%)';
+        overlay.style.zIndex = '0';
+        towerOverlay.appendChild(overlay);
+      } else {
+        // Main game or lightning: fixed at clicker position
+        overlay.style.position = 'fixed';
+        overlay.style.left = centerX + 'px';
+        overlay.style.top = centerY + 'px';
+        overlay.style.transform = 'translate(-50%, -50%)';
+        overlay.style.zIndex = isLightning ? '9998' : '-900';
+        document.body.appendChild(overlay);
+      }
       
       const effectImg = document.createElement('img');
       effectImg.src = imageUrl;
@@ -171,7 +235,6 @@ export class VisualEffects {
       }
 
       overlay.appendChild(effectImg);
-      document.body.appendChild(overlay);
 
       // Удаляем через время
       setTimeout(() => {

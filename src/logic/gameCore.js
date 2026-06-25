@@ -39,30 +39,56 @@ export class GameCore {
   }
 
   getClickValue() {
-    // база + (улучшения × мультипликатор) + предметы
+    // база + (улучшения + предметы) × мультипликатор
     const base = this.baseClickValue;
-    const shopWithMultiplier = this.shopClickBonus * this.shopMultiplier;
-    
+
     let itemBonus = 0;
     const activeItems = this.getActiveItemsByName();
-  
+
     for (const item of Object.values(activeItems)) {
       if (item.stat === 'click') {
         itemBonus += item.enhancedValue || item.baseBonus;
       }
     }
-  
-    return base + shopWithMultiplier + itemBonus;
+
+    const shopWithMultiplier = (this.shopClickBonus + itemBonus) * this.shopMultiplier;
+
+    return base + shopWithMultiplier;
+  }
+
+  getItemCritValues() {
+    const activeItems = this.getActiveItemsByName();
+    for (const item of Object.values(activeItems)) {
+      if (item.id === 'scythe_of_gods') {
+        const value = item.enhancedValue || item.baseBonus;
+        return {
+          chance: value,
+          damage: 2 + value * 0.5
+        };
+      }
+    }
+    return { chance: 0, damage: 1 };
   }
 
   handleClick() {
     this.clickCounter = (this.clickCounter || 0) + 1;
     const effectSummary = this.checkActiveEffects();
-    const amount = this.getClickValue() * effectSummary.multiplier;
-    this.addCurrency(amount);
+    let amount = this.getClickValue() * effectSummary.multiplier;
+    let sourceItemId = effectSummary.sourceItemId;
+
+    const critValues = this.getItemCritValues();
+    if (critValues.chance > 0 && Math.random() < critValues.chance / 100) {
+      amount *= critValues.damage;
+      if (!sourceItemId) {
+        sourceItemId = 'scythe_crit';
+      }
+      this.showCritEffect();
+    }
+
+    this.addCurrency(Math.round(amount));
     return {
-      amount,
-      sourceItemId: effectSummary.sourceItemId,
+      amount: Math.round(amount),
+      sourceItemId,
       isEternalClockActive: effectSummary.isEternalClockActive
     };
   }
@@ -109,9 +135,16 @@ export class GameCore {
     };
   }
 
+  _getActiveClicker() {
+    const inTower = document.querySelector('.tower-overlay');
+    return inTower
+      ? document.querySelector('.tower-clicker')
+      : document.getElementById('clicker');
+  }
+
   showLightningEffect() {
     import('../components/VisualEffects.js').then(({ VisualEffects }) => {
-      const clicker = document.getElementById('clicker');
+      const clicker = this._getActiveClicker();
       if (clicker) {
         if (getComputedStyle(clicker).position === 'static') {
           clicker.style.position = 'relative';
@@ -123,12 +156,24 @@ export class GameCore {
 
   showChaosEffect() {
     import('../components/VisualEffects.js').then(({ VisualEffects }) => {
-      const clicker = document.getElementById('clicker');
+      const clicker = this._getActiveClicker();
       if (clicker) {
         if (getComputedStyle(clicker).position === 'static') {
           clicker.style.position = 'relative';
         }
         VisualEffects.showChaosEffect(clicker);
+      }
+    });
+  }
+
+  showCritEffect() {
+    import('../components/VisualEffects.js').then(({ VisualEffects }) => {
+      const clicker = this._getActiveClicker();
+      if (clicker) {
+        if (getComputedStyle(clicker).position === 'static') {
+          clicker.style.position = 'relative';
+        }
+        VisualEffects.showCritEffect(clicker);
       }
     });
   }
@@ -166,10 +211,11 @@ export class GameCore {
   
 
   getAutoIncome() {
-    // база + (улучшения × мультипликатор) + предметы
+    // база + улучшения × ослабленный множитель + предметы
     const base = this.baseAutoIncome;
-    const shopWithMultiplier = this.shopAutoBonus * this.shopMultiplier;
-    
+    const autoMultiplier = 1 + (this.shopMultiplier - 1) * 0.25;
+    const shopWithMultiplier = this.shopAutoBonus * autoMultiplier;
+
     let itemBonus = 0;
     const activeItems = this.getActiveItemsByName();
 

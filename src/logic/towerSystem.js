@@ -9,17 +9,19 @@ const TOWER_AUTO_DAMAGE_INTERVAL_MS = 5000;
 const HEAL_COOLDOWN_MS = 30000;
 
 const NAME_PREFIXES = [
-  'Шепчущая', 'Чернильная', 'Пепельный', 'Зеркальный', 'Скорбный',
-  'Безликий', 'Древний', 'Гниющий', 'Ледяной', 'Кровавый',
-  'Пылающий', 'Мёртвый', 'Костяной', 'Ржавый', 'Шипастый',
-  'Гремящий', 'Слепящий', 'Гулящий', 'Разбитый', 'Искажённый',
+  'Тусклая', 'Погибающая', 'Изломанный', 'Грозовой', 'Дрожащий',
+  'Безмолвный', 'Искажённый', 'Гнилой', 'Ветхий', 'Леденящий',
+  'Кровоточащий', 'Пылающий', 'Беспокойный', 'Кремневый', 'Шепчущий',
+  'Затаённый', 'Склочный', 'Багровый', 'Инейный', 'Мороковый',
+  'Призрачный', 'Сумрачный', 'Обугленный', 'Жуткий', 'Скрипящий'
 ];
 
 const NAME_NOUNS = [
-  'Тень', 'Полоть', 'Рыцарь', 'Клык', 'Колокол',
-  'Слуга', 'Червь', 'Страж', 'Глаз', 'Коготь',
-  'Панцирь', 'Шёпот', 'Пламя', 'Скелет', 'Корень',
-  'Гвоздь', 'Зеркало', 'Цепь', 'Шрам', 'Ветер',
+  'Фантом', 'Осколок', 'Пастырь', 'Клык', 'Колокол',
+  'Потрошитель', 'Пиявка', 'Страж', 'Зрак', 'Коготь',
+  'Панцирь', 'Глас', 'Сгусток', 'Череп', 'Мох',
+  'Гвоздь', 'Зеркало', 'Вериг', 'Шрам', 'Вихрь',
+  'Прах', 'Саван', 'Злоба', 'Облик', 'Лабиринт'
 ];
 
 function generateEnemyName(floor) {
@@ -204,13 +206,21 @@ export class TowerSystem {
   calculatePlayerMaxHp() {
     const clickValue = this.game.getClickValue();
     const autoIncome = this.game.getAutoIncome();
-    const baseHp = Math.max(100, Math.round(100 + clickValue * 12 + autoIncome * 25 + this.highestFloor * 10));
+    const baseHp = Math.max(100, Math.round(100 + clickValue * 2 + autoIncome * 3 + this.highestFloor * 15));
     const bonusPercent = this.getShopBonus('hp_percent');
     return Math.max(100, Math.round(baseHp * (1 + bonusPercent / 100)));
   }
 
   getItemCombatModifiers() {
     const activeItems = this.game.getActiveItemsByName();
+    const scythe = activeItems['Коса богов'];
+    let scytheCritChance = 0;
+    let scytheCritDamage = 0;
+    if (scythe) {
+      const value = scythe.enhancedValue || scythe.baseBonus;
+      scytheCritChance = value;
+      scytheCritDamage = value * 50;
+    }
     return {
       flatDamage: Object.values(activeItems)
         .filter((item) => item.stat === 'click')
@@ -218,7 +228,9 @@ export class TowerSystem {
       lightning: activeItems['Кинжал молнии'],
       chaos: activeItems['Печать Хаоса'],
       clock: activeItems['Часы Этерна'],
-      hood: activeItems['Капюшон Тени']
+      hood: activeItems['Капюшон Тени'],
+      scytheCritChance,
+      scytheCritDamage
     };
   }
 
@@ -449,8 +461,10 @@ export class TowerSystem {
     const baseDamage = this.game.getClickValue();
     const modifiers = this.getItemCombatModifiers();
     const towerDamageBonus = this.getShopBonus('damage_percent');
-    const critChance = this.getShopBonus('crit_chance');
-    const critDamageBonus = this.getShopBonus('crit_damage');
+    const shopCritChance = this.getShopBonus('crit_chance');
+    const shopCritDamage = this.getShopBonus('crit_damage');
+    const totalCritChance = shopCritChance + modifiers.scytheCritChance;
+    const totalCritDamageBonus = shopCritDamage + modifiers.scytheCritDamage;
     let multiplier = this.game.isEternalClockActive() ? 3 : 1;
     let sourceItemId = null;
     let isCrit = false;
@@ -469,12 +483,12 @@ export class TowerSystem {
       this.game.showChaosEffect();
     }
 
-    if (critChance > 0 && Math.random() < critChance / 100) {
+    if (totalCritChance > 0 && Math.random() < totalCritChance / 100) {
       isCrit = true;
-      critMultiplier = 2 + critDamageBonus / 100;
+      critMultiplier = 2 + totalCritDamageBonus / 100;
       multiplier *= critMultiplier;
       if (!sourceItemId) {
-        sourceItemId = 'tower_crit_damage';
+        sourceItemId = modifiers.scytheCritChance > 0 ? 'scythe_crit' : 'tower_crit_damage';
       }
     }
 

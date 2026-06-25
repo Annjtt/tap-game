@@ -23,9 +23,9 @@
     "id": "gloves_of_rage",
     "name": "Перчатки Гнева",
     "type": "passive",
-    "baseBonus": 1,
+    "baseBonus": 5,
     "price": 3000,
-    "effect": "+1 Тень за нажатие",
+    "effect": "+5 к силе нажатия (умножается на множитель магазина)",
     "stat": "click",
     "image": "images/items/gloves_of_rage.jpg"
   },
@@ -48,5 +48,15 @@
     "effect": "+5% к авто-добыванию",
     "stat": "auto",
     "image": "images/items/shadow_hood.jpg"
+  },
+  {
+    "id": "scythe_of_gods",
+    "name": "Коса богов",
+    "type": "passive",
+    "baseBonus": 2,
+    "price": 10000,
+    "effect": "Даёт шанс крит. удара и увеличивает его силу",
+    "stat": "click",
+    "image": "images/items/scythe_of_gods.jpg"
   }
 ]

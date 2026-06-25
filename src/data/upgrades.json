@@ -7,7 +7,7 @@
     "value": 1,
     "price": 100,
     "icon": "fa-hand-point-up",
-    "maxLevel": 5,
+    "maxLevel": 10,
     "priceIncrease": 1.5
   },
   {
@@ -18,7 +18,7 @@
     "value": 5,
     "price": 500,
     "icon": "fa-fist-raised",
-    "maxLevel": 3,
+    "maxLevel": 10,
     "priceIncrease": 2.0
   },
   {
@@ -40,7 +40,7 @@
     "value": 2,
     "price": 1500,
     "icon": "fa-hourglass-half",
-    "maxLevel": 5,
+    "maxLevel": 10,
     "priceIncrease": 1.5
   },
   {
@@ -51,7 +51,7 @@
     "value": 1.5,
     "price": 1000,
     "icon": "fa-star",
-    "maxLevel": 5,
+    "maxLevel": 8,
     "priceIncrease": 2.0
   }
 ]
