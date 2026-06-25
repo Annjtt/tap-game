@@ -496,17 +496,17 @@
   border-radius: 0px 0px 34px 34px;
   padding: 13px 18px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 14px;
-  align-items: baseline;
+  align-items: center;
 }
 
 /* ===== Вторичная кнопка (например, выход или действие) ===== */
 .tower-secondary-btn {
   width: 100%;
-  min-height: 48px;
+  min-height: 52px;
   border-radius: 999px;
-  padding: 10px 24px;
+  padding: 6px 16px;
   cursor: pointer;
   font-size: 0.95rem;
   background: #1d1d1d59;
@@ -514,10 +514,29 @@
   color: #fff;
   transition: all 0.3s ease;
   backdrop-filter: blur(3px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 .tower-secondary-btn:hover {
   transform: rotate(1.1deg) scale(1.05);
   background: #383838a8;
+}
+.tower-secondary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.tower-secondary-btn .btn-main {
+  font-size: 0.95rem;
+}
+.tower-secondary-btn .btn-sub {
+  font-size: 0.7rem;
+  opacity: 0.7;
 }
 .tower-shop-overlay {
   position: fixed;

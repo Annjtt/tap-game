@@ -112,7 +112,7 @@ export class TowerShopSystem {
   }
 
   canAfford(item, shards) {
-    return shards >= this.getCurrentCost(item) && item.level < item.maxLevel && item.isUnlocked;
+    return shards >= this.getCurrentCost(item) && item.isUnlocked;
   }
 
   getEffectValue(item) {
@@ -154,11 +154,6 @@ export class TowerShopSystem {
       return { success: false, newShards: shards };
     }
 
-    if (item.level >= item.maxLevel) {
-      Notification.show(`Максимальный уровень "${item.name}" достигнут`);
-      return { success: false, newShards: shards };
-    }
-
     const cost = this.getCurrentCost(item);
     if (shards < cost) {
       Notification.show('Недостаточно осколков');
@@ -169,7 +164,7 @@ export class TowerShopSystem {
     item.totalSpent += cost;
     this.saveState();
 
-    Notification.show(`${item.name} улучшен до уровня ${item.level}${item.level === item.maxLevel ? ' (МАКС)' : ''}`);
+    Notification.show(`${item.name} улучшен до уровня ${item.level}`);
     return { success: true, newShards: shards - cost };
   }
 
@@ -180,7 +175,7 @@ export class TowerShopSystem {
       currentCost: this.getCurrentCost(item),
       canAfford: this.canAfford(item, shards),
       effectValue: this.getEffectValue(item),
-      progressPercent: (item.level / item.maxLevel) * 100,
+      progressPercent: 0,
       isUnlocked: !!item.isUnlocked,
       unlockedAt: item.unlockLevel || 1,
     }));
@@ -236,7 +231,6 @@ export class TowerShopSystem {
     return this.items.map(item => ({
       name: item.name,
       level: item.level,
-      max: item.maxLevel,
       isUnlocked: !!item.isUnlocked,
       unlockedAt: item.unlockLevel,
       nextCost: this.getCurrentCost(item),

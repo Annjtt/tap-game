@@ -1,3 +1,5 @@
+import { Notification } from './Notification.js';
+
 export class ProfileModal {
   constructor(gameCore, telegram, towerSystem) {
     this.game = gameCore;
@@ -24,8 +26,12 @@ export class ProfileModal {
       <div class="profile-stats">
         <h3>Башня Теней</h3>
         <div class="stat-item">
-          <span class="stat-label">Похождений башни:</span>
-          <span class="stat-value">${this.tower.getTowerRunCount()}</span>
+          <span class="stat-label">Этаж:</span>
+          <span class="stat-value">${this.tower.getState().currentFloor}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Рекорд:</span>
+          <span class="stat-value">${this.tower.getState().highestFloor}</span>
         </div>
         <div class="stat-item">
           <span class="stat-label">Осколков:</span>
@@ -40,8 +46,8 @@ export class ProfileModal {
           <span class="stat-value">${this.tower.getMaxHp()}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Восстановление HP/удар:</span>
-          <span class="stat-value">+${this.tower.getRegenPerHit()}</span>
+          <span class="stat-label">Отхил с урона:</span>
+          <span class="stat-value">${this.tower.getRegenPercent()}%</span>
         </div>
       </div>
       <button id="reset-tower-shop" class="reset-btn">
@@ -117,20 +123,40 @@ export class ProfileModal {
     const resetTowerBtn = this.container.querySelector('#reset-tower-shop');
 
     resetBtn?.addEventListener('click', () => {
-      if (confirm('Вы уверены, что хотите сбросить все улучшения магазина? Вы получите все Тени за потраченные улучшения.')) {
-        if (this.game.shopSystem) {
+      if (!this.game.shopSystem) {
+        Notification.show('Система магазина недоступна');
+        return;
+      }
+      const confirmMsg = 'Все улучшения магазина будут сброшены, Тени вернутся.';
+      const tg = this.telegram;
+      if (tg?.showConfirm) {
+        tg.showConfirm(confirmMsg, (ok) => {
+          if (!ok) return;
           const refund = this.game.shopSystem.resetAllUpgrades();
-          alert(`Улучшения сброшены. Получено: ${refund} Теней`);
-        } else {
-          alert('Система магазина недоступна');
-        }
+          Notification.show(`Улучшения сброшены. Возвращено: ${refund} Теней`);
+          this.hide();
+        });
+      } else {
+        const refund = this.game.shopSystem.resetAllUpgrades();
+        Notification.show(`Улучшения сброшены. Возвращено: ${refund} Теней`);
+        this.hide();
       }
     });
 
     resetTowerBtn?.addEventListener('click', () => {
-      if (confirm('Вы уверены, что хотите сбросить все улучшения башни? Осколки будут возвращены.')) {
+      const confirmMsg = 'Все улучшения башни будут сброшены, осколки вернутся.';
+      const tg = this.telegram;
+      if (tg?.showConfirm) {
+        tg.showConfirm(confirmMsg, (ok) => {
+          if (!ok) return;
+          const refund = this.tower.resetShopUpgrades();
+          Notification.show(`Улучшения башни сброшены. Возвращено: ${refund} осколков`);
+          this.hide();
+        });
+      } else {
         const refund = this.tower.resetShopUpgrades();
-        alert(`Улучшения башни сброшены. Получено: ${refund} осколков`);
+        Notification.show(`Улучшения башни сброшены. Возвращено: ${refund} осколков`);
+        this.hide();
       }
     });
 

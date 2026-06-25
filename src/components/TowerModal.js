@@ -117,8 +117,8 @@ export class TowerModal {
               </div>
             </div>
             <div class="tower-arena-actions">
-              <button type="button" class="tower-secondary-btn" id="tower-refresh-btn">Лечение</button>
-              <button type="button" class="tower-secondary-btn" id="tower-chest-btn">Тайник</button>
+              <button type="button" class="tower-secondary-btn" id="tower-refresh-btn"></button>
+              <button type="button" class="tower-secondary-btn" id="tower-chest-btn"></button>
             </div>
           </footer>
         </div>
@@ -147,24 +147,53 @@ export class TowerModal {
         this.onProfileOpen();
       }
     });
-    this.container.querySelector('.tower-boss-kicker').textContent = floorTypeLabel;
+    this.container.querySelector('.tower-boss-kicker').textContent = enemy?.description || floorTypeLabel;
     this.container.querySelector('.tower-boss-panel-name').textContent = enemy?.name || 'Неизвестная Тень';
     this.container.querySelector('.tower-boss-panel-bar-fill').style.width = `${enemyHpPercent}%`;
     this.container.querySelector('.tower-boss-panel-hp').textContent = `${Math.round(state.enemyHp)} / ${Math.round(state.enemyMaxHp)}`;
-    this.container.querySelector('.tower-boss-panel-meta').textContent = `Этаж ${state.currentFloor} · ${enemy?.reward || 0} Теней · ${enemy?.shards || 0} осколков`;
+
+    const isBoss = enemy?.type === 'boss';
+    const metaText = isBoss
+      ? `Этаж ${state.currentFloor} · БОСС · ${enemy?.reward || 0} Теней · ${enemy?.shards || 0} осколков`
+      : `Этаж ${state.currentFloor} · ${enemy?.reward || 0} Теней · ${enemy?.shards || 0} осколков`;
+    this.container.querySelector('.tower-boss-panel-meta').textContent = metaText;
+
     this.container.querySelector('.tower-clicker-glyph').textContent = bossGlyph;
     this.container.querySelector('.tower-hero-name').textContent = state.playerName;
     this.container.querySelector('.tower-shadow-shards').textContent = state.shadowShards;
     this.container.querySelector('.tower-checkpoint-floor').textContent = `· Свеча: ${state.checkpointFloor} этаж`;
     this.container.querySelector('.tower-hero-hp-text').textContent = `${Math.round(state.playerHp)} / ${Math.round(state.playerMaxHp)}`;
     this.container.querySelector('.tower-hero-hp-fill').style.width = `${playerHpPercent}%`;
-    this.container.querySelector('.tower-floor-progress-text').textContent = `${state.floorProgressPercent}%`;
+
+    const floorsToBoss = state.floorsToBoss ?? 0;
+    const bossLabel = floorsToBoss === 0 ? 'БОСС!' : `Босс через ${floorsToBoss} эт.`;
+    this.container.querySelector('.tower-floor-progress-text').textContent = `∞ · Этаж ${state.currentFloor} · ${bossLabel}`;
     this.container.querySelector('.tower-arena-progress-fill').style.width = `${state.floorProgressPercent}%`;
 
     const attackBtn = this.container.querySelector('#tower-attack-btn');
     const isDisabled = state.playerHp <= 0 || state.enemyHp <= 0;
     attackBtn.classList.toggle('is-disabled', isDisabled);
     attackBtn.disabled = isDisabled;
+
+    const refreshBtn = this.container.querySelector('#tower-refresh-btn');
+    if (refreshBtn) {
+      if (state.playerHp >= state.playerMaxHp) {
+        refreshBtn.innerHTML = '<span class="btn-main">Лечение</span><span class="btn-sub">HP полон</span>';
+        refreshBtn.disabled = true;
+      } else if (state.healCooldownRemaining > 0) {
+        const secs = Math.ceil(state.healCooldownRemaining / 1000);
+        refreshBtn.innerHTML = `<span class="btn-main">Лечение</span><span class="btn-sub">${secs}с</span>`;
+        refreshBtn.disabled = true;
+      } else {
+        refreshBtn.innerHTML = `<span class="btn-main">Лечение</span><span class="btn-sub">${state.healCost} Т</span>`;
+        refreshBtn.disabled = false;
+      }
+    }
+
+    const chestBtn = this.container.querySelector('#tower-chest-btn');
+    if (chestBtn) {
+      chestBtn.innerHTML = '<span class="btn-main">Магазин</span><span class="btn-sub">тайник</span>';
+    }
   }
 
   bindActions() {
@@ -227,17 +256,8 @@ export class TowerModal {
   }
 
   handleRefresh() {
-    const state = this.tower.getState();
-    if (state.playerHp >= state.playerMaxHp) {
-      Notification.show('Силы уже на пределе.');
-      return;
-    }
-
-    const oldHp = this.tower.playerHp;
-    this.tower.playerMaxHp = this.tower.calculatePlayerMaxHp();
-    this.tower.playerHp = Math.min(this.tower.playerMaxHp, this.tower.playerHp + Math.round(this.tower.playerMaxHp * 0.25));
-    const healAmount = this.tower.playerHp - oldHp;
-    this.tower.triggerUpdate();
+    const result = this.tower.heal();
+    if (!result) return;
 
     import('./VisualEffects.js').then(({ VisualEffects }) => {
       const clicker = this.container?.querySelector('.tower-clicker');
@@ -246,13 +266,11 @@ export class TowerModal {
         VisualEffects.showFloatingGain(
           rect.left + rect.width / 2,
           rect.top + rect.height / 2,
-          healAmount,
+          Math.round(this.tower.playerMaxHp * 0.25),
           { isHeal: true }
         );
       }
     });
-
-    Notification.show('Вы переводите дух. Часть сил восстановлена.');
   }
 
   handleChest() {

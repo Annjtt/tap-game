@@ -6,7 +6,7 @@ export class GameCore {
     this.currency = 0;
     this.baseClickValue = CONFIG.baseClickValue; // ✅ Отдельно базовая сила
     this.items = [];
-    this.baseAutoIncome = 0; // ✅ Отдельно базовый авто-доход
+    this.baseAutoIncome = CONFIG.baseAutoIncome; // ✅ Отдельно базовый авто-доход
 
     // ✅ Бонусы из магазина
     this.shopClickBonus = 0;

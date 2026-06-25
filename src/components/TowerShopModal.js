@@ -80,12 +80,11 @@ export class TowerShopModal {
 
   renderItem(item) {
     const canAfford = item.canAfford;
-    const isMaxLevel = item.level >= item.maxLevel;
     const effectText = this.formatEffect(item);
     const descriptionValue = item.effectValue > 0 ? item.effectValue : item.valuePerLevel;
 
     return `
-      <div class="tower-shop-item ${isMaxLevel ? 'maxed' : ''} ${!canAfford && !isMaxLevel ? 'locked' : ''}">
+      <div class="tower-shop-item ${!canAfford ? 'locked' : ''}">
         <div class="tower-shop-item-icon">
           <i class="fas fa-${this.getIcon(item.id)}"></i>
         </div>
@@ -96,22 +95,17 @@ export class TowerShopModal {
             <div class="tower-shop-progress-bar">
               <div class="tower-shop-progress-fill" style="width:${item.progressPercent}%"></div>
             </div>
-            <span class="tower-shop-level">${item.level} / ${item.maxLevel}</span>
+            <span class="tower-shop-level">Lv. ${item.level}</span>
           </div>
           <p class="tower-shop-current-effect">Текущий эффект: ${effectText}</p>
         </div>
         <div class="tower-shop-item-buy">
-          ${isMaxLevel
-            ? '<span class="tower-shop-maxed">МАКС</span>'
-            : `
-              <button type="button" 
-                class="tower-shop-buy-btn ${!canAfford ? 'disabled' : ''}" 
-                data-id="${item.id}" 
-                ${!canAfford ? 'disabled' : ''}>
-                <i class="fas fa-gem"></i> ${item.currentCost}
-              </button>
-            `
-          }
+          <button type="button" 
+            class="tower-shop-buy-btn ${!canAfford ? 'disabled' : ''}" 
+            data-id="${item.id}" 
+            ${!canAfford ? 'disabled' : ''}>
+            <i class="fas fa-gem"></i> ${item.currentCost}
+          </button>
         </div>
       </div>
     `;

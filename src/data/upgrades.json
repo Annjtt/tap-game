@@ -24,9 +24,9 @@
   {
     "id": "auto_income_1",
     "name": "Тени в Минуту I",
-    "description": "Даёт 0.1 Тени в секунду",
+    "description": "Даёт 0.5 Тени в секунду",
     "type": "auto",
-    "value": 0.1,
+    "value": 0.5,
     "price": 300,
     "icon": "fa-clock",
     "maxLevel": 10,
@@ -35,9 +35,9 @@
   {
     "id": "auto_income_2",
     "name": "Тени в Минуту II",
-    "description": "Даёт 0.5 Тени в секунду",
+    "description": "Даёт 2 Тени в секунду",
     "type": "auto",
-    "value": 0.5,
+    "value": 2,
     "price": 1500,
     "icon": "fa-hourglass-half",
     "maxLevel": 5,

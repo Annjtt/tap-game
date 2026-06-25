@@ -1,22 +1,111 @@
-import towerFloors from '../data/towerFloors.json';
+import { CONFIG } from '../config.js';
 import { Notification } from '../components/Notification.js';
-import { TowerShopSystem } from './towerShopSystem.js'; // Подключаем магазин башни
+import { TowerShopSystem } from './towerShopSystem.js';
 
 const STORAGE_KEY = 'towerProgress';
-const FLOOR_CHECKPOINT_STEP = 5;
+const FLOOR_CHECKPOINT_STEP = CONFIG.towerInfinite.checkpointStep;
+const BOSS_INTERVAL = CONFIG.towerInfinite.bossInterval;
 const TOWER_AUTO_DAMAGE_INTERVAL_MS = 5000;
+const HEAL_COOLDOWN_MS = 30000;
+
+const NAME_PREFIXES = [
+  'Шепчущая', 'Чернильная', 'Пепельный', 'Зеркальный', 'Скорбный',
+  'Безликий', 'Древний', 'Гниющий', 'Ледяной', 'Кровавый',
+  'Пылающий', 'Мёртвый', 'Костяной', 'Ржавый', 'Шипастый',
+  'Гремящий', 'Слепящий', 'Гулящий', 'Разбитый', 'Искажённый',
+];
+
+const NAME_NOUNS = [
+  'Тень', 'Полоть', 'Рыцарь', 'Клык', 'Колокол',
+  'Слуга', 'Червь', 'Страж', 'Глаз', 'Коготь',
+  'Панцирь', 'Шёпот', 'Пламя', 'Скелет', 'Корень',
+  'Гвоздь', 'Зеркало', 'Цепь', 'Шрам', 'Ветер',
+];
+
+function generateEnemyName(floor) {
+  const poolSize = NAME_PREFIXES.length * NAME_NOUNS.length;
+  const index = (floor - 1) % poolSize;
+  const pIdx = index % NAME_PREFIXES.length;
+  const nIdx = Math.floor(index / NAME_PREFIXES.length) % NAME_NOUNS.length;
+  return `${NAME_PREFIXES[pIdx]} ${NAME_NOUNS[nIdx]}`;
+}
+
+function generateEnemyDescription(type, floor) {
+  if (type === 'boss') {
+    const bossTitles = [
+      'Владыка', 'Хранитель', 'Повелитель', 'Страж',
+    ];
+    const title = bossTitles[(floor / BOSS_INTERVAL - 1) % bossTitles.length];
+    return `${title} этажа ${floor}`;
+  }
+  const descTemplates = [
+    `Порождение тьмы на этаже: ${floor}`,
+    `Тень, застывшая между мирами. Этаж: ${floor}`,
+    `Сущность, охраняющая этаж: ${floor}`,
+    `Ужас этажа: ${floor}`,
+    `Сгусток Мрака этажа: ${floor}`,
+  ];
+  return descTemplates[Math.floor((floor - 1) % descTemplates.length)];
+}
+
+function generateFloor(floorNumber) {
+  const cfg = CONFIG.towerInfinite;
+  const isBoss = floorNumber % BOSS_INTERVAL === 0;
+
+  const rawHp = cfg.enemyBaseHp + Math.pow(floorNumber, cfg.enemyHpPow) * cfg.enemyHpScale;
+  const rawDmg = cfg.enemyBaseDmg + Math.pow(floorNumber, cfg.enemyDmgPow) * cfg.enemyDmgScale;
+  const rawInterval = Math.max(
+    cfg.enemyIntervalMin,
+    cfg.enemyIntervalBase - floorNumber * cfg.enemyIntervalFloorFactor
+  );
+
+  let reward;
+  if (floorNumber <= cfg.rewardSwitchFloor) {
+    reward = Math.round(cfg.rewardBase * Math.pow(cfg.rewardGrowth, floorNumber - 1));
+  } else {
+    const atSwitch = Math.round(cfg.rewardBase * Math.pow(cfg.rewardGrowth, cfg.rewardSwitchFloor - 1));
+    reward = Math.round(atSwitch * Math.pow(cfg.rewardGrowthLate, floorNumber - cfg.rewardSwitchFloor));
+  }
+  const shards = Math.max(1, Math.floor(cfg.shardsBase + floorNumber * cfg.shardsPerFloor));
+
+  if (isBoss) {
+    return {
+      floor: floorNumber,
+      enemyId: `boss_f${floorNumber}`,
+      name: `Король Теней этаж ${floorNumber}`,
+      type: 'boss',
+      maxHp: Math.round(rawHp * cfg.bossHpMultiplier),
+      damage: Math.round(rawDmg * cfg.bossDmgMultiplier),
+      attackIntervalMs: Math.round(rawInterval),
+      reward: Math.round(reward * cfg.bossRewardMultiplier),
+      shards: Math.max(1, Math.round(shards * cfg.bossShardMultiplier)),
+      description: generateEnemyDescription('boss', floorNumber),
+    };
+  }
+
+  return {
+    floor: floorNumber,
+    enemyId: `enemy_f${floorNumber}`,
+    name: generateEnemyName(floorNumber),
+    type: 'normal',
+    maxHp: Math.round(rawHp),
+    damage: Math.round(rawDmg),
+    attackIntervalMs: Math.round(rawInterval),
+    reward,
+    shards,
+    description: generateEnemyDescription('normal', floorNumber),
+  };
+}
 
 export class TowerSystem {
   constructor(gameCore, telegram) {
     this.game = gameCore;
     this.telegram = telegram;
-    this.floors = towerFloors;
     this.attackTimer = null;
     this.autoDamageTimer = null;
     this.resetState();
 
-    // Инициализация магазина башни (тайника)
-    this.towerShop = new TowerShopSystem(this);
+    this.towerShop = new TowerShopSystem();
 
     this.loadProgress();
     this.startEnemyLoop();
@@ -25,7 +114,7 @@ export class TowerSystem {
 
   resetState() {
     this.isOpen = false;
-    this.isShopOpen = false; // Стейт магазина
+    this.isShopOpen = false;
     this.currentFloor = 1;
     this.highestFloor = 1;
     this.lastCheckpointFloor = 1;
@@ -39,9 +128,8 @@ export class TowerSystem {
     this.lastEnemyAttackAt = Date.now();
     this.lastSavedAt = Date.now();
     this.lastAutoDamageAt = Date.now();
+    this.lastHealTime = 0;
     this.defeatedBosses = [];
-    this.isCleared = false;
-    this.towerRunCount = 0;
 
     if (this.towerShop && typeof this.towerShop.resetShop === 'function') {
       this.towerShop.resetShop();
@@ -57,19 +145,14 @@ export class TowerSystem {
   }
 
   getCurrentFloorData() {
-    return this.floors.find((floor) => floor.floor === this.currentFloor) || this.floors[this.floors.length - 1];
+    return generateFloor(this.currentFloor);
   }
 
   getShopBonus(stat) {
     if (!this.towerShop || typeof this.towerShop.getTotalBonus !== 'function') {
       return 0;
     }
-
     return this.towerShop.getTotalBonus(stat);
-  }
-
-  getTowerRunCount() {
-    return this.towerRunCount;
   }
 
   getShadowShards() {
@@ -87,8 +170,8 @@ export class TowerSystem {
     return this.calculatePlayerMaxHp();
   }
 
-  getRegenPerHit() {
-    return this.getRegenerationPerHit();
+  getRegenPercent() {
+    return this.getRegenerationPercent();
   }
 
   ensureFloorState() {
@@ -121,7 +204,7 @@ export class TowerSystem {
   calculatePlayerMaxHp() {
     const clickValue = this.game.getClickValue();
     const autoIncome = this.game.getAutoIncome();
-    const baseHp = Math.max(100, Math.round(100 + clickValue * 12 + autoIncome * 25 + this.highestFloor * 6));
+    const baseHp = Math.max(100, Math.round(100 + clickValue * 12 + autoIncome * 25 + this.highestFloor * 10));
     const bonusPercent = this.getShopBonus('hp_percent');
     return Math.max(100, Math.round(baseHp * (1 + bonusPercent / 100)));
   }
@@ -247,12 +330,54 @@ export class TowerSystem {
     return Math.min(0.35, hoodValue * 0.8);
   }
 
-  getRegenerationPerHit() {
+  getRegenerationPercent() {
     const modifiers = this.getItemCombatModifiers();
     const hoodValue = modifiers.hood ? (modifiers.hood.enhancedValue || modifiers.hood.baseBonus || 0) : 0;
-    const itemRegen = Math.max(0, Math.round(hoodValue * 20));
-    const towerRegen = Math.max(0, Math.round(this.getShopBonus('regen_per_hit')));
+    const itemRegen = Math.max(0, hoodValue * 20);
+    const towerRegen = Math.max(0, this.getShopBonus('regen_per_hit'));
     return itemRegen + towerRegen;
+  }
+
+  getHealCooldownRemaining() {
+    return Math.max(0, HEAL_COOLDOWN_MS - (Date.now() - this.lastHealTime));
+  }
+
+  getHealCost() {
+    return Math.round(25 + 25 * this.currentFloor);
+  }
+
+  canHeal() {
+    if (this.playerHp >= this.playerMaxHp) return false;
+    if (this.getHealCooldownRemaining() > 0) return false;
+    return this.game.getCurrency() >= this.getHealCost();
+  }
+
+  heal() {
+    if (this.playerHp >= this.playerMaxHp) {
+      Notification.show('Силы уже на пределе.');
+      return false;
+    }
+
+    if (this.getHealCooldownRemaining() > 0) {
+      const secs = Math.ceil(this.getHealCooldownRemaining() / 1000);
+      Notification.show(`Лечение будет доступно через ${secs} сек.`);
+      return false;
+    }
+
+    const cost = this.getHealCost();
+    if (this.game.getCurrency() < cost) {
+      Notification.show(`Недостаточно Теней для лечения. Нужно: ${cost}`);
+      return false;
+    }
+
+    this.game.addCurrency(-cost);
+    this.playerMaxHp = this.calculatePlayerMaxHp();
+    this.playerHp = Math.min(this.playerMaxHp, this.playerHp + Math.round(this.playerMaxHp * 0.50));
+    this.lastHealTime = Date.now();
+    this.triggerUpdate();
+
+    Notification.show(`Восстановлено 50% HP за ${cost} Теней.`);
+    return true;
   }
 
   getAttackSummary(multiplier, sourceItemId, damage, isCrit = false, critMultiplier = 1) {
@@ -270,6 +395,13 @@ export class TowerSystem {
     const modifiers = this.getItemCombatModifiers();
     const damage = Math.max(1, Math.round((baseDamage + modifiers.flatDamage) * (autoDamagePercent / 100)));
     this.enemyHp = Math.max(0, this.enemyHp - damage);
+
+    const regenPercent = this.getRegenerationPercent();
+    if (regenPercent > 0) {
+      const heal = Math.max(1, Math.round(damage * regenPercent / 100));
+      this.playerHp = Math.min(this.playerMaxHp, this.playerHp + heal);
+    }
+
     this.lastAttackSummary = this.getAttackSummary('auto_damage', 'tower_auto_damage', damage, false, autoDamagePercent / 100);
 
     import('../components/VisualEffects.js').then(({ VisualEffects }) => {
@@ -351,9 +483,10 @@ export class TowerSystem {
     this.enemyHp = Math.max(0, this.enemyHp - damage);
     this.game.clickCounter = nextTowerClick;
 
-    const regen = this.getRegenerationPerHit();
-    if (regen > 0) {
-      this.playerHp = Math.min(this.playerMaxHp, this.playerHp + regen);
+    const regenPercent = this.getRegenerationPercent();
+    if (regenPercent > 0) {
+      const heal = Math.max(1, Math.round(damage * regenPercent / 100));
+      this.playerHp = Math.min(this.playerMaxHp, this.playerHp + heal);
     }
 
     this.lastAttackSummary = this.getAttackSummary(multiplier, sourceItemId, damage, isCrit, critMultiplier);
@@ -397,26 +530,6 @@ export class TowerSystem {
       Notification.show('Вы нашли тайник! Можете открыть магазин башни.');
     }
 
-    if (this.currentFloor >= this.floors[this.floors.length - 1].floor) {
-      this.isCleared = true;
-      this.towerRunCount += 1;
-      const superReward = 10_000;
- 
-      this.game.addCurrency(superReward);
-
-      Notification.show(`Башня откликнулась вам. НАГРАДА: ${superReward.toLocaleString('ru-RU')} Теней! и ${shards} осколков`);
-
-      this.currentFloor = 1;
-      this.lastCheckpointFloor = 1;
-      this.playerMaxHp = this.calculatePlayerMaxHp();
-      this.playerHp = this.playerMaxHp;
-      this.enemyHp = 0;
-      this.ensureFloorState();
-      this.saveProgress();
-
-      return;
-    }
-
     Notification.show(`Этаж ${enemy.floor} очищен. Получено ${reward} Теней и ${shards} осколков.`);
     this.currentFloor += 1;
     this.playerMaxHp = this.calculatePlayerMaxHp();
@@ -454,24 +567,11 @@ export class TowerSystem {
   }
 
   getFloorProgressPercent() {
-    const totalFloors = this.floors.length;
-    const isFinished = this.currentFloor > totalFloors;
-    let floorProgress = 0;
-
-    if (isFinished) {
-      floorProgress = 100;
-    } else {
-      let completedFloors = this.currentFloor - 1;
-      let currentFloorFraction = 0;
-
-      if (this.enemyMaxHp && this.enemyHp >= 0 && this.enemyHp <= this.enemyMaxHp) {
-        currentFloorFraction = (this.enemyMaxHp - this.enemyHp) / this.enemyMaxHp;
-        currentFloorFraction = Math.max(0, Math.min(1, currentFloorFraction));
-      }
-
-      floorProgress = ((completedFloors + currentFloorFraction) / totalFloors) * 100;
-    }
-    return Math.max(0, Math.min(100, Math.round(floorProgress)));
+    const floor = this.currentFloor;
+    const nextBoss = Math.ceil(floor / BOSS_INTERVAL) * BOSS_INTERVAL;
+    const floorsSinceLastBoss = (floor - 1) % BOSS_INTERVAL;
+    const progress = (floorsSinceLastBoss / BOSS_INTERVAL) * 100;
+    return Math.max(0, Math.min(100, Math.round(progress)));
   }
 
   getState() {
@@ -482,10 +582,14 @@ export class TowerSystem {
       shopState = this.towerShop.getState();
     }
 
+    const floor = this.currentFloor;
+    const nextBoss = Math.ceil(floor / BOSS_INTERVAL) * BOSS_INTERVAL;
+    const floorsToBoss = nextBoss - floor;
+
     return {
       isOpen: this.isOpen,
       isShopOpen: this.isShopOpen,
-      isShopAvailable: this.currentEnemy?.type === 'boss' || this.currentFloor % FLOOR_CHECKPOINT_STEP === 0,
+      isShopAvailable: this.currentEnemy?.type === 'boss' || floor % FLOOR_CHECKPOINT_STEP === 0,
       currentFloor: this.currentFloor,
       highestFloor: this.highestFloor,
       checkpointFloor: this.lastCheckpointFloor,
@@ -498,8 +602,12 @@ export class TowerSystem {
       currentEnemy: this.currentEnemy,
       shadowShards: this.shadowShards,
       lastAttackSummary: this.lastAttackSummary,
-      isCleared: this.isCleared,
       floorProgressPercent: this.getFloorProgressPercent(),
+      floorsToBoss,
+      nextBoss,
+      healCooldownRemaining: this.getHealCooldownRemaining(),
+      healCost: this.getHealCost(),
+      canHeal: this.canHeal(),
       shopState
     };
   }
@@ -520,10 +628,9 @@ export class TowerSystem {
       enemyMaxHp: this.enemyMaxHp,
       shadowShards: this.shadowShards,
       defeatedBosses: this.defeatedBosses,
-      isCleared: this.isCleared,
-      towerRunCount: this.towerRunCount,
       lastEnemyAttackAt: this.lastEnemyAttackAt,
       lastAutoDamageAt: this.lastAutoDamageAt,
+      lastHealTime: this.lastHealTime,
       timestamp: Date.now(),
       shop: shopData
     };
@@ -549,10 +656,9 @@ export class TowerSystem {
       this.enemyMaxHp = data.enemyMaxHp || 0;
       this.shadowShards = data.shadowShards || 0;
       this.defeatedBosses = Array.isArray(data.defeatedBosses) ? data.defeatedBosses : [];
-      this.isCleared = Boolean(data.isCleared);
-      this.towerRunCount = data.towerRunCount || 0;
       this.lastEnemyAttackAt = data.lastEnemyAttackAt || Date.now();
       this.lastAutoDamageAt = data.lastAutoDamageAt || Date.now();
+      this.lastHealTime = data.lastHealTime || 0;
       this.ensureFloorState();
 
       if (this.towerShop && typeof this.towerShop.loadPersistentData === 'function' && data.shop) {
