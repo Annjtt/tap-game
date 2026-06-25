@@ -39,35 +39,35 @@ export class ProfileModal {
       <div class="profile-stats">
         <h3>Башня Теней</h3>
         <div class="stat-item">
-          <span class="stat-label">Этаж:</span>
+          <span class="stat-label"><i class="fas fa-layer-group"></i> Этаж:</span>
           <span class="stat-value">${this.tower.getState().currentFloor}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Рекорд:</span>
+          <span class="stat-label"><i class="fas fa-trophy"></i> Рекорд:</span>
           <span class="stat-value">${this.tower.getState().highestFloor}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Осколков:</span>
+          <span class="stat-label"><i class="fas fa-gem"></i> Осколков:</span>
           <span class="stat-value">${this.tower.getShadowShards()}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Базовый урон:</span>
+          <span class="stat-label"><i class="fas fa-bolt"></i> Базовый урон:</span>
           <span class="stat-value">${this.tower.getBaseTowerDamage().toFixed(2)}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Макс. HP:</span>
+          <span class="stat-label"><i class="fas fa-heart"></i> Макс. HP:</span>
           <span class="stat-value">${this.tower.getMaxHp()}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Отхил с урона:</span>
+          <span class="stat-label"><i class="fas fa-heart-pulse"></i> Отхил с урона:</span>
           <span class="stat-value">${this.tower.getRegenPercent()}%</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Крит шанс (башня):</span>
+          <span class="stat-label"><i class="fas fa-crosshairs"></i> Крит шанс (башня):</span>
           <span class="stat-value">${towerCrit.chance.toFixed(1)}%</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Крит урон (башня):</span>
+          <span class="stat-label"><i class="fas fa-skull"></i> Крит урон (башня):</span>
           <span class="stat-value">×${towerCrit.multiplier.toFixed(2)}</span>
         </div>
       </div>
@@ -94,28 +94,28 @@ export class ProfileModal {
         <div class="profile-stats">
           <h3>Статистика</h3>
           <div class="stat-item">
-            <span class="stat-label">Теней:</span>
+            <span class="stat-label"><i class="fas fa-coins"></i> Теней:</span>
             <span class="stat-value" data-key="currency">${this.game.getCurrency().toFixed(2)}</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Сила нажатия:</span>
+            <span class="stat-label"><i class="fas fa-hand-pointer"></i> Сила нажатия:</span>
             <span class="stat-value">${this.game.getClickValue().toFixed(2)}</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Авто-доход:</span>
+            <span class="stat-label"><i class="fas fa-arrow-trend-up"></i> Авто-доход:</span>
             <span class="stat-value">${this.game.getAutoIncome().toFixed(2)}</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Предметов в инвентаре:</span>
+            <span class="stat-label"><i class="fas fa-box"></i> Предметов в инвентаре:</span>
             <span class="stat-value">${this.game.items.length}</span>
           </div>
           ${hasCrit ? `
           <div class="stat-item">
-            <span class="stat-label">Крит шанс:</span>
+            <span class="stat-label"><i class="fas fa-crosshairs"></i> Крит шанс:</span>
             <span class="stat-value">${critValues.chance.toFixed(1)}%</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">Крит урон:</span>
+            <span class="stat-label"><i class="fas fa-skull"></i> Крит урон:</span>
             <span class="stat-value">×${critValues.damage.toFixed(2)}</span>
           </div>
           ` : ''}

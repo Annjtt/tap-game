@@ -67,28 +67,6 @@ export class ChestShopModal {
     });
   }
 
-  buyChest(chestId) {
-    const chest = this.chestTypes.find(c => c.id === chestId);
-    
-    if (!chest) {
-      alert('Сундук не найден');
-      return;
-    }
-
-    if (this.game.getCurrency() < chest.price) {
-      alert('Недостаточно Теней');
-      return;
-    }
-
-    this.game.addCurrency(-chest.price);
-    
-    // Открываем сундук с ограничениями по редкости
-    this.openChestWithRestrictions(chest);
-    
-    // Закрываем магазин
-    this.close();
-  }
-
   openChestWithRestrictions(chest) {
     // Генерируем случайную карту в диапазоне
     const availableCards = this.getAvailableCards(chest.minCard, chest.maxCard);
@@ -158,9 +136,24 @@ export class ChestShopModal {
   }
 
   showChestResult(card, item) {
-    import('./CardsDisplay.js').then(({ CardsDisplay }) => {
-      CardsDisplay.showCard(card, item, this.game);
+    const chest = this._lastChest;
+    import('./ChestOpeningAnimation.js').then(({ ChestOpeningAnimation }) => {
+      ChestOpeningAnimation.play(chest, item, card, this.game).then(() => {
+        import('./CardsDisplay.js').then(({ CardsDisplay }) => {
+          CardsDisplay.showCard(card, item, this.game);
+        });
+      });
     });
+  }
+
+  buyChest(chestId) {
+    const chest = this.chestTypes.find(c => c.id === chestId);
+    if (!chest) { alert('Сундук не найден'); return; }
+    if (this.game.getCurrency() < chest.price) { alert('Недостаточно Теней'); return; }
+    this._lastChest = chest;
+    this.game.addCurrency(-chest.price);
+    this.openChestWithRestrictions(chest);
+    this.close();
   }
 
   close() {
