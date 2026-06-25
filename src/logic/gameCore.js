@@ -60,10 +60,11 @@ export class GameCore {
     const activeItems = this.getActiveItemsByName();
     for (const item of Object.values(activeItems)) {
       if (item.id === 'scythe_of_gods') {
-        const value = item.enhancedValue || item.baseBonus;
+        const rankMult = item.bonusMultiplier || 1;
+        const effectiveValue = 15 * rankMult;
         return {
-          chance: value,
-          damage: 2 + value * 0.5
+          chance: effectiveValue,
+          damage: 2 + effectiveValue * 0.2
         };
       }
     }

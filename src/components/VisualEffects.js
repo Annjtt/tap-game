@@ -56,20 +56,20 @@ export class VisualEffects {
       // Особые цвета: lightning_dagger, chaos_seal, super-ярко если eternal_clock
       if (options.isEternalClockActive && !isEnemyAttack) {
         color = '#fff200';
-        textShadow = '0 0 16px rgb(111, 0, 255), 0 0 28px rgb(167, 19, 197), 0 0 60px #fff200, 0 0 95px #ff0080';
+        textShadow = '0 0 16px rgb(111, 0, 255), 0 0 28px rgb(85, 8, 100), 0 0 60px #fff200, 0 0 95px #ff0080';
         fontWeight = '900';
         styleBoost = true;
       } else if (options.sourceItemId === 'lightning_dagger' && !isEnemyAttack) {
-        color = '#ffe021';
-        textShadow = '0 0 8px rgba(135, 255, 249, 0.74), 0 0 18px rgba(139, 228, 255, 0.73), 0 0 24px rgba(255, 0, 234, 0.9)';
+        color = '#64d8ff';
+        textShadow = '0 0 2px #000, 0 0 4px #000, 0 0 10px rgba(100, 216, 255, 0.8)';
         fontWeight = '900';
       } else if (options.sourceItemId === 'chaos_seal' && !isEnemyAttack) {
         color = '#b700ff';
-        textShadow = '0 0 10px rgb(255, 2, 153), 0 0 28px rgba(170, 2, 255, 0.78)';
+        textShadow = '0 0 10px rgb(105, 0, 63), 0 0 28px rgba(125, 0, 187, 0.78)';
         fontWeight = '900';
       } else if ((options.sourceItemId === 'tower_crit_damage' || options.sourceItemId === 'scythe_crit') && !isEnemyAttack) {
         color = '#ff7a18';
-        textShadow = '0 0 10px rgba(255, 122, 24, 0.9), 0 0 22px rgba(255, 208, 0, 0.75)';
+        textShadow = '0 0 10px rgba(214, 39, 27, 0.9), 0 0 22px rgba(255, 208, 0, 0.75)';
         fontWeight = '900';
       } else if (options.sourceItemId === 'tower_auto_damage' && !isEnemyAttack) {
         color = '#7cf7ff';

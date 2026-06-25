@@ -1,5 +1,5 @@
 import { ItemModal } from './ItemModal.js';
-import { img } from '../utils/imageHelper.js'; // ✅ Импортируем хелпер
+import { img } from '../utils/imageHelper.js';
 
 export class InventoryModal {
   constructor(gameCore) {
@@ -49,7 +49,8 @@ export class InventoryModal {
       const newSlot = container.querySelectorAll('.inventory-slot')[index];
 
       if (newSlot && this.game.items[index]) {
-        newSlot.addEventListener('click', () => {
+        newSlot.addEventListener('click', (e) => {
+          if (e.target.closest('.slot-tooltip')) return;
           const item = this.game.items[index];
           if (item) {
             ItemModal.show(item, this.game);
@@ -65,17 +66,38 @@ export class InventoryModal {
     this.updateSlotListeners(container);
   }
 
+  getRankColor(card) {
+    const colors = { A: '#bb86fc', B: '#ff5252', C: '#448aff', D: '#e0e0e0', E: '#e0e0e0', F: '#e0e0e0', G: '#e0e0e0', H: '#e0e0e0' };
+    return colors[card] || '#e0e0e0';
+  }
+
   renderSlots() {
     const slots = [];
 
     for (let i = 0; i < 20; i++) {
       const item = this.game.items[i];
       if (item) {
-        // ✅ Используем хелпер для путей
         const itemImage = img(item.image);
+        const rankColor = this.getRankColor(item.card);
+        let statPreview = '';
+
+        if (item.stat === 'click') {
+          statPreview = `<div class="tooltip-stat"><i class="fas fa-bolt"></i> +${ItemModal.fmt(item.enhancedValue)}</div>`;
+        } else if (item.stat === 'auto') {
+          statPreview = `<div class="tooltip-stat"><i class="fas fa-coins"></i> +${ItemModal.fmt(item.enhancedValue)}</div>`;
+        }
+
         slots.push(`
-          <div class="inventory-slot" title="${item.name}">
+          <div class="inventory-slot" data-index="${i}">
             <img src="${itemImage}" alt="${item.name}" class="item-icon" />
+            <span class="slot-card-badge" style="background:${rankColor};color:#1a1a1a;">${item.card}</span>
+            <div class="slot-tooltip">
+              <div class="tooltip-name">${item.name}</div>
+              <div class="tooltip-rank" style="color:${rankColor}">Ранг ${item.card}</div>
+              <div class="tooltip-stats">
+                ${statPreview}
+              </div>
+            </div>
           </div>
         `);
       } else {

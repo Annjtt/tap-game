@@ -627,15 +627,15 @@
   }
   
   .card-modal {
-    background: #88888818;
-    backdrop-filter: blur(3px);
-    border: 1px solid #4444446c;
+    background: #1a1a1a;
     padding: 20px;
     border-radius: 12px;
-    text-align: center;
-    max-width: 300px;
+    width: 360px;
     box-shadow: 0 0 30px rgba(255,255,255,0.1);
-    animation: popIn 0.4s ease;
+    animation: popIn 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
   }
   
   .card-image {
@@ -644,20 +644,6 @@
     margin-bottom: 15px;
     border-radius: 8px;
     box-shadow: 0 0 15px rgba(255,255,255,0.2);
-  }
-  
-  .card-modal h2 {
-    font-size: 1.5rem;
-    margin: 10px 0;
-    color: #e0e0e0;
-  }
-  
-  .card-modal p {
-    margin: 5px 0;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #cccccc;
   }
   
   #close-card {
@@ -981,6 +967,79 @@
     box-shadow: 0 3px 12px 0 #161622 inset, 0 1.5px 8px #ffffff0a inset, 0 2.5px 0 #4444440c;
   }
 
+  .slot-card-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    line-height: 1;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+  }
+
+  .inventory-slot {
+    position: relative;
+  }
+
+  .slot-tooltip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    border: 1px solid #444444;
+    border-radius: 8px;
+    padding: 8px 12px;
+    white-space: nowrap;
+    z-index: 100;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+    pointer-events: none;
+  }
+
+  .inventory-slot:hover .slot-tooltip {
+    display: block;
+  }
+
+  .slot-tooltip .tooltip-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #cccccc;
+    margin-bottom: 2px;
+  }
+
+  .slot-tooltip .tooltip-rank {
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .slot-tooltip .tooltip-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .slot-tooltip .tooltip-stat {
+    font-size: 0.7rem;
+    color: #f0e68c;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .slot-tooltip .tooltip-stat i {
+    font-size: 0.6rem;
+    color: #888888;
+  }
+
   .profile-overlay {
     position: fixed;
     top: 0;
@@ -1165,15 +1224,16 @@
   }
   
   .item-modal {
-    background: #1a1a1a;
+    background: #1a1a1aaf;
     padding: 20px;
     border-radius: 12px;
-    width: 360px; /* 👈 Сделали уже */
+    max-width: 90%;
+    width: 400px;
     box-shadow: 0 0 30px rgba(255,255,255,0.1);
     animation: popIn 0.3s ease;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
   }
   
   .item-image-container {
@@ -1216,9 +1276,75 @@
   }
   
   .item-effect {
-    font-size: 0.9rem;
-    color: #cccccc;
+    font-size: 0.85rem;
+    color: #999999;
     line-height: 1.4;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .item-stats-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    background: #222222;
+    border-radius: 8px;
+    border: 1px solid #333333;
+  }
+
+  .item-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 0.85rem;
+  }
+
+  .item-stat-row:last-child {
+    border-bottom: none;
+  }
+
+  .item-stat-icon {
+    width: 20px;
+    text-align: center;
+    color: #888888;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  .item-stat-label {
+    flex: 1;
+    color: #aaaaaa;
+  }
+
+  .item-stat-value {
+    text-align: right;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .item-type-badge {
+    align-self: center;
+    padding: 3px 12px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .item-type-badge.active {
+    background: #2d5a6b;
+    color: #7fdbff;
+    border: 1px solid #3a7a91;
+  }
+
+  .item-type-badge.passive {
+    background: #3d5a3d;
+    color: #9fdf9f;
+    border: 1px solid #4d7a4d;
   }
 
   #close-inventory {
@@ -1293,7 +1419,7 @@
     font-size: 1.7rem;
     font-weight: 500;
     color: #cccccc;
-    margin: 10px 0;
+    margin: 1px 0;
     text-shadow: 0 0 6px #2c8096b7;
   }
 
@@ -1344,7 +1470,7 @@
       }
       
       .item-modal {
-        background: #1a1a1a;
+        background: #1a1a1aaf;
         padding: 20px;
         border-radius: 12px;
         max-width: 90%;
@@ -1353,7 +1479,7 @@
         animation: popIn 0.4s ease;
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 10px;
       }
       
       .item-image-container {
@@ -1395,9 +1521,26 @@
       }
       
       .item-effect {
-        font-size: 0.9rem;
-        color: #cccccc;
+        font-size: 0.85rem;
+        color: #999999;
         line-height: 1.4;
+        text-align: center;
+        margin-top: 4px;
+      }
+
+      .item-stats-block {
+        padding: 10px;
+        gap: 5px;
+      }
+
+      .item-stat-row {
+        font-size: 0.8rem;
+        gap: 8px;
+      }
+
+      .item-type-badge {
+        font-size: 0.65rem;
+        padding: 2px 10px;
       }
 
       .confetti {

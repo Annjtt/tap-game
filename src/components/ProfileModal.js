@@ -22,6 +22,19 @@ export class ProfileModal {
     const username = user?.username || null;
     const userId = user?.id || null;
 
+    const critValues = this.game.getItemCritValues();
+    const hasCrit = critValues.chance > 0;
+
+    const towerCrit = this.tower ? (() => {
+      const shopChance = this.tower.getShopBonus('crit_chance');
+      const shopDamage = this.tower.getShopBonus('crit_damage');
+      const mods = this.tower.getItemCombatModifiers();
+      return {
+        chance: shopChance + mods.scytheCritChance,
+        multiplier: 2 + (shopDamage + mods.scytheCritDamage) / 100
+      };
+    })() : null;
+
     const towerSection = this.tower ? `
       <div class="profile-stats">
         <h3>Башня Теней</h3>
@@ -49,6 +62,14 @@ export class ProfileModal {
           <span class="stat-label">Отхил с урона:</span>
           <span class="stat-value">${this.tower.getRegenPercent()}%</span>
         </div>
+        <div class="stat-item">
+          <span class="stat-label">Крит шанс (башня):</span>
+          <span class="stat-value">${towerCrit.chance.toFixed(1)}%</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Крит урон (башня):</span>
+          <span class="stat-value">×${towerCrit.multiplier.toFixed(2)}</span>
+        </div>
       </div>
       <button id="reset-tower-shop" class="reset-btn">
         <i class="fas fa-dungeon" style="margin-right: 6px;"></i>
@@ -74,7 +95,7 @@ export class ProfileModal {
           <h3>Статистика</h3>
           <div class="stat-item">
             <span class="stat-label">Теней:</span>
-            <span class="stat-value">${this.game.getCurrency().toFixed(2)}</span>
+            <span class="stat-value" data-key="currency">${this.game.getCurrency().toFixed(2)}</span>
           </div>
           <div class="stat-item">
             <span class="stat-label">Сила нажатия:</span>
@@ -88,6 +109,16 @@ export class ProfileModal {
             <span class="stat-label">Предметов в инвентаре:</span>
             <span class="stat-value">${this.game.items.length}</span>
           </div>
+          ${hasCrit ? `
+          <div class="stat-item">
+            <span class="stat-label">Крит шанс:</span>
+            <span class="stat-value">${critValues.chance.toFixed(1)}%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Крит урон:</span>
+            <span class="stat-value">×${critValues.damage.toFixed(2)}</span>
+          </div>
+          ` : ''}
         </div>
         <button id="reset-shop" class="reset-btn">
           <i class="fas fa-store" style="margin-right: 6px;"></i>
@@ -102,11 +133,23 @@ export class ProfileModal {
 
     document.body.appendChild(this.container);
     this.bindActions();
+    this.startCounters();
+
+    this._boundCurrencyUpdate = () => {
+      const el = this.container?.querySelector('[data-key="currency"]');
+      if (el) el.textContent = this.game.getCurrency().toFixed(2);
+    };
+    document.addEventListener('currencyChanged', this._boundCurrencyUpdate);
   }
 
   hide() {
     if (!this.isOpen || !this.container) {
       return;
+    }
+
+    if (this._boundCurrencyUpdate) {
+      document.removeEventListener('currencyChanged', this._boundCurrencyUpdate);
+      this._boundCurrencyUpdate = null;
     }
 
     if (this.container.parentNode) {
@@ -115,6 +158,44 @@ export class ProfileModal {
 
     this.container = null;
     this.isOpen = false;
+  }
+
+  startCounters() {
+    const items = this.container.querySelectorAll('.stat-value');
+    items.forEach(el => {
+      const text = el.textContent;
+      const match = text.match(/^[×]?([\d.]+)(%?)$/);
+      if (!match) return;
+      const prefix = text.startsWith('×') ? '×' : '';
+      const suffix = match[2] || '';
+      const target = parseFloat(match[1]);
+      const decimals = (match[1].split('.')[1] || '').length;
+      el.dataset.target = target;
+      el.textContent = prefix + (decimals > 0 ? '0.' + '0'.repeat(decimals) : '0');
+      this.animateValue(el, target, 600, prefix, suffix, decimals);
+    });
+  }
+
+  animateValue(element, target, duration, prefix, suffix, decimals) {
+    let start;
+
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - (1 - progress) * (1 - progress);
+
+      if (element.parentNode) {
+        element.textContent = prefix + (target * eased).toFixed(decimals) + suffix;
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else if (element.parentNode) {
+        element.textContent = prefix + target.toFixed(decimals) + suffix;
+      }
+    };
+
+    requestAnimationFrame(step);
   }
 
   bindActions() {

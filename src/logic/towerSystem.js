@@ -217,9 +217,10 @@ export class TowerSystem {
     let scytheCritChance = 0;
     let scytheCritDamage = 0;
     if (scythe) {
-      const value = scythe.enhancedValue || scythe.baseBonus;
+      const rankMult = scythe.bonusMultiplier || 1;
+      const value = 15 * rankMult;
       scytheCritChance = value;
-      scytheCritDamage = value * 50;
+      scytheCritDamage = value * 20;
     }
     return {
       flatDamage: Object.values(activeItems)
