@@ -211,8 +211,6 @@ export class ProfileModal {
           <div class="profile-info">
             <div class="profile-name-row">
               <h2 class="profile-name">${playerName}</h2>
-              ${username ? `<p class="profile-username">@${username}</p>` : ''}
-              ${userId ? `<p class="profile-id">ID: ${userId}</p>` : ''}
               <img src="${rankImg}" alt="${rank}" class="profile-rank-badge" style="border-color:${rankColor}" title="Ранг ${rank}" />
             </div>
           </div>
