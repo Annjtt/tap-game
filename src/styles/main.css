@@ -1311,7 +1311,603 @@
     font-family: 'Neucha', cursive;
     letter-spacing: 1.5px;
   }
-  
+
+  /* ── Profile sections – collapsible ────────────────── */
+  .profile-section {
+    border-bottom: 1px solid #2d2d2d;
+    margin: 0 -4px;
+    padding: 0 4px;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 8px;
+    margin: 0 -4px;
+    cursor: pointer;
+    color: #e0e0e0;
+    font-family: 'Neucha', cursive;
+    font-size: 1.05rem;
+    user-select: none;
+    transition: background 0.2s, color 0.2s;
+    border-radius: 8px;
+  }
+
+  .section-header:hover {
+    color: #7dc5ca;
+    background: rgba(125, 197, 202, 0.06);
+  }
+
+  .section-header span i {
+    margin-right: 8px;
+    color: #7dc5ca;
+    width: 18px;
+    text-align: center;
+  }
+
+  .section-arrow {
+    transition: transform 0.35s ease;
+    color: #666;
+    font-size: 0.8rem;
+  }
+
+  .section-header:has(+ .section-body--open) .section-arrow {
+    transform: rotate(180deg);
+  }
+
+  .section-header:has(+ .section-body--open) {
+    color: #7dc5ca;
+    background: rgba(125, 197, 202, 0.05);
+  }
+
+  .section-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+    padding: 0 8px;
+  }
+
+  .section-body--open {
+    max-height: 2500px;
+    padding: 13px 8px 14px;
+  }
+
+  /* ── Profile name row with rank badge ──────────────── */
+  .profile-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .profile-name {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #e0e0e0;
+    font-family: 'Neucha', cursive;
+  }
+
+  .profile-rank-badge {
+    width: 38px;
+    height: 38px;
+    border: 2px solid;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(255,255,255,0.1);
+  }
+
+  /* ── Achievement items (shared with old quests) ────── */
+  .quest-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 6px;
+    border-bottom: 1px solid #222;
+    animation: fadeIn 0.3s ease;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+
+  .quest-item:last-child {
+    border-bottom: none;
+  }
+
+  .quest-item:hover {
+    background: rgba(255,255,255,0.02);
+  }
+
+  .quest--done {
+    opacity: 0.45;
+  }
+
+  .quest--done:hover {
+    background: transparent;
+  }
+
+  .quest--ready {
+    background: rgba(125, 197, 202, 0.07);
+    border: 1px solid rgba(125, 197, 202, 0.15);
+    border-radius: 8px;
+    padding: 10px 8px;
+    margin-bottom: 4px;
+  }
+
+  .quest--ready:hover {
+    background: rgba(125, 197, 202, 0.12);
+  }
+
+  .quest-icon {
+    width: 32px;
+    text-align: center;
+    font-size: 1.15rem;
+    color: #7dc5ca;
+    flex-shrink: 0;
+  }
+
+  .quest--done .quest-icon {
+    color: #4a4a4a;
+  }
+
+  .quest-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .quest-name {
+    font-size: 0.85rem;
+    color: #e0e0e0;
+    font-weight: 600;
+  }
+
+  .quest-desc {
+    font-size: 0.72rem;
+    color: #888;
+    margin: 2px 0 6px;
+  }
+
+  .quest--done .quest-desc {
+    color: #555;
+  }
+
+  .quest-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .quest-bar-bg {
+    flex: 1;
+    height: 7px;
+    background: #1e1e1e;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+  }
+
+  .quest-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #5bb8be, #97cace);
+    border-radius: 4px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 6px rgba(125, 197, 202, 0.3);
+  }
+
+  .quest--done .quest-bar-fill {
+    background: #3a3a3a;
+    box-shadow: none;
+  }
+
+  .quest-pct {
+    font-size: 0.68rem;
+    color: #777;
+    min-width: 34px;
+    text-align: right;
+    font-family: monospace;
+  }
+
+  .quest--done .quest-pct {
+    color: #4a9e4a;
+  }
+
+  .quest-reward {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    background: rgba(73, 73, 73, 0.336);
+    padding: 4px 8px;
+    border-radius: 12px;
+  }
+
+  .quest-reward-val {
+    color: #e0e0e0;
+    font-weight: 600;
+  }
+
+  .quest-reward-icon {
+    color: #99f2dc;
+  }
+
+  .quest-claim-btn {
+    background: #7dc5ca;
+    border: none;
+    border-radius: 50%;
+    width: 23px;
+    height: 23px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #0a0a0a;
+    font-size: 0.85rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 6px rgba(125, 197, 202, 0.3);
+    margin-left: 4px;
+  }
+
+  .quest-claim-btn:hover {
+    transform: scale(1.18);
+    box-shadow: 0 0 12px rgba(125, 197, 202, 0.5);
+  }
+
+  .quest-claim-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* ── Achievement-specific claim (shards) ────────────── */
+  .ach-claim {
+    background: #00ffc6e0;
+    color: #1a1a1a;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+  }
+
+  .ach-claim:hover {
+    box-shadow: 0 0 16px rgba(0, 238, 255, 0.5);
+  }
+
+  .quest-count {
+    font-size: 0.72rem;
+    color: #666;
+    margin-left: 6px;
+  }
+
+  /* ── Medals grid ────────────────────────────────────── */
+  .medals-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+
+  .medal-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 2px;
+    border-radius: 10px;
+    background: #181818;
+    border: 1px solid #222;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .medal-item i {
+    font-size: 1.3rem;
+    transition: transform 0.25s;
+  }
+
+  .medal--earned {
+    border-color: #2a2a2a;
+  }
+
+  .medal--earned:hover {
+    transform: translateY(-2px);
+    border-color: #7dc5ca;
+    box-shadow: 0 4px 16px rgba(125, 197, 202, 0.18);
+  }
+
+  .medal--earned:hover i {
+    transform: scale(1.18);
+  }
+
+  .medal--locked {
+    opacity: 0.2;
+    border-color: #1a1a1a;
+    cursor: default;
+  }
+
+  .medal-name {
+    font-size: 0.55rem;
+    color: #bbb;
+    word-break: break-word;
+    line-height: 1.15;
+  }
+
+  .medal--locked .medal-name {
+    color: #444;
+  }
+
+  .medal--selected {
+    border-color: #7dc5ca !important;
+    box-shadow: 0 0 16px rgba(125, 197, 202, 0.22);
+    transform: translateY(-2px);
+  }
+
+  .medal--selected i {
+    transform: scale(1.18);
+  }
+
+  /* ── Medal progress area ────────────────────────────── */
+  .medal-progress-area {
+    margin: 10px 0 8px;
+    padding: 10px;
+    background: #181818;
+    border-radius: 10px;
+    border: 1px solid #222;
+  }
+
+  .medal-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    color: #ccc;
+    margin-bottom: 6px;
+  }
+
+  .medal-progress-header i {
+    margin-right: 5px;
+    color: #7dc5ca;
+  }
+
+  .medal-progress-count {
+    font-family: 'Neucha', cursive;
+    color: #97cace;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .medal-progress-area .quest-bar-bg {
+    height: 8px;
+    border-radius: 5px;
+  }
+
+  .medal-progress-area .quest-bar-fill {
+    border-radius: 5px;
+    background: linear-gradient(90deg, #ffd700, #ffb300);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+  }
+
+  .medal-progress-sub {
+    font-size: 0.68rem;
+    color: #777;
+    margin-top: 5px;
+    text-align: right;
+  }
+
+  /* ── Medal description ──────────────────────────────── */
+  .medal-desc-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #1a1a1a;
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .medal-desc-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #111;
+    border: 1px solid #2a2a2a;
+  }
+
+  .medal-desc-icon i {
+    font-size: 1.2rem;
+  }
+
+  .medal-desc-text {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .medal-desc-name {
+    font-size: 0.85rem;
+    color: #e0e0e0;
+    font-weight: 600;
+  }
+
+  .medal-desc-body {
+    font-size: 0.72rem;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  /* ── Active quest items ─────────────────────────────── */
+  .aq-item {
+    padding: 12px 8px;
+    border-bottom: 1px solid #222;
+    animation: fadeIn 0.3s ease;
+    border-radius: 8px;
+    transition: background 0.2s;
+    margin-bottom: 2px;
+  }
+
+  .aq-item:last-child {
+    border-bottom: none;
+  }
+
+  .aq-item:hover {
+    background: rgba(255,255,255,0.02);
+  }
+
+  .aq-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .aq-icon {
+    width: 30px;
+    text-align: center;
+    font-size: 1rem;
+    color: #7dc5ca;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .aq-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .aq-name {
+    font-size: 0.85rem;
+    color: #e0e0e0;
+    font-weight: 600;
+  }
+
+  .aq-desc {
+    font-size: 0.72rem;
+    color: #888;
+    margin-top: 2px;
+  }
+
+  .aq-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    flex-shrink: 0;
+    min-width: 80px;
+  }
+
+  .aq-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .aq-accept {
+    background: linear-gradient(135deg, #7dc5ca, #5bb8be);
+    color: #0a0a0a;
+    box-shadow: 0 2px 8px rgba(125, 197, 202, 0.25);
+  }
+
+  .aq-accept:hover {
+    transform: scale(1.06);
+    box-shadow: 0 3px 12px rgba(125, 197, 202, 0.4);
+  }
+
+  .aq-accept:active {
+    transform: scale(0.96);
+  }
+
+  .aq-active {
+    background: #2d2d2d;
+    color: #666;
+    cursor: default;
+    border: 1px solid #3a3a3a;
+  }
+
+  .aq-claim {
+    background: linear-gradient(135deg, #4caf50, #388e3c);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  }
+
+  .aq-claim:hover {
+    transform: scale(1.06);
+    box-shadow: 0 3px 12px rgba(76, 175, 80, 0.45);
+  }
+
+  .aq-claim:active {
+    transform: scale(0.96);
+  }
+
+  .aq-cooldown-btn {
+    background: #333;
+    color: #666;
+    cursor: default;
+    border: 1px solid #3a3a3a;
+  }
+
+  .aq-cooldown {
+    font-size: 0.72rem;
+    color: #ff9800;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    animation: cooldownPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes cooldownPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .aq-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 0 40px;
+  }
+
+  .aq-prog-text {
+    font-size: 0.68rem;
+    color: #777;
+    min-width: 38px;
+    text-align: right;
+    font-family: monospace;
+  }
+
+  .aq-reward-line {
+    margin: 6px 0 0 40px;
+    font-size: 0.72rem;
+    color: #ffd700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 215, 0, 0.07);
+    padding: 2px 10px;
+    border-radius: 10px;
+    width: fit-content;
+  }
+
+  .aq-reward-line i {
+    font-size: 0.65rem;
+  }
+
+  /* ── Tower stats inline ────────────────────────────── */
+  .tower-stats-inline > h3 {
+    font-family: 'Neucha', cursive;
+    color: #7dc5ca;
+    margin: 10px 0 6px;
+    font-size: 1rem;
+  }
+
+  .tower-stats-inline .stat-item {
+    padding: 3px 0;
+    font-size: 0.85rem;
+  }
+
   #close-profile {
     display: block;
     margin-left: auto;

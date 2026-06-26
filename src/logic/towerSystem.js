@@ -161,6 +161,11 @@ export class TowerSystem {
     return this.shadowShards;
   }
 
+  addShadowShards(amount) {
+    this.shadowShards += amount;
+    document.dispatchEvent(new CustomEvent('shadowShardsUpdated'));
+  }
+
   getBaseTowerDamage() {
     const baseDamage = this.game.getClickValue();
     const modifiers = this.getItemCombatModifiers();

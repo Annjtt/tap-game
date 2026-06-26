@@ -31,6 +31,7 @@ export class GameCore {
 
   addCurrency(amount) {
     this.currency += amount;
+    if (this.questSystem && amount > 0) this.questSystem.onEarn(amount);
     this.triggerEvent('currencyChanged');
   }
 
@@ -73,6 +74,7 @@ export class GameCore {
 
   handleClick() {
     this.clickCounter = (this.clickCounter || 0) + 1;
+    if (this.questSystem) this.questSystem.onClick();
     const effectSummary = this.checkActiveEffects();
     let amount = this.getClickValue() * effectSummary.multiplier;
     let sourceItemId = effectSummary.sourceItemId;
@@ -343,6 +345,7 @@ addItem(item) {
   }
 
   this.triggerEvent('inventoryUpdated');
+  if (this.questSystem) this.questSystem.onItemCollected();
 }
 
   // ✅ Новая функция для компенсации
@@ -365,6 +368,7 @@ addItem(item) {
     const index = this.items.indexOf(item);
     if (index > -1) {
       this.items.splice(index, 1);
+      if (this.questSystem) this.questSystem.onDisenchant();
       this.triggerEvent('inventoryUpdated');
     }
   }

@@ -3,11 +3,12 @@ import { GameCore } from './logic/gameCore.js';
 import { InventoryModal } from './components/InventoryModal.js';
 import { ShopModal } from './components/ShopModal.js';
 import { ProfileModal } from './components/ProfileModal.js';
-import { ChestShopModal } from './components/ChestShopModal.js'; // ✅ Новый импорт
+import { ChestShopModal } from './components/ChestShopModal.js';
 import { VisualEffects } from './components/VisualEffects.js';
 import { ActiveItemsHud } from './components/ActiveItemsHud.js';
 import { TowerSystem } from './logic/towerSystem.js';
 import { TowerModal } from './components/TowerModal.js';
+import { QuestSystem } from './logic/QuestSystem.js';
 
 // Инициализация Telegram
 const Telegram = window.Telegram?.WebApp;
@@ -26,7 +27,7 @@ game.loadProgress();
 // Создаём магазин и передаём его в gameCore
 const shopModal = new ShopModal(game);
 const shopSystem = shopModal.shop;
-game.shopSystem = shopSystem; // ✅ Передаём раньше, чем создаём ProfileMoыdal
+game.shopSystem = shopSystem;
 
 // DOM элементы
 const currencyDisplay = document.getElementById('currency');
@@ -50,6 +51,12 @@ function formatNumber(num) {
 
 const towerSystem = new TowerSystem(game, Telegram);
 const towerModal = new TowerModal(towerSystem, () => profileModal.show());
+
+// Создаём систему квестов (после tower, чтобы передать ссылку)
+const questSystem = new QuestSystem(game, towerSystem);
+game.questSystem = questSystem;
+questSystem.totalClicks = game.clickCounter || 0;
+questSystem.cleanActiveCooldowns();
 
 // Обработчики событий
 clicker.addEventListener('click', (event) => {
@@ -93,8 +100,8 @@ if (towerEntryBtn) {
   console.warn('Кнопка входа в Башню Теней не найдена в DOM');
 }
 
-// Профиль - создаём после передачи shopSystem
-const profileModal = new ProfileModal(game, Telegram, towerSystem);
+// Профиль - создаём после передачи shopSystem и questSystem
+const profileModal = new ProfileModal(game, Telegram, towerSystem, questSystem);
 const activeItemsHud = new ActiveItemsHud(game);
 activeItemsHud.init();
 
