@@ -35,6 +35,13 @@ export class ChestShopModal {
     });
   }
 
+  static formatPrice(num) {
+    if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
+    if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return String(num);
+  }
+
   renderChests() {
     return this.chestTypes.map(chest => {
       const canAfford = this.game.getCurrency() >= chest.price;
@@ -47,7 +54,7 @@ export class ChestShopModal {
           <div class="chest-info">
             <h3>${chest.name}</h3>
             <p>${chest.description}</p>
-            <div class="chest-price">Цена: ${chest.price} Теней</div>
+            <div class="chest-price">Цена: ${ChestShopModal.formatPrice(chest.price)} Теней</div>
           </div>
           <button class="buy-chest-btn" data-id="${chest.id}" ${!canAfford ? 'disabled' : ''}>
             Купить
