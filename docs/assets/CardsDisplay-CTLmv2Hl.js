@@ -1,4 +1,4 @@
-import{i,I as l}from"./index-D1V1yT2A.js";class v{static showCard(d,e,a,c){const t=document.createElement("div");t.className="card-overlay";const n=i(`images/cards/${d.toLowerCase()}.png`),o=i(e.image);t.innerHTML=`
+import{i,I as l}from"./index-BV-HhkLS.js";class v{static showCard(d,e,a,c){const t=document.createElement("div");t.className="card-overlay";const n=i(`images/cards/${d.toLowerCase()}.png`),o=i(e.image);t.innerHTML=`
       <div class="card-modal">
         <div class="item-image-container">
           <img src="${o}" alt="${e.name}" class="item-image" />

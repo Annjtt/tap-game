@@ -1406,6 +1406,7 @@
     box-shadow: 0 0 8px rgba(255,255,255,0.1);
     margin-left: auto;
     display: block;
+    margin: 1px;
   }
 
   /* ── Achievement items (shared with old quests) ────── */
@@ -2289,12 +2290,12 @@
       
       .card-badge {
         position: absolute;
-        top: 10px;
+        top: 40px;
         right: 10px;
         width: 60px;
         height: auto;
         border-radius: 8px;
-        box-shadow: 0 0 10px rgba(255,255,255,0.3);
+        box-shadow: 0 0 10px rgba(110, 110, 110, 0.418);
         z-index: 10;
       }
       
