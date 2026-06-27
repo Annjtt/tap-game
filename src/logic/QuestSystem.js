@@ -273,10 +273,8 @@ export class QuestSystem {
     if (this.game.clickCounter) {
       this.totalClicks = Math.max(this.totalClicks, this.game.clickCounter);
     }
-    // tower floors from towerSystem
-    if (this.tower) {
-      this.totalTowerFloors = Math.max(this.totalTowerFloors, this.tower.getState().currentFloor);
-    }
+    // tower floors counter — preserved from save, not synced from current floor
+    // (no achievements use this type; only active quests track it)
     // validate saved achievements against actual progress
     this.achievementsCompleted = this.achievementsCompleted.filter(id => {
       const a = ACHIEVEMENTS.find(x => x.id === id);
@@ -324,11 +322,9 @@ export class QuestSystem {
     }
   }
 
-  onFloorReached(floor) {
-    if (floor > this.totalTowerFloors) {
-      this.totalTowerFloors = floor;
-      this.checkActiveQuests();
-    }
+  onFloorReached() {
+    this.totalTowerFloors++;
+    this.checkActiveQuests();
   }
 
   // ─── save / load ──────────────────────────────────────
