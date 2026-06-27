@@ -1970,19 +1970,20 @@
 
   .reset-btn {
     width: 100%;
-    padding: 12px;
-    background: #44444481;
-    border: none;
-    border-radius: 6px;
+    padding: 14px;
+    background: #ce181827;
+    border: 1px solid;
+    border-color: #5525259c;
+    border-radius: 30px;
     color: #cccccc;
     font-size: 1rem;
     cursor: pointer;
-    margin: 10px 0;
+    margin: 20px 0;
     transition: all 0.2s ease;
   }
   
   .reset-btn:hover {
-    background: #7dc5ca7c;
+    background: #e037376e;
     transform: scale(0.97);
   }
   
