@@ -4,9 +4,7 @@ import { ItemModal } from './ItemModal.js';
 import { img } from '../utils/imageHelper.js';
 
 export class CardsDisplay {
-  static showCard(card, item, game) {
-    Confetti.show(card);
-
+  static showCard(card, item, game, onReopen) {
     const container = document.createElement('div');
     container.className = 'card-overlay';
 
@@ -25,7 +23,7 @@ export class CardsDisplay {
           ${ItemModal.getItemStatsHTML(item, game)}
         </div>
         <div class="item-effect">${item.enhancedEffect}</div>
-        <button id="disenchant-card" class="disenchant-btn">Распылить</button>
+        <button id="reopen-card" class="disenchant-btn">Открыть снова</button>
         <button id="close-card">Закрыть</button>
       </div>
     `;
@@ -37,11 +35,10 @@ export class CardsDisplay {
       document.body.removeChild(container);
     };
 
-    document.getElementById('disenchant-card').addEventListener('click', () => {
-      const compensation = CardsDisplay.getCompensation(item);
-      game.addCurrency(compensation);
+    document.getElementById('reopen-card').addEventListener('click', () => {
+      game.addItem(item);
       document.body.removeChild(container);
-      Notification.show(`Предмет распылен. Получено: ${compensation} Теней.`);
+      if (typeof onReopen === 'function') onReopen();
     });
 
     document.getElementById('close-card').addEventListener('click', () => {

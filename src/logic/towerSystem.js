@@ -6,7 +6,6 @@ const STORAGE_KEY = 'towerProgress';
 const FLOOR_CHECKPOINT_STEP = CONFIG.towerInfinite.checkpointStep;
 const BOSS_INTERVAL = CONFIG.towerInfinite.bossInterval;
 const TOWER_AUTO_DAMAGE_INTERVAL_MS = 5000;
-const HEAL_COOLDOWN_MS = 30000;
 
 const NAME_PREFIXES = [
   'Тусклая', 'Погибающая', 'Изломанный', 'Грозовой', 'Дрожащий',
@@ -110,8 +109,6 @@ export class TowerSystem {
     this.towerShop = new TowerShopSystem();
 
     this.loadProgress();
-    this.startEnemyLoop();
-    this.startAutoDamageLoop();
   }
 
   resetState() {
@@ -130,8 +127,9 @@ export class TowerSystem {
     this.lastEnemyAttackAt = Date.now();
     this.lastSavedAt = Date.now();
     this.lastAutoDamageAt = Date.now();
-    this.lastHealTime = 0;
     this.defeatedBosses = [];
+    this.autoBattleActive = false;
+    this.autoBattleTimer = null;
 
     if (this.towerShop && typeof this.towerShop.resetShop === 'function') {
       this.towerShop.resetShop();
@@ -190,6 +188,12 @@ export class TowerSystem {
     this.currentEnemy = floor;
     this.enemyMaxHp = floor.maxHp;
 
+    // Compute final reward with shop bonuses for UI display
+    const goldBonus = this.getShopBonus('gold_bonus');
+    const shardBonus = this.getShopBonus('shard_bonus');
+    this.currentEnemy.finalReward = Math.max(0, Math.round(floor.reward * (1 + goldBonus / 100)));
+    this.currentEnemy.finalShards = Math.max(0, Math.round(floor.shards * (1 + shardBonus / 100)));
+
     if (!this.enemyHp || this.enemyHp > this.enemyMaxHp) {
       this.enemyHp = this.enemyMaxHp;
     }
@@ -245,14 +249,24 @@ export class TowerSystem {
     this.playerMaxHp = this.calculatePlayerMaxHp();
     this.playerHp = Math.min(this.playerHp || this.playerMaxHp, this.playerMaxHp);
     this.ensureFloorState();
+    this.startEnemyLoop();
+    this.startAutoDamageLoop();
     this.triggerUpdate();
   }
 
   close() {
     this.isOpen = false;
     this.isShopOpen = false;
+    this.deactivateAutoBattle();
+    if (this.attackTimer) {
+      clearInterval(this.attackTimer);
+      this.attackTimer = null;
+    }
+    if (this.autoDamageTimer) {
+      clearInterval(this.autoDamageTimer);
+      this.autoDamageTimer = null;
+    }
     this.saveProgress();
-    this.triggerUpdate();
   }
 
   openShop() {
@@ -356,46 +370,56 @@ export class TowerSystem {
     return itemRegen + towerRegen;
   }
 
-  getHealCooldownRemaining() {
-    return Math.max(0, HEAL_COOLDOWN_MS - (Date.now() - this.lastHealTime));
+  // ─── auto-battle ──────────────────────────────────────
+
+  getAutoBattleConfig() {
+    return {
+      unlocked: this.getShopBonus('auto_speed') > 0,
+      speed: this.getShopBonus('auto_speed'),
+      damagePct: this.getShopBonus('auto_damage_pct'),
+      lifestealPct: this.getShopBonus('auto_lifesteal')
+    };
   }
 
-  getHealCost() {
-    return Math.round(25 + 25 * this.currentFloor);
-  }
-
-  canHeal() {
-    if (this.playerHp >= this.playerMaxHp) return false;
-    if (this.getHealCooldownRemaining() > 0) return false;
-    return this.game.getCurrency() >= this.getHealCost();
-  }
-
-  heal() {
-    if (this.playerHp >= this.playerMaxHp) {
-      Notification.show('Силы уже на пределе.');
-      return false;
-    }
-
-    if (this.getHealCooldownRemaining() > 0) {
-      const secs = Math.ceil(this.getHealCooldownRemaining() / 1000);
-      Notification.show(`Лечение будет доступно через ${secs} сек.`);
-      return false;
-    }
-
-    const cost = this.getHealCost();
-    if (this.game.getCurrency() < cost) {
-      Notification.show(`Недостаточно Теней для лечения. Нужно: ${cost}`);
-      return false;
-    }
-
-    this.game.addCurrency(-cost);
-    this.playerMaxHp = this.calculatePlayerMaxHp();
-    this.playerHp = Math.min(this.playerMaxHp, this.playerHp + Math.round(this.playerMaxHp * 0.50));
-    this.lastHealTime = Date.now();
-    this.triggerUpdate();
-
-    Notification.show(`Восстановлено 50% HP за ${cost} Теней.`);
+  activateAutoBattle() {
+    if (this.autoBattleActive) return false;
+    const cfg = this.getAutoBattleConfig();
+    if (!cfg.unlocked) return false;
+    this.autoBattleActive = true;
+    this._startAutoBattleLoop();
     return true;
+  }
+
+  deactivateAutoBattle() {
+    this.autoBattleActive = false;
+    if (this.autoBattleTimer) {
+      clearInterval(this.autoBattleTimer);
+      this.autoBattleTimer = null;
+    }
+  }
+
+  _startAutoBattleLoop() {
+    if (this.autoBattleTimer) clearInterval(this.autoBattleTimer);
+    const cfg = this.getAutoBattleConfig();
+    const interval = Math.max(200, Math.round(1000 / cfg.speed));
+    this.autoBattleTimer = setInterval(() => {
+      if (!this.isOpen || this.isShopOpen || !this.currentEnemy || this.enemyHp <= 0 || this.playerHp <= 0) {
+        if (this.playerHp <= 0) this.deactivateAutoBattle();
+        return;
+      }
+      const summary = this.handleAttackClick(true);
+      if (summary && summary.damage > 0) {
+        const c = this.getAutoBattleConfig();
+        let lifeHeal = 0;
+        if (c.lifestealPct > 0) {
+          lifeHeal = Math.max(1, Math.round(summary.damage * c.lifestealPct / 100));
+          this.playerHp = Math.min(this.playerMaxHp, this.playerHp + lifeHeal);
+        }
+        document.dispatchEvent(new CustomEvent('towerAutoAttack', {
+          detail: { damage: summary.damage, sourceItemId: summary.sourceItemId, isCrit: summary.isCrit, lifesteal: lifeHeal }
+        }));
+      }
+    }, interval);
   }
 
   getAttackSummary(multiplier, sourceItemId, damage, isCrit = false, critMultiplier = 1) {
@@ -443,7 +467,7 @@ export class TowerSystem {
     this.triggerUpdate();
   }
 
-  handleAttackClick() {
+  handleAttackClick(isAuto = false) {
     if (!this.isOpen) {
       this.open();
     }
@@ -476,17 +500,23 @@ export class TowerSystem {
     let isCrit = false;
     let critMultiplier = 1;
 
-    if (modifiers.lightning && Math.random() < 0.05) {
+    if (!isAuto && modifiers.lightning && Math.random() < 0.05) {
       multiplier *= 2;
       sourceItemId = 'lightning_dagger';
       this.game.showLightningEffect();
+    } else if (isAuto && modifiers.lightning && Math.random() < 0.05) {
+      multiplier *= 2;
+      sourceItemId = 'lightning_dagger';
     }
 
     const nextTowerClick = (this.game.clickCounter || 0) + 1;
-    if (modifiers.chaos && nextTowerClick % 10 === 0) {
+    if (!isAuto && modifiers.chaos && nextTowerClick % 10 === 0) {
       multiplier *= 5;
       sourceItemId = 'chaos_seal';
       this.game.showChaosEffect();
+    } else if (isAuto && modifiers.chaos && nextTowerClick % 10 === 0) {
+      multiplier *= 5;
+      sourceItemId = 'chaos_seal';
     }
 
     if (totalCritChance > 0 && Math.random() < totalCritChance / 100) {
@@ -498,15 +528,24 @@ export class TowerSystem {
       }
     }
 
+    // Apply auto-battle damage % if from auto
+    if (isAuto) {
+      const cfg = this.getAutoBattleConfig();
+      multiplier *= (cfg.damagePct / 100);
+    }
+
     const totalBaseDamage = (baseDamage + modifiers.flatDamage) * (1 + towerDamageBonus / 100);
     const damage = Math.max(1, Math.round(totalBaseDamage * multiplier));
     this.enemyHp = Math.max(0, this.enemyHp - damage);
     this.game.clickCounter = nextTowerClick;
+    if (!isAuto && this.game.questSystem) this.game.questSystem.onClick();
 
-    const regenPercent = this.getRegenerationPercent();
-    if (regenPercent > 0) {
-      const heal = Math.max(1, Math.round(damage * regenPercent / 100));
-      this.playerHp = Math.min(this.playerMaxHp, this.playerHp + heal);
+    if (!isAuto) {
+      const regenPercent = this.getRegenerationPercent();
+      if (regenPercent > 0) {
+        const heal = Math.max(1, Math.round(damage * regenPercent / 100));
+        this.playerHp = Math.min(this.playerMaxHp, this.playerHp + heal);
+      }
     }
 
     this.lastAttackSummary = this.getAttackSummary(multiplier, sourceItemId, damage, isCrit, critMultiplier);
@@ -546,20 +585,19 @@ export class TowerSystem {
       }
     }
 
-    if (enemy.type === 'boss' || enemy.floor % FLOOR_CHECKPOINT_STEP === 0) {
-      Notification.show('Вы нашли тайник! Можете открыть магазин башни.');
-    }
-
-    Notification.show(`Этаж ${enemy.floor} очищен. Получено ${reward} Теней и ${shards} осколков.`);
     this.currentFloor += 1;
     this.playerMaxHp = this.calculatePlayerMaxHp();
     this.playerHp = Math.min(this.playerMaxHp, this.playerHp + Math.round(this.playerMaxHp * 0.2));
     this.enemyHp = 0;
     this.ensureFloorState();
+    if (this.game && this.game.questSystem) {
+      this.game.questSystem.onFloorReached(this.currentFloor);
+    }
     this.saveProgress();
   }
 
   handlePlayerDefeat() {
+    this.deactivateAutoBattle();
     this.currentFloor = 1;
     this.lastCheckpointFloor = 1;
     this.playerMaxHp = this.calculatePlayerMaxHp();
@@ -625,9 +663,8 @@ export class TowerSystem {
       floorProgressPercent: this.getFloorProgressPercent(),
       floorsToBoss,
       nextBoss,
-      healCooldownRemaining: this.getHealCooldownRemaining(),
-      healCost: this.getHealCost(),
-      canHeal: this.canHeal(),
+      autoBattleActive: this.autoBattleActive,
+      autoBattleConfig: this.getAutoBattleConfig(),
       shopState
     };
   }
@@ -650,7 +687,6 @@ export class TowerSystem {
       defeatedBosses: this.defeatedBosses,
       lastEnemyAttackAt: this.lastEnemyAttackAt,
       lastAutoDamageAt: this.lastAutoDamageAt,
-      lastHealTime: this.lastHealTime,
       timestamp: Date.now(),
       shop: shopData
     };
@@ -678,7 +714,6 @@ export class TowerSystem {
       this.defeatedBosses = Array.isArray(data.defeatedBosses) ? data.defeatedBosses : [];
       this.lastEnemyAttackAt = data.lastEnemyAttackAt || Date.now();
       this.lastAutoDamageAt = data.lastAutoDamageAt || Date.now();
-      this.lastHealTime = data.lastHealTime || 0;
       this.ensureFloorState();
 
       if (this.towerShop && typeof this.towerShop.loadPersistentData === 'function' && data.shop) {

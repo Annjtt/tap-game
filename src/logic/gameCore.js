@@ -304,7 +304,7 @@ addItem(item) {
   const existingItem = this.items.find(i => i.name === item.name);
   console.log('Найден существующий предмет:', existingItem);
 
-  if (existingItem) {
+    if (existingItem) {
     // Единая система редкости
     const cardRanks = { 
       A: 0, B: 1, C: 2, D: 3, 
@@ -330,12 +330,14 @@ addItem(item) {
       this.addCurrency(compensation);
       const index = this.items.indexOf(existingItem);
       this.items[index] = item;
+      if (this.questSystem) this.questSystem.onDisenchant();
       Notification.show(`Предмет "${item.name}" заменен (${existingItem.card} → ${item.card}). Компенсация: ${compensation} Теней`);
     } else {
       // Новый предмет МЕНЕЕ редкий или ОДИНАКОВЫЙ - компенсация за НОВЫЙ
       console.log('НОВЫЙ предмет менее редкий или одинаковый - компенсация за НОВЫЙ');
       const compensation = this.getCompensationForItem(item);
       this.addCurrency(compensation);
+      if (this.questSystem) this.questSystem.onDisenchant();
       Notification.show(`У вас уже есть "${existingItem.name}" (${existingItem.card}). Новый предмет (${item.card}) менее редкий. Компенсация: ${compensation} Теней`);
     }
   } else {
@@ -345,7 +347,7 @@ addItem(item) {
   }
 
   this.triggerEvent('inventoryUpdated');
-  if (this.questSystem) this.questSystem.onItemCollected();
+  if (this.questSystem) this.questSystem.onItemCollected(item.name);
 }
 
   // ✅ Новая функция для компенсации

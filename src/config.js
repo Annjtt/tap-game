@@ -55,10 +55,10 @@ export const CONFIG = {
       bossRewardMultiplier: 3,
       bossShardMultiplier: 2,
       // Награда: до 13 этажа быстрый рост, после — медленный
-      // floor 1: 2k, floor 13: 10.7k, floor 25: 23k, floor 50: 100k, floor 100: 2.8M
-      rewardBase: 2000,
-      rewardGrowth: 1.15,
-      rewardGrowthLate: 1.07,
+      // floor 1: 100, floor 13: 370, floor 25: 655, floor 50: 1.7k, floor 100: 19k
+      rewardBase: 100,
+      rewardGrowth: 1.11,
+      rewardGrowthLate: 1.05,
       rewardSwitchFloor: 13,
       // Осколки: base + floor * perFloor
       shardsBase: 1,

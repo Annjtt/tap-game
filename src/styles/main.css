@@ -1530,6 +1530,21 @@
     border-radius: 12px;
   }
 
+  .quest-reward--claimed {
+    background: rgba(46, 125, 50, 0.2);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    color: #81c784;
+    font-size: 0.72rem;
+    gap: 4px;
+    padding: 4px 10px;
+  }
+
+  .quest-reward--unclaimed {
+    background: rgba(0, 255, 198, 0.12);
+    border: 1px solid rgba(0, 255, 198, 0.3);
+    box-shadow: 0 0 8px rgba(0, 255, 198, 0.15);
+  }
+
   .quest-reward-val {
     color: #e0e0e0;
     font-weight: 600;
@@ -1545,15 +1560,11 @@
     border-radius: 50%;
     width: 23px;
     height: 23px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
     color: #0a0a0a;
     font-size: 0.85rem;
     transition: transform 0.2s, box-shadow 0.2s;
     box-shadow: 0 0 6px rgba(125, 197, 202, 0.3);
-    margin-left: 4px;
   }
 
   .quest-claim-btn:hover {
@@ -1567,9 +1578,22 @@
 
   /* ── Achievement-specific claim (shards) ────────────── */
   .ach-claim {
-    background: #00ffc6e0;
+    background: #00ffa3e0;
     color: #1a1a1a;
     box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+    animation: ach-claim-sway 1s infinite ease-in-out;
+  }
+
+  @keyframes ach-claim-sway {
+    0% {
+      transform: rotate(-10deg) scale(1);
+    }
+    50% {
+      transform: rotate(10deg) scale(1.07);
+    }
+    100% {
+      transform: rotate(-10deg) scale(1);
+    }
   }
 
   .ach-claim:hover {

@@ -55,7 +55,7 @@ const towerModal = new TowerModal(towerSystem, () => profileModal.show());
 // Создаём систему квестов (после tower, чтобы передать ссылку)
 const questSystem = new QuestSystem(game, towerSystem);
 game.questSystem = questSystem;
-questSystem.totalClicks = game.clickCounter || 0;
+questSystem.syncFromInventory();
 questSystem.cleanActiveCooldowns();
 
 // Обработчики событий

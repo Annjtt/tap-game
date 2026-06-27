@@ -43,6 +43,9 @@ export class VisualEffects {
       const randomTilt = (Math.random() * 26 - 3).toFixed(2);
       const isEnemyAttack = options.isEnemyAttack === true;
       const isHeal = options.isHeal === true;
+      const isAutoBattle = options.isAutoBattle === true;
+      const isAutoBattleHeal = options.isAutoBattleHeal === true;
+      const isAutoBattleCrit = options.isAutoBattleCrit === true;
 
       // По умолчанию цвет
       let color = isEnemyAttack ? '#ff4242' : '#f5f5f5';
@@ -53,8 +56,18 @@ export class VisualEffects {
       let styleBoost = false;
       let prefix = isEnemyAttack ? '' : '+';
 
-      // Особые цвета: lightning_dagger, chaos_seal, super-ярко если eternal_clock
-      if (options.isEternalClockActive && !isEnemyAttack) {
+      // Особые цвета
+      if (isAutoBattleCrit) {
+        color = '#ff4400';
+        textShadow = '0 0 8px #ff4400, 0 0 20px rgba(255, 68, 0, 0.7)';
+        fontWeight = '900';
+        prefix = '';
+      } else if (isAutoBattleHeal) {
+        color = '#41d87c';
+        textShadow = '0 0 8px rgba(65, 216, 124, 0.8), 0 0 16px rgba(165, 245, 158, 0.6)';
+        fontWeight = '800';
+        prefix = '+';
+      } else if (options.isEternalClockActive && !isEnemyAttack) {
         color = '#fff200';
         textShadow = '0 0 16px rgb(111, 0, 255), 0 0 28px rgb(85, 8, 100), 0 0 60px #fff200, 0 0 95px #ff0080';
         fontWeight = '900';
@@ -80,6 +93,11 @@ export class VisualEffects {
         textShadow = '0 0 8px rgba(65, 216, 124, 0.8), 0 0 16px rgba(165, 245, 158, 0.6)';
         fontWeight = '800';
         prefix = '+';
+      } else if (isAutoBattle) {
+        color = '#ffffff';
+        textShadow = '0 0 4px rgba(0, 0, 0, 0.92), 0 0 10px rgba(255, 255, 255, 0.3)';
+        fontWeight = '600';
+        prefix = '';
       }
 
       const floatingValue = document.createElement('div');

@@ -2,33 +2,47 @@ import { Notification } from '../components/Notification.js';
 
 const ACHIEVEMENTS = [
   { id: 'ach_click_100', type: 'click', target: 100, reward: 5, name: 'Новичок', desc: 'Сделайте 100 кликов', icon: 'fa-hand-pointer' },
-  { id: 'ach_click_1000', type: 'click', target: 1000, reward: 15, name: 'Трудяга', desc: 'Сделайте 1 000 кликов', icon: 'fa-hand-pointer' },
-  { id: 'ach_click_5000', type: 'click', target: 5000, reward: 30, name: 'Неутомимый', desc: 'Сделайте 5 000 кликов', icon: 'fa-hand-pointer' },
-  { id: 'ach_click_25000', type: 'click', target: 25000, reward: 75, name: 'Легенда клика', desc: 'Сделайте 25 000 кликов', icon: 'fa-hand-pointer' },
-  { id: 'ach_item_1', type: 'items_total', target: 1, reward: 3, name: 'Коллекционер', desc: 'Соберите 1 предмет', icon: 'fa-box' },
-  { id: 'ach_item_5', type: 'items_total', target: 5, reward: 10, name: 'Энтузиаст', desc: 'Соберите 5 предметов', icon: 'fa-box' },
-  { id: 'ach_item_10', type: 'items_total', target: 10, reward: 25, name: 'Собиратель', desc: 'Соберите 10 предметов', icon: 'fa-box' },
-  { id: 'ach_disenchant_1', type: 'disenchants', target: 1, reward: 2, name: 'Распылитель', desc: 'Распылите 1 предмет', icon: 'fa-recycle' },
-  { id: 'ach_disenchant_5', type: 'disenchants', target: 5, reward: 8, name: 'Разрушитель', desc: 'Распылите 5 предметов', icon: 'fa-recycle' },
+  { id: 'ach_click_1000', type: 'click', target: 1000, reward: 20, name: 'Трудяга', desc: 'Сделайте 1 000 кликов', icon: 'fa-hand-pointer' },
+  { id: 'ach_click_5000', type: 'click', target: 5000, reward: 50, name: 'Неутомимый', desc: 'Сделайте 5 000 кликов', icon: 'fa-hand-pointer' },
+  { id: 'ach_click_25000', type: 'click', target: 25000, reward: 150, name: 'Легенда клика', desc: 'Сделайте 25 000 кликов', icon: 'fa-hand-pointer' },
+  { id: 'ach_chest_3', type: 'chests_opened', target: 3, reward: 5, name: 'Любопытный', desc: 'Откройте 3 сундука', icon: 'fa-box-open' },
+  { id: 'ach_chest_10', type: 'chests_opened', target: 10, reward: 20, name: 'Кладоискатель', desc: 'Откройте 10 сундуков', icon: 'fa-box-open' },
+  { id: 'ach_chest_25', type: 'chests_opened', target: 25, reward: 50, name: 'Расхититель', desc: 'Откройте 25 сундуков', icon: 'fa-box-open' },
+  { id: 'ach_chest_50', type: 'chests_opened', target: 50, reward: 100, name: 'Король сундуков', desc: 'Откройте 50 сундуков', icon: 'fa-box-open' },
+  { id: 'ach_collect_1', type: 'unique_items', target: 1, reward: 3, name: 'Знаток', desc: 'Соберите 1 вид предмета', icon: 'fa-cubes' },
+  { id: 'ach_collect_2', type: 'unique_items', target: 2, reward: 10, name: 'Любитель', desc: 'Соберите 2 вида предметов', icon: 'fa-cubes' },
+  { id: 'ach_collect_4', type: 'unique_items', target: 4, reward: 30, name: 'Ценитель', desc: 'Соберите 4 вида предметов', icon: 'fa-cubes' },
+  { id: 'ach_collect_6', type: 'unique_items', target: 6, reward: 75, name: 'Коллекционер', desc: 'Соберите все 6 видов предметов', icon: 'fa-cubes' },
+  { id: 'ach_disenchant_3', type: 'disenchants', target: 3, reward: 5, name: 'Распылитель', desc: 'Распылите 3 предмета', icon: 'fa-recycle' },
+  { id: 'ach_disenchant_10', type: 'disenchants', target: 10, reward: 15, name: 'Разрушитель', desc: 'Распылите 10 предметов', icon: 'fa-recycle' },
+  { id: 'ach_disenchant_25', type: 'disenchants', target: 25, reward: 40, name: 'Демонтажник', desc: 'Распылите 25 предметов', icon: 'fa-recycle' },
   { id: 'ach_earn_1000', type: 'earned', target: 1000, reward: 5, name: 'Богач', desc: 'Заработайте 1 000 Теней', icon: 'fa-coins' },
-  { id: 'ach_earn_50000', type: 'earned', target: 50000, reward: 25, name: 'Магнат', desc: 'Заработайте 50 000 Теней', icon: 'fa-coins' },
-  { id: 'ach_earn_1m', type: 'earned', target: 1000000, reward: 100, name: 'Теневой король', desc: 'Заработайте 1 000 000 Теней', icon: 'fa-crown' }
+  { id: 'ach_earn_50000', type: 'earned', target: 50000, reward: 30, name: 'Магнат', desc: 'Заработайте 50 000 Теней', icon: 'fa-coins' },
+  { id: 'ach_earn_1m', type: 'earned', target: 1000000, reward: 150, name: 'Теневой король', desc: 'Заработайте 1 000 000 Теней', icon: 'fa-crown' }
 ];
 
-const MEDALS = [
-  { id: 'medal_1', icon: 'fa-star', name: 'Начало пути', desc: 'Выполните 1 достижение', req: a => a >= 1 },
-  { id: 'medal_3', icon: 'fa-star', name: 'Странник', desc: 'Выполните 3 достижения', req: a => a >= 3 },
-  { id: 'medal_6', icon: 'fa-star', name: 'Герой', desc: 'Выполните 6 достижений', req: a => a >= 6 },
-  { id: 'medal_9', icon: 'fa-crown', name: 'Легенда', desc: 'Выполните 9 достижений', req: a => a >= 9 },
-  { id: 'medal_all', icon: 'fa-skull', name: 'Абсолют', desc: `Выполните все ${ACHIEVEMENTS.length} достижений`, req: a => a >= ACHIEVEMENTS.length }
-];
+const MEDALS = (() => {
+  const total = ACHIEVEMENTS.length;
+  const step = total / 7;
+  const G = Math.ceil(step * 1);
+  const F = Math.ceil(step * 2);
+  const E = Math.ceil(step * 3);
+  const D = Math.ceil(step * 4);
+  return [
+    { id: 'medal_1', icon: 'fa-sun', name: 'Начало пути', desc: `Выполните ${G} достижения`, req: a => a >= G },
+    { id: 'medal_3', icon: 'fa-compass', name: 'Странник', desc: `Выполните ${F} достижений`, req: a => a >= F },
+    { id: 'medal_6', icon: 'fa-shield-halved', name: 'Герой', desc: `Выполните ${E} достижений`, req: a => a >= E },
+    { id: 'medal_9', icon: 'fa-crown', name: 'Легенда', desc: `Выполните ${D} достижений`, req: a => a >= D },
+    { id: 'medal_all', icon: 'fa-skull', name: 'Абсолют', desc: `Выполните все ${total} достижений`, req: a => a >= total }
+  ];
+})();
 
 const ACTIVE_QUESTS = [
-  { id: 'act_click_500', type: 'click', target: 500, reward: 3, name: 'Щелкун', desc: 'Сделайте 500 кликов', icon: 'fa-hand-pointer', cooldown: 900000 },
-  { id: 'act_earn_5000', type: 'earned', target: 5000, reward: 5, name: 'Добытчик', desc: 'Заработайте 5 000 Теней', icon: 'fa-coins', cooldown: 1800000 },
-  { id: 'act_item_3', type: 'items_total', target: 3, reward: 4, name: 'Охотник за сокровищами', desc: 'Соберите 3 предмета', icon: 'fa-box', cooldown: 1200000 },
-  { id: 'act_disenchant_5', type: 'disenchants', target: 5, reward: 4, name: 'Разборщик', desc: 'Распылите 5 предметов', icon: 'fa-recycle', cooldown: 1800000 },
-  { id: 'act_tower_5', type: 'tower_floors', target: 5, reward: 8, name: 'Высотник', desc: 'Пройдите 5 этажей башни', icon: 'fa-dungeon', cooldown: 3600000 }
+  { id: 'act_click_500', type: 'click', target: 500, reward: 6, name: 'Щелкун', desc: 'Сделайте 500 кликов', icon: 'fa-hand-pointer', cooldown: 900000 },
+  { id: 'act_earn_5000', type: 'earned', target: 5000, reward: 10, name: 'Добытчик', desc: 'Заработайте 5 000 Теней', icon: 'fa-coins', cooldown: 1800000 },
+  { id: 'act_chest_3', type: 'chests_opened', target: 3, reward: 8, name: 'Сундучник', desc: 'Откройте 3 сундука', icon: 'fa-box-open', cooldown: 1200000 },
+  { id: 'act_disenchant_5', type: 'disenchants', target: 5, reward: 8, name: 'Разборщик', desc: 'Распылите 5 предметов', icon: 'fa-recycle', cooldown: 1800000 },
+  { id: 'act_tower_10', type: 'tower_floors', target: 10, reward: 16, name: 'Высотник', desc: 'Пройдите 10 этажей башни', icon: 'fa-dungeon', cooldown: 3600000 }
 ];
 
 const STORAGE_KEY = 'tapGameQuests';
@@ -44,6 +58,8 @@ export class QuestSystem {
     this.totalItemsCollected = 0;
     this.totalEarned = 0;
     this.totalTowerFloors = 0;
+    this.totalChestsOpened = 0;
+    this.collectedUniqueItems = [];
     /** @type {Object.<string, {state:'active'|'completed'|'cooldown', current:number, acceptedAt:number, claimedAt:number}>} */
     this.activeState = {};
     this.load();
@@ -53,11 +69,15 @@ export class QuestSystem {
 
   getRank() {
     const n = this.achievementsCompleted.length;
-    if (n >= ACHIEVEMENTS.length) return 'A';
-    if (n >= 9) return 'B';
-    if (n >= 6) return 'C';
-    if (n >= 4) return 'D';
-    if (n >= 2) return 'E';
+    const total = ACHIEVEMENTS.length;
+    if (n >= total) return 'A';
+    const step = total / 7;
+    if (n >= Math.ceil(step * 6)) return 'B';
+    if (n >= Math.ceil(step * 5)) return 'C';
+    if (n >= Math.ceil(step * 4)) return 'D';
+    if (n >= Math.ceil(step * 3)) return 'E';
+    if (n >= Math.ceil(step * 2)) return 'F';
+    if (n >= Math.ceil(step * 1)) return 'G';
     return 'H';
   }
 
@@ -75,6 +95,8 @@ export class QuestSystem {
       case 'disenchants': return this.totalDisenchants;
       case 'earned': return this.totalEarned;
       case 'tower_floors': return this.totalTowerFloors;
+      case 'chests_opened': return this.totalChestsOpened;
+      case 'unique_items': return this.collectedUniqueItems.length;
       default: return 0;
     }
   }
@@ -145,7 +167,8 @@ export class QuestSystem {
       if (!s) return { ...base, status: 'available', current: this.getAchievementProgress(q.type) };
 
       if (s.state === 'active') {
-        const cur = this.getAchievementProgress(q.type);
+        const total = this.getAchievementProgress(q.type);
+        const cur = Math.max(0, total - (s.current || 0));
         return { ...base, status: 'active', current: cur, progress: Math.min(100, (cur / q.target) * 100) };
       }
 
@@ -168,7 +191,7 @@ export class QuestSystem {
     if (!q) return false;
     if (this.activeState[q.id]) return false; // already active/completed/cooldown
 
-    this.activeState[q.id] = { state: 'active', current: 0, acceptedAt: Date.now(), claimedAt: 0 };
+    this.activeState[q.id] = { state: 'active', current: this.getAchievementProgress(q.type), acceptedAt: Date.now(), claimedAt: 0 };
     this.save();
     Notification.show(`Квест принят: ${q.name}`);
     return true;
@@ -180,7 +203,7 @@ export class QuestSystem {
     ACTIVE_QUESTS.forEach(q => {
       const s = this.activeState[q.id];
       if (!s || s.state !== 'active') return;
-      const cur = this.getAchievementProgress(q.type);
+      const cur = this.getAchievementProgress(q.type) - (s.current || 0);
       if (cur >= q.target) {
         s.state = 'completed';
         Notification.show(`Квест выполнен: ${q.name}!`);
@@ -234,6 +257,36 @@ export class QuestSystem {
     if (changed) this.save();
   }
 
+  /** Sync counters from existing game state on startup */
+  syncFromInventory() {
+    if (!this.game) return;
+    // unique items from inventory
+    if (this.game.items) {
+      this.game.items.forEach(item => {
+        if (item.name && !this.collectedUniqueItems.includes(item.name)) {
+          this.collectedUniqueItems.push(item.name);
+        }
+      });
+      this.totalItemsCollected = Math.max(this.totalItemsCollected, this.game.items.length);
+    }
+    // clicks from game clickCounter (accurate lifetime count)
+    if (this.game.clickCounter) {
+      this.totalClicks = Math.max(this.totalClicks, this.game.clickCounter);
+    }
+    // tower floors from towerSystem
+    if (this.tower) {
+      this.totalTowerFloors = Math.max(this.totalTowerFloors, this.tower.getState().currentFloor);
+    }
+    // validate saved achievements against actual progress
+    this.achievementsCompleted = this.achievementsCompleted.filter(id => {
+      const a = ACHIEVEMENTS.find(x => x.id === id);
+      return a && this.getAchievementProgress(a.type) >= a.target;
+    });
+    this.achievementsClaimed = this.achievementsClaimed.filter(id => {
+      return this.achievementsCompleted.includes(id);
+    });
+  }
+
   // ─── event hooks ──────────────────────────────────────
 
   onClick() {
@@ -242,8 +295,17 @@ export class QuestSystem {
     this.checkActiveQuests();
   }
 
-  onItemCollected() {
+  onItemCollected(itemName) {
     this.totalItemsCollected++;
+    if (itemName && !this.collectedUniqueItems.includes(itemName)) {
+      this.collectedUniqueItems.push(itemName);
+    }
+    this.checkAchievements();
+    this.checkActiveQuests();
+  }
+
+  onChestOpened() {
+    this.totalChestsOpened++;
     this.checkAchievements();
     this.checkActiveQuests();
   }
@@ -281,6 +343,8 @@ export class QuestSystem {
         totalItemsCollected: this.totalItemsCollected,
         totalEarned: this.totalEarned,
         totalTowerFloors: this.totalTowerFloors,
+        totalChestsOpened: this.totalChestsOpened,
+        collectedUniqueItems: this.collectedUniqueItems,
         activeState: this.activeState
       }));
     } catch (e) { /* ignore */ }
@@ -297,6 +361,8 @@ export class QuestSystem {
       this.totalItemsCollected = data.totalItemsCollected || 0;
       this.totalEarned = data.totalEarned || 0;
       this.totalTowerFloors = data.totalTowerFloors || 0;
+      this.totalChestsOpened = data.totalChestsOpened || 0;
+      this.collectedUniqueItems = data.collectedUniqueItems || [];
       this.activeState = data.activeState || {};
     } catch (e) { /* ignore */ }
   }

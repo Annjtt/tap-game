@@ -538,6 +538,16 @@
   font-size: 0.7rem;
   opacity: 0.7;
 }
+.tower-secondary-btn.auto-active {
+  border-color: #00e5e57c;
+  box-shadow: 0 0 12px rgba(0, 176, 229, 0.4), inset 0 0 12px rgba(0, 229, 200, 0.1);
+  background: rgba(0, 229, 229, 0.068);
+  animation: autoPulse 1.5s ease-in-out infinite;
+}
+@keyframes autoPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(0, 221, 229, 0.4), inset 0 0 12px rgba(0, 221, 229, 0.1); }
+  50% { box-shadow: 0 0 20px rgba(0, 221, 229, 0.7), inset 0 0 18px rgba(0, 221, 229, 0.15); }
+}
 .tower-shop-overlay {
   position: fixed;
   top: 0;

@@ -140,7 +140,7 @@ export class ChestShopModal {
     import('./ChestOpeningAnimation.js').then(({ ChestOpeningAnimation }) => {
       ChestOpeningAnimation.play(chest, item, card, this.game).then(() => {
         import('./CardsDisplay.js').then(({ CardsDisplay }) => {
-          CardsDisplay.showCard(card, item, this.game);
+          CardsDisplay.showCard(card, item, this.game, () => this.buyChest(chest.id));
         });
       });
     });
@@ -152,6 +152,7 @@ export class ChestShopModal {
     if (this.game.getCurrency() < chest.price) { alert('Недостаточно Теней'); return; }
     this._lastChest = chest;
     this.game.addCurrency(-chest.price);
+    if (this.game.questSystem) this.game.questSystem.onChestOpened();
     this.openChestWithRestrictions(chest);
     this.close();
   }

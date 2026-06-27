@@ -9,6 +9,7 @@ export class TowerModal {
     this.container = null;
     this.boundUpdate = (event) => this.render(event.detail);
     this.boundEnemyAttack = (event) => this.handleEnemyAttackVisual(event.detail);
+    this.boundAutoAttack = (event) => this.handleAutoAttackVisual(event.detail);
   }
 
   show() {
@@ -25,6 +26,7 @@ export class TowerModal {
 
     document.addEventListener('towerStateChanged', this.boundUpdate);
     document.addEventListener('towerEnemyAttack', this.boundEnemyAttack);
+    document.addEventListener('towerAutoAttack', this.boundAutoAttack);
     this.render(this.tower.getState());
   }
 
@@ -35,6 +37,7 @@ export class TowerModal {
 
     document.removeEventListener('towerStateChanged', this.boundUpdate);
     document.removeEventListener('towerEnemyAttack', this.boundEnemyAttack);
+    document.removeEventListener('towerAutoAttack', this.boundAutoAttack);
     if (this.container?.parentNode) {
       this.container.parentNode.removeChild(this.container);
     }
@@ -153,9 +156,11 @@ export class TowerModal {
     this.container.querySelector('.tower-boss-panel-hp').textContent = `${Math.round(state.enemyHp)} / ${Math.round(state.enemyMaxHp)}`;
 
     const isBoss = enemy?.type === 'boss';
+    const metaReward = enemy?.finalReward ?? enemy?.reward ?? 0;
+    const metaShards = enemy?.finalShards ?? enemy?.shards ?? 0;
     const metaText = isBoss
-      ? `Этаж ${state.currentFloor} · БОСС · ${enemy?.reward || 0} Теней · ${enemy?.shards || 0} осколков`
-      : `Этаж ${state.currentFloor} · ${enemy?.reward || 0} Теней · ${enemy?.shards || 0} осколков`;
+      ? `Этаж ${state.currentFloor} · БОСС · ${metaReward} Теней · ${metaShards} осколков`
+      : `Этаж ${state.currentFloor} · ${metaReward} Теней · ${metaShards} осколков`;
     this.container.querySelector('.tower-boss-panel-meta').textContent = metaText;
 
     this.container.querySelector('.tower-clicker-glyph').textContent = bossGlyph;
@@ -177,16 +182,18 @@ export class TowerModal {
 
     const refreshBtn = this.container.querySelector('#tower-refresh-btn');
     if (refreshBtn) {
-      if (state.playerHp >= state.playerMaxHp) {
-        refreshBtn.innerHTML = '<span class="btn-main">Лечение</span><span class="btn-sub">HP полон</span>';
+      const cfg = state.autoBattleConfig;
+      if (!cfg.unlocked) {
+        refreshBtn.innerHTML = '<span class="btn-main">Автобой</span><span class="btn-sub">🔒</span>';
         refreshBtn.disabled = true;
-      } else if (state.healCooldownRemaining > 0) {
-        const secs = Math.ceil(state.healCooldownRemaining / 1000);
-        refreshBtn.innerHTML = `<span class="btn-main">Лечение</span><span class="btn-sub">${secs}с</span>`;
-        refreshBtn.disabled = true;
-      } else {
-        refreshBtn.innerHTML = `<span class="btn-main">Лечение</span><span class="btn-sub">${state.healCost} Т</span>`;
+      } else if (state.autoBattleActive) {
+        refreshBtn.innerHTML = `<span class="btn-main">Автобой</span><span class="btn-sub">⏹ ${cfg.speed.toFixed(1)}/с</span>`;
         refreshBtn.disabled = false;
+        refreshBtn.classList.add('auto-active');
+      } else {
+        refreshBtn.innerHTML = '<span class="btn-main">Автобой</span><span class="btn-sub">▶</span>';
+        refreshBtn.disabled = false;
+        refreshBtn.classList.remove('auto-active');
       }
     }
 
@@ -204,27 +211,53 @@ export class TowerModal {
 
     closeBtn?.addEventListener('click', () => this.hide());
     attackBtn?.addEventListener('click', (event) => this.handleAttack(event));
-    refreshBtn?.addEventListener('click', () => this.handleRefresh());
+    refreshBtn?.addEventListener('click', () => this.handleAutoBattle());
     chestBtn?.addEventListener('click', () => this.handleChest());
   }
 
   handleEnemyAttackVisual(detail) {
     if (!this.container) return;
-    const clicker = this.container.querySelector('.tower-clicker');
-    if (!clicker) return;
-
-    clicker.classList.add('tower-clicker-enemy-hit');
-    setTimeout(() => clicker.classList.remove('tower-clicker-enemy-hit'), 300);
+    const avatarWrap = this.container.querySelector('.tower-hero-avatar-wrap');
+    if (!avatarWrap) return;
+    const rect = avatarWrap.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
 
     import('./VisualEffects.js').then(({ VisualEffects }) => {
-      const rect = clicker.getBoundingClientRect();
-      VisualEffects.showFloatingGain(
-        rect.left + rect.width / 2,
-        rect.top + rect.height / 2,
-        `-${detail.damage}`,
-        { isEnemyAttack: true }
-      );
+      VisualEffects.showFloatingGain(x, y, `-${detail.damage}`, { isEnemyAttack: true });
     });
+  }
+
+  handleAutoAttackVisual(detail) {
+    if (!this.container) return;
+    const clicker = this.container.querySelector('.tower-clicker');
+    if (!clicker) return;
+    const rect = clicker.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    import('./VisualEffects.js').then(({ VisualEffects }) => {
+      VisualEffects.showFloatingGain(x, y, detail.damage, {
+        sourceItemId: detail.sourceItemId,
+        isAutoBattle: true
+      });
+    });
+
+    if (detail.lifesteal > 0) {
+      import('./VisualEffects.js').then(({ VisualEffects }) => {
+        VisualEffects.showFloatingGain(x, y - 20, `+${detail.lifesteal}`, {
+          isAutoBattleHeal: true
+        });
+      });
+    }
+
+    if (detail.isCrit) {
+      import('./VisualEffects.js').then(({ VisualEffects }) => {
+        VisualEffects.showFloatingGain(x + 30, y - 30, 'CRIT', {
+          isAutoBattleCrit: true
+        });
+      });
+    }
   }
 
   handleAttack(event) {
@@ -255,22 +288,12 @@ export class TowerModal {
     });
   }
 
-  handleRefresh() {
-    const result = this.tower.heal();
-    if (!result) return;
-
-    import('./VisualEffects.js').then(({ VisualEffects }) => {
-      const clicker = this.container?.querySelector('.tower-clicker');
-      if (clicker) {
-        const rect = clicker.getBoundingClientRect();
-        VisualEffects.showFloatingGain(
-          rect.left + rect.width / 2,
-          rect.top + rect.height / 2,
-          Math.round(this.tower.playerMaxHp * 0.25),
-          { isHeal: true }
-        );
-      }
-    });
+  handleAutoBattle() {
+    if (this.tower.autoBattleActive) {
+      this.tower.deactivateAutoBattle();
+    } else {
+      this.tower.activateAutoBattle();
+    }
   }
 
   handleChest() {

@@ -45,8 +45,6 @@ export class ChestOpeningAnimation {
       overlay.className = 'chest-opening-overlay';
       document.body.appendChild(overlay);
 
-      Confetti.show(card);
-
       for (let i = 0; i < 12; i++) {
         this.createSparkle(overlay, rankColor, Math.random() * 0.6);
       }
@@ -184,6 +182,8 @@ export class ChestOpeningAnimation {
         for (let i = 0; i < 8; i++) {
           this.createSparkle(overlay, rankColor, Math.random() * 0.3);
         }
+
+        Confetti.show(finalCard);
 
         setTimeout(() => {
           onComplete();

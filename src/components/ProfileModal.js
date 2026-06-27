@@ -56,6 +56,13 @@ export class ProfileModal {
       const curStr = typeof a.current === 'number' && !Number.isInteger(a.current) && a.current < 1000
         ? a.current.toFixed(2) : QuestSystem.formatNum(a.current);
       const tgtStr = QuestSystem.formatNum(a.target);
+      const rewardHtml = done
+        ? '<div class="quest-reward quest-reward--claimed"><i class="fas fa-check-circle"></i> Получено</div>'
+        : `<div class="quest-reward${ready ? ' quest-reward--unclaimed' : ''}">
+            <span class="quest-reward-val">${a.reward}</span>
+            <i class="fas fa-gem quest-reward-icon"></i>
+            ${ready ? '<button class="quest-claim-btn ach-claim"><i class="fas fa-check"></i></button>' : ''}
+           </div>`;
       return `
         <div class="quest-item ${done ? 'quest--done' : ''} ${ready ? 'quest--ready' : ''}" data-ach-id="${a.id}">
           <div class="quest-icon"><i class="fas ${a.icon}"></i></div>
@@ -69,11 +76,7 @@ export class ProfileModal {
               <span class="quest-pct">${done ? '✓' : `${curStr}/${tgtStr}`}</span>
             </div>
           </div>
-          <div class="quest-reward">
-            <span class="quest-reward-val">${a.reward}</span>
-            <span class="quest-reward-icon"><i class="fas fa-gem"></i></span>
-            ${ready ? '<button class="quest-claim-btn ach-claim"><i class="fas fa-check"></i></button>' : ''}
-          </div>
+          ${rewardHtml}
         </div>
       `;
     }).join('');
@@ -235,6 +238,7 @@ export class ProfileModal {
     document.body.appendChild(this.container);
     this.bindActions();
     this.animateSection(this._activeSection);
+    this._startCooldownTick();
 
     this._boundCurrencyUpdate = () => {
       const el = this.container?.querySelector('[data-key="currency"]');
@@ -243,8 +247,43 @@ export class ProfileModal {
     document.addEventListener('currencyChanged', this._boundCurrencyUpdate);
   }
 
+  _startCooldownTick() {
+    this._stopCooldownTick();
+    this._cooldownTimer = setInterval(() => {
+      const body = this.container?.querySelector('[data-section-body="active-quests"]');
+      if (!body) return;
+      this.quests.cleanActiveCooldowns();
+      let needRebuild = false;
+      body.querySelectorAll('.aq-item').forEach(el => {
+        const id = el.dataset.aqId;
+        if (!id) return;
+        const span = el.querySelector('.aq-cooldown');
+        if (!span) return;
+        const qs = this.quests.getActiveQuests().find(q => q.id === id);
+        if (!qs) return;
+        if (qs.status !== 'cooldown') {
+          needRebuild = true;
+          return;
+        }
+        const rem = qs.cooldownRemaining;
+        const min = Math.floor(rem / 60000);
+        const sec = Math.floor((rem % 60000) / 1000);
+        span.textContent = `${min}:${String(sec).padStart(2, '0')}`;
+      });
+      if (needRebuild) this._rebuildActiveQuests();
+    }, 1000);
+  }
+
+  _stopCooldownTick() {
+    if (this._cooldownTimer) {
+      clearInterval(this._cooldownTimer);
+      this._cooldownTimer = null;
+    }
+  }
+
   hide() {
     if (!this.isOpen || !this.container) return;
+    this._stopCooldownTick();
     if (this._boundCurrencyUpdate) {
       document.removeEventListener('currencyChanged', this._boundCurrencyUpdate);
       this._boundCurrencyUpdate = null;
