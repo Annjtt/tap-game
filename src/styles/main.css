@@ -630,12 +630,14 @@
     background: #1a1a1a;
     padding: 20px;
     border-radius: 12px;
+    margin-left: 10px;
+    margin-right: 10px;
     width: 360px;
     box-shadow: 0 0 30px rgba(255,255,255,0.1);
     animation: popIn 0.3s ease;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
   }
   
   .card-image {
@@ -647,12 +649,12 @@
   }
   
   #close-card {
-    margin-top: 15px;
-    padding: 9px 18px;
-    background: #2d2d2d;
-    border: none;
+    margin-top: 8px;
+    padding: 10px 18px;
+    background: #2d2d2db0;
+    border: 1px solid #4e4e4e86;
     color: #cccccc;
-    border-radius: 6px;
+    border-radius: 30px;
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.3s ease;
@@ -2157,11 +2159,11 @@
   
   #close-item-modal {
     margin-top: 15px;
-    padding: 9px 18px;
-    background: #2d2d2d;
+    padding: 10px 18px;
+    background: #2d2d2db0;
+    border: 1px solid #4e4e4e86;
     color: #cccccc;
-    border: none;
-    border-radius: 6px;
+    border-radius: 30px;
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.3s ease;
@@ -2175,10 +2177,10 @@
   .disenchant-btn {
     margin-top: 8px;
     position: relative;
-    padding: 8px 18px;
-    background: #1b6471;
-    border: none;
-    border-radius: 6px;
+    padding: 10px 18px;
+    background: #299db17a;
+    border: 1px solid #7abdce3d;
+    border-radius: 30px;
     cursor: pointer;
     font-size: 0.9rem;
     color: #ffffff;
@@ -2205,7 +2207,7 @@
     font-size: 1.7rem;
     font-weight: 500;
     color: #cccccc;
-    margin: 1px 0;
+    margin: 0;
     text-shadow: 0 0 6px #2c8096b7;
   }
 
