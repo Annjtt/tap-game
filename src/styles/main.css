@@ -1970,13 +1970,13 @@
 
   .reset-btn {
     width: 100%;
-    padding: 14px;
+    padding: 10px;
     background: #ce181827;
     border: 1px solid;
     border-color: #5525259c;
     border-radius: 30px;
     color: #cccccc;
-    font-size: 1rem;
+    font-size: 0.95rem;
     cursor: pointer;
     margin: 20px 0;
     transition: all 0.2s ease;
